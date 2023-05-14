@@ -1,3 +1,4 @@
+import 'package:baby_book/app/IsLoadingController.dart';
 import 'package:baby_book/app/view/home/tab/tab_bookings.dart';
 import 'package:baby_book/app/view/home/tab/tab_home.dart';
 import 'package:baby_book/app/view/home/tab/tab_profile.dart';
@@ -6,6 +7,7 @@ import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/constant.dart';
 
@@ -42,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(IsLoadingController());
+
     FetchPixels(context);
     double size = FetchPixels.getPixelHeight(45);
     double iconSize = FetchPixels.getPixelHeight(32);
@@ -50,8 +54,26 @@ class _HomeScreenState extends State<HomeScreen> {
             resizeToAvoidBottomInset: true,
             backgroundColor: backGroundColor,
             body:
-            SafeArea(
-              child: tabList[index!],
+            Stack(
+              children: [
+                SafeArea(
+                  child: tabList[index!],
+                ),
+                Obx(//isLoading(obs)가 변경되면 다시 그림.
+                      () => Offstage(
+                    offstage: !IsLoadingController.to.isLoading, // isLoading이 false면 감추기
+                    child: Stack(children: const <Widget>[//다시 stack
+                      Opacity(//뿌옇게~
+                        opacity: 0.5,//0.5만큼~
+                        child: ModalBarrier(dismissible: false, color: Colors.black),//클릭 못하게
+                      ),
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ]),
+                  ),
+                ),
+              ],
             ),
             bottomNavigationBar: buildBottomBar(size, iconSize)),
         onWillPop: () async {

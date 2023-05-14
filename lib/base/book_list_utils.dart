@@ -163,7 +163,7 @@ GestureDetector buildBookListItem(ModelBook modelBook,
                     //       height: FetchPixels.getPixelHeight(20)),
                     // ),
                    getPaddingWidget(EdgeInsets.only(bottom:FetchPixels.getPixelHeight(10) ),  getCustomFont(
-                     "${f.format(modelBook.amount)} 원",
+                     "${f.format(modelBook.amount ?? 0)} 원",
                      12,
                      Colors.grey,
                      1,

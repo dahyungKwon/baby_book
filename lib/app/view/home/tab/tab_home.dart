@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:baby_book/app/IsLoadingController.dart';
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/models/model_category.dart';
@@ -7,14 +6,12 @@ import 'package:baby_book/app/models/model_popular_service.dart';
 import 'package:baby_book/app/repository/book_list_repository.dart';
 import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/app/view/home/age_agoup_bottom_sheet.dart';
+import 'package:baby_book/base/book_list_utils.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
-import 'package:baby_book/base/book_list_utils.dart';
 import 'package:flutter/material.dart';
-
-import '../../../models/model_booking.dart';
 
 class TabHome extends StatefulWidget {
   const TabHome({Key? key}) : super(key: key);
@@ -24,7 +21,8 @@ class TabHome extends StatefulWidget {
 }
 
 class _TabHomeState extends State<TabHome> {
-  List<ModelBook> bookLists = [];
+  List<ModelBook> bookLists = [ModelBook(),ModelBook(),ModelBook(),ModelBook(),
+    ModelBook(),ModelBook(),ModelBook(),ModelBook(),ModelBook(),ModelBook()];
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
@@ -38,10 +36,10 @@ class _TabHomeState extends State<TabHome> {
     ageGroupId = 2;
 
     getBookList();
-    // getBookList().then((value) => print(value));
   }
 
   Future getBookList() async {
+    IsLoadingController.to.isLoading = true;
     List<ModelBook> bookList = await BookListRepository.fetchData(
       categoryList: 'MATH,LIFE',
     );
@@ -50,8 +48,7 @@ class _TabHomeState extends State<TabHome> {
       bookLists = [];
       bookLists.addAll(bookList);
     });
-
-    // return bookList;
+    IsLoadingController.to.isLoading = false;
   }
 
   @override
@@ -208,23 +205,12 @@ class _TabHomeState extends State<TabHome> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        getSvgImage("clipboard.svg",
-            height: FetchPixels.getPixelHeight(124),
-            width: FetchPixels.getPixelHeight(124)),
         getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("No Bookings Yet!", 20, Colors.black, 1,
+        getCustomFont("조건에 해당하는 책이 없습니다!", 20, Colors.black, 1,
             fontWeight: FontWeight.w900),
-        getVerSpace(FetchPixels.getPixelHeight(10)),
-        getCustomFont(
-          "Go to services and book the best services. ",
-          16,
-          Colors.black,
-          1,
-          fontWeight: FontWeight.w400,
-        ),
-        getVerSpace(FetchPixels.getPixelHeight(30)),
+        getVerSpace(FetchPixels.getPixelHeight(25)),
         getButton(
-            context, backGroundColor, "Go to Service", blueColor, () {}, 18,
+            context, backGroundColor, "책 등록 요청하기", blueColor, () {}, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
             insetsGeometry: EdgeInsets.symmetric(

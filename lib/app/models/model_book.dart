@@ -17,8 +17,8 @@ class ModelBook{
   String? publisherName;
 
   ModelBook({
-    required this.id,
-    required this.name,
+    this.id,
+    this.name,
     this.content,
     this.targetAge,
     this.amount,
