@@ -26,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
         () {
           (value)
               ? Constant.sendToNext(context, Routes.homeScreenRoute)
-              : Constant.sendToNext(context, Routes.homeScreenRoute);
-              // : Constant.sendToNext(context, Routes.introRoute);
+              // : Constant.sendToNext(context, Routes.homeScreenRoute);
+              : Constant.sendToNext(context, Routes.loginRoute);
         },
       );
     });
@@ -53,13 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Container buildLogo() {
     return Container(
-          color: blueColor,
-          child: Center(
-              child: getSvgImageWithSize(
-                  context,
-                  "splash_logo.svg",
-                  FetchPixels.getPixelHeight(180),
-                  FetchPixels.getPixelHeight(180)))
-        );
+        color: blueColor,
+        child: Center(
+            child: getSvgImageWithSize(
+                context, "splash_logo.svg", FetchPixels.getPixelHeight(180), FetchPixels.getPixelHeight(180))));
   }
 }

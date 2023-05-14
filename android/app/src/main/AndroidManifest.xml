@@ -39,11 +39,11 @@
 
                 <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
                 <!-- 카카오톡 공유, 카카오톡 메시지 -->
-                <data android:host="kakaolink"
-                    android:scheme="kakaod73522af0c49b3e4be2da226ea516f4d" />
-                <!-- 카카오스토리 -->
-                <data android:host="kakaostory"
-                    android:scheme="kakaod73522af0c49b3e4be2da226ea516f4d" />
+<!--                <data android:host="kakaolink"-->
+<!--                    android:scheme="kakaod73522af0c49b3e4be2da226ea516f4d" />-->
+<!--                &lt;!&ndash; 카카오스토리 &ndash;&gt;-->
+<!--                <data android:host="kakaostory"-->
+<!--                    android:scheme="kakaod73522af0c49b3e4be2da226ea516f4d" />-->
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
