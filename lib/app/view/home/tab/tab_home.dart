@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_age_group.dart';
+import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/models/model_category.dart';
 import 'package:baby_book/app/models/model_popular_service.dart';
+import 'package:baby_book/app/repository/book_list_repository.dart';
 import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/app/view/home/age_agoup_bottom_sheet.dart';
 import 'package:baby_book/base/color_data.dart';
@@ -24,6 +25,7 @@ class TabHome extends StatefulWidget {
 
 class _TabHomeState extends State<TabHome> {
   List<ModelBooking> bookingLists = DataFile.bookingList;
+  List<ModelBook> bookLists = List.empty();
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
@@ -35,6 +37,16 @@ class _TabHomeState extends State<TabHome> {
   void initState() {
     super.initState();
     ageGroupId = 2;
+
+    getBookList().then((value) => bookLists.addAll(value));
+  }
+
+  Future<List<ModelBook>> getBookList() async {
+    List<ModelBook> bookList = await BookListRepository.fetchData(
+      categoryList: 'MATH,LIFE',
+    );
+
+    return bookList;
   }
 
   @override
