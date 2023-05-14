@@ -24,8 +24,7 @@ class TabHome extends StatefulWidget {
 }
 
 class _TabHomeState extends State<TabHome> {
-  List<ModelBooking> bookingLists = DataFile.bookingList;
-  List<ModelBook> bookLists = List.empty();
+  List<ModelBook> bookLists = [];
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
@@ -38,15 +37,21 @@ class _TabHomeState extends State<TabHome> {
     super.initState();
     ageGroupId = 2;
 
-    getBookList().then((value) => bookLists.addAll(value));
+    getBookList();
+    // getBookList().then((value) => print(value));
   }
 
-  Future<List<ModelBook>> getBookList() async {
+  Future getBookList() async {
     List<ModelBook> bookList = await BookListRepository.fetchData(
       categoryList: 'MATH,LIFE',
     );
 
-    return bookList;
+    setState(() {
+      bookLists = [];
+      bookLists.addAll(bookList);
+    });
+
+    // return bookList;
   }
 
   @override
@@ -174,7 +179,7 @@ class _TabHomeState extends State<TabHome> {
               ),
               Container(
                 color: backGroundColor,
-                child: bookingLists.isEmpty
+                child: bookLists.isEmpty
                     ? getPaddingWidget(edgeInsets, nullListView(context))
                     : allBookingList(),
               ),
@@ -189,26 +194,11 @@ class _TabHomeState extends State<TabHome> {
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
-      itemCount: bookingLists.length,
+      itemCount: bookLists.length,
       itemBuilder: (context, index) {
-        ModelBooking modelBooking = bookingLists[index];
-        return buildBookingListItem(modelBooking, context, index, () {
-          ModelBooking booking = ModelBooking(
-              modelBooking.image ?? "",
-              modelBooking.name ?? "",
-              modelBooking.date ?? "",
-              modelBooking.rating ?? "",
-              modelBooking.price ?? 0.0,
-              modelBooking.owner ?? "",
-              modelBooking.tag,
-              0,
-              null);
-          PrefData.setBookingModel(jsonEncode(booking));
-          Constant.sendToNext(context, Routes.bookingRoute);
-        }, () {
-          setState(() {
-            bookingLists.removeAt(index);
-          });
+        ModelBook modelBook = bookLists[index];
+        return buildBookListItem(modelBook, context, index, () {
+          Constant.sendToNext(context, Routes.bookingRoute, arguments: {'modelBook': modelBook});
         });
       },
     );

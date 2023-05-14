@@ -102,9 +102,26 @@ class DataFile {
     ModelCard("visa.svg", "Visa", "xxxx xxxx xxxx 4565")
   ];
 
+  // ModelBooking(
+  //    this.image,
+  //    this.name,
+  //    this.date,
+  //    this.rating,
+  //    this.price,
+  //    this.owner,
+  //    this.tag,
+  //    this.bgColor,
+  //    this.textColor);
   static List<ModelBooking> bookingList = [
-    ModelBooking("grgr2.png", "그래그래", "그레이트북스", "4.3",
-        367000, "By Mendy Wilson", "reading", 0xFFEEFCF0, success),
+    ModelBooking("grgr2.png",
+                  "그래그래",
+                  "그레이트북스",
+                  "4.3",
+                  367000,
+                  "By Mendy Wilson",
+                  "reading",
+                  0xFFEEFCF0,
+                  success),
     ModelBooking("booking2.png", "Painting", "22 April, 2022, 08:00 am", "4.2",
         50.00, "By Jenny Winget", "ready", 0xFFF0F8FF, completed),
     ModelBooking("booking3.png", "Cleaning", "20 April, 2022, 06:00 pm", "4.3",

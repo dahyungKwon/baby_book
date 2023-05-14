@@ -16,7 +16,7 @@ class BookListRepository {
 
     return response.data['body']
         .map<ModelBook>(
-          (item) => ModelBook.fromJson(json: item),
+          (item) => ModelBook.fromJson(item),
         ).toList();
   }
 }
