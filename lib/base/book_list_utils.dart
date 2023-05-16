@@ -1,3 +1,4 @@
+import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
-import '../app/models/model_booking.dart';
 import 'constant.dart';
 
 Widget getVerSpace(double verSpace) {
@@ -73,8 +73,8 @@ Widget getPaddingWidget(EdgeInsets edgeInsets, Widget widget) {
   );
 }
 
-GestureDetector buildBookingListItem(ModelBooking modelBooking,
-    BuildContext context, int index, Function function, Function funDelete) {
+GestureDetector buildBookListItem(ModelBook modelBook,
+    BuildContext context, int index, Function function) {
   var f = NumberFormat('###,###,###,###');
   return GestureDetector(
     onTap: () {
@@ -111,7 +111,7 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                   width: FetchPixels.getPixelHeight(70),
                   decoration: BoxDecoration(
                     image: getDecorationAssetImage(
-                        context, modelBooking.image ?? "",fit: BoxFit.cover),
+                        context, modelBook.logo ?? "grgr2.png",fit: BoxFit.cover),
                   ),
                 ),
                 getHorSpace(FetchPixels.getPixelWidth(16)),
@@ -124,11 +124,11 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                     children: [
                       Expanded(flex: 1,child: getHorSpace(0),),
                       getCustomFont(
-                          modelBooking.name ?? "", 13, Colors.black, 1,
+                          modelBook.name ?? "", 13, Colors.black, 1,
                           fontWeight: FontWeight.w900),
                       getVerSpace(FetchPixels.getPixelHeight(2)),
                       getCustomFont(
-                        modelBooking.date ?? "",
+                        modelBook.publisherName ?? "그레이트북스",
                         12,
                         textColor,
                         1,
@@ -142,7 +142,7 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                               width: FetchPixels.getPixelHeight(12)),
                           getHorSpace(FetchPixels.getPixelWidth(6)),
                           getCustomFont(
-                              modelBooking.rating ?? "", 12, Colors.black, 1,
+                              modelBook.reviewScore ?? "", 12, Colors.black, 1,
                               fontWeight: FontWeight.w400),
                         ],
                       ),
@@ -163,7 +163,7 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                     //       height: FetchPixels.getPixelHeight(20)),
                     // ),
                    getPaddingWidget(EdgeInsets.only(bottom:FetchPixels.getPixelHeight(10) ),  getCustomFont(
-                     "${f.format(modelBooking.price)} 원",
+                     "${f.format(modelBook.amount ?? 0)} 원",
                      12,
                      Colors.grey,
                      1,
