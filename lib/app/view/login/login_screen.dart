@@ -1,5 +1,6 @@
 import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/base/color_data.dart';
+import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
         GestureDetector(
             onTap: () async {
               //토큰 존재 체크 및 유효성 체크
-              if (await AuthApi.instance.hasToken() && await validateKakaoToken()) {
+              if (await isLogin()) {
                 print("토큰 존재하고 유효함");
                 Constant.sendToNext(context, Routes.homeScreenRoute);
               } else {
@@ -74,6 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   print("시스템 에러");
                 } else {
                   print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
+                  //TODO API 호출해야함
+                  PrefData.setAccessToken(token.accessToken);
+                  PrefData.setRefreshToken(token.refreshToken!);
                   Constant.sendToNext(context, Routes.homeScreenRoute);
                 }
               }

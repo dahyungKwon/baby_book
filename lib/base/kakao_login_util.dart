@@ -1,5 +1,16 @@
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import '../../base/pref_data.dart';
+
+Future<bool> isLogin() async {
+  return await PrefData.getAccessToken().then((accessToken) async {
+    if (accessToken == null) {
+      return false;
+    }
+
+    return await AuthApi.instance.hasToken() && await validateKakaoToken();
+  });
+}
 
 Future<bool> validateKakaoToken() async {
   try {

@@ -23,25 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () async {
-      if (await AuthApi.instance.hasToken() && await validateKakaoToken()) {
-        print("토큰 존재하고 유효함");
+      if (await isLogin()) {
+        print("로그인 완료");
         Constant.sendToNext(context, Routes.homeScreenRoute);
       } else {
         Constant.sendToNext(context, Routes.loginRoute);
       }
     });
-
-    // PrefData.isLogIn().then((value) {
-    //   Timer(
-    //     const Duration(seconds: 3),
-    //     () {
-    //       (value)
-    //           ? Constant.sendToNext(context, Routes.homeScreenRoute)
-    //           // : Constant.sendToNext(context, Routes.homeScreenRoute);
-    //           : Constant.sendToNext(context, Routes.loginRoute);
-    //     },
-    //   );
-    // });
   }
 
   void backClick() {

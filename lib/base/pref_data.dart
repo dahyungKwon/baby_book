@@ -11,6 +11,9 @@ class PrefData {
   static String defIndexVal = "${prefName}index";
   static String modelBooking = "${prefName}bookingModel";
   static String defCountryName = "image_albania.jpg";
+  static String accessToken = "${prefName}accessToken";
+  static String refreshToken = "${prefName}refreshToken";
+  static String memberId = "${prefName}memberId";
 
   static Future<SharedPreferences> getPrefInstance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -68,8 +71,37 @@ class PrefData {
 
   static Future<String> getDefCountry() async {
     SharedPreferences preferences = await getPrefInstance();
-    String isIntroAvailable =
-        preferences.getString(getDefaultCountry) ?? defCountryName;
+    String isIntroAvailable = preferences.getString(getDefaultCountry) ?? defCountryName;
     return isIntroAvailable;
+  }
+
+  static Future<String?> getAccessToken() async {
+    SharedPreferences preferences = await getPrefInstance();
+    return preferences.getString(accessToken);
+  }
+
+  static Future<String?> getRefreshToken() async {
+    SharedPreferences preferences = await getPrefInstance();
+    return preferences.getString(refreshToken);
+  }
+
+  static Future<String?> getMemberId() async {
+    SharedPreferences preferences = await getPrefInstance();
+    return preferences.getString(memberId);
+  }
+
+  static setAccessToken(String accessTokenParam) async {
+    SharedPreferences preferences = await getPrefInstance();
+    preferences.setString(accessToken, accessTokenParam);
+  }
+
+  static setRefreshToken(String refreshTokenParam) async {
+    SharedPreferences preferences = await getPrefInstance();
+    preferences.setString(refreshToken, refreshTokenParam);
+  }
+
+  static setMemberId(String memberIdParam) async {
+    SharedPreferences preferences = await getPrefInstance();
+    preferences.setString(memberId, memberIdParam);
   }
 }
