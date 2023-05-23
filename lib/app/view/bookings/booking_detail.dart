@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_booking.dart';
-import 'package:baby_book/base/pref_data.dart';
+import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -27,52 +24,40 @@ class _BookingDetailState extends State<BookingDetail> {
   void initState() {
     super.initState();
 
-    getPrefData();
+    tag = "reading"; // TODO :: 사용자별로 책상태 받기
+    setController();
   }
 
-  getPrefData() async {
-    String getModel = await PrefData.getBookingModel();
-    if (getModel.isNotEmpty) {
-      ModelBooking modelBooking = ModelBooking.fromJson(jsonDecode(getModel));
-      image = modelBooking.image;
-      name = modelBooking.name;
-      date = modelBooking.date;
-      rating = modelBooking.rating;
-      tag = modelBooking.tag;
-      owner = modelBooking.owner;
-      price = modelBooking.price;
+  setController() {
+    _controller = YoutubePlayerController(
+      initialVideoId: "KuGPpecYc28",
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: false,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+        hideControls: false,
+      ),
+    );
 
-      _controller = YoutubePlayerController(
-        initialVideoId: "KuGPpecYc28",
-        flags: const YoutubePlayerFlags(
-          mute: false,
-          autoPlay: false,
-          disableDragSeek: false,
-          loop: false,
-          isLive: false,
-          forceHD: false,
-          enableCaption: true,
-          hideControls: false,
-        ),
-      );
-
-      setState(() {});
-    }
+    setState(() {});
   }
 
   bool? isDetailMenu;
 
-  String? image;
-  String? name;
-  String? date;
-  String? rating;
-  String? tag;
-  String? owner;
-  double? price;
-  Color? color;
+  ModelBook? modelBook;
+  String? tag; // TODO :: 삭제
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    print(arguments['modelBook']);
+
+    modelBook = arguments['modelBook'];
+
     isDetailMenu = isDetailMenu ?? true;
     FetchPixels(context);
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
@@ -134,7 +119,7 @@ class _BookingDetailState extends State<BookingDetail> {
               width: FetchPixels.width*0.8,
               decoration: BoxDecoration(
                 image: getDecorationAssetImage(
-                    context, image ?? ""),
+                    context, modelBook?.logo ?? "grgr2.png"),
               ),
             ),
           ),
@@ -144,9 +129,9 @@ class _BookingDetailState extends State<BookingDetail> {
             children: [
               Column(
                 children: [
-                  getCustomFont(date ?? "", 12, textColor, 1,
+                  getCustomFont(modelBook?.publisherName ?? "", 12, textColor, 1,
                       fontWeight: FontWeight.w400),
-                  getCustomFont(name ?? "", 22, Colors.black, 1,
+                  getCustomFont(modelBook?.name ?? "", 22, Colors.black, 1,
                       fontWeight: FontWeight.w700),
                 ],
               ),
@@ -163,7 +148,7 @@ class _BookingDetailState extends State<BookingDetail> {
                   height: FetchPixels.getPixelHeight(16)),
               getHorSpace(FetchPixels.getPixelWidth(6)),
               getCustomFont(
-                rating ?? "",
+                modelBook?.reviewScore ?? "",
                 14,
                 Colors.black,
                 1,
