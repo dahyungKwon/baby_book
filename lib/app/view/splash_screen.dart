@@ -4,11 +4,9 @@ import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 import '../../base/constant.dart';
 import '../../base/kakao_login_util.dart';
-import '../../base/pref_data.dart';
 import '../routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {

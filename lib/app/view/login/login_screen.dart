@@ -1,3 +1,5 @@
+import 'package:baby_book/app/models/model_member.dart';
+import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
@@ -75,9 +77,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   print("시스템 에러");
                 } else {
                   print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
-                  //TODO API 호출해야함
-                  PrefData.setAccessToken(token.accessToken);
-                  PrefData.setRefreshToken(token.refreshToken!);
+                  ModelMember member =
+                      await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+                  PrefData.setAccessToken(member.accessToken!);
+                  PrefData.setRefreshToken(member.refreshToken!);
                   Constant.sendToNext(context, Routes.homeScreenRoute);
                 }
               }
