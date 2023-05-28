@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () async {
+    Timer(const Duration(seconds: 1), () async {
       if (await isLogin()) {
         print("로그인 완료");
         Constant.sendToNext(context, Routes.homeScreenRoute);
@@ -37,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
+
     return WillPopScope(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -50,9 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Container buildLogo() {
     return Container(
-        color: blueColor,
         child: Center(
-            child: getSvgImageWithSize(
-                context, "splash_logo.svg", FetchPixels.getPixelHeight(180), FetchPixels.getPixelHeight(180))));
+            child: getAssetImage("splash3.png", FetchPixels.getPixelWidth(double.infinity),
+                FetchPixels.getPixelHeight(double.infinity))));
   }
 }
