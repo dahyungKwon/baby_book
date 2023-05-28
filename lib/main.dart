@@ -1,7 +1,10 @@
 import 'package:baby_book/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:get/get.dart';
+
+import 'base/color_data.dart';
 
 void main() {
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
@@ -26,6 +29,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: backGroundColor,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
