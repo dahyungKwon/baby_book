@@ -6,7 +6,7 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../base/constant.dart';
-import '../../base/pref_data.dart';
+import '../../base/kakao_login_util.dart';
 import '../routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,16 +20,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    PrefData.isLogIn().then((value) {
-      Timer(
-        const Duration(seconds: 3),
-        () {
-          (value)
-              ? Constant.sendToNext(context, Routes.homeScreenRoute)
-              : Constant.sendToNext(context, Routes.homeScreenRoute);
-              // : Constant.sendToNext(context, Routes.introRoute);
-        },
-      );
+    Timer(const Duration(seconds: 3), () async {
+      if (await isLogin()) {
+        print("로그인 완료");
+        Constant.sendToNext(context, Routes.homeScreenRoute);
+      } else {
+        Constant.sendToNext(context, Routes.loginRoute);
+      }
     });
   }
 
@@ -53,13 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Container buildLogo() {
     return Container(
-          color: blueColor,
-          child: Center(
-              child: getSvgImageWithSize(
-                  context,
-                  "splash_logo.svg",
-                  FetchPixels.getPixelHeight(180),
-                  FetchPixels.getPixelHeight(180)))
-        );
+        color: blueColor,
+        child: Center(
+            child: getSvgImageWithSize(
+                context, "splash_logo.svg", FetchPixels.getPixelHeight(180), FetchPixels.getPixelHeight(180))));
   }
 }
