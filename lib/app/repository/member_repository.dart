@@ -7,7 +7,7 @@ class MemberRepository {
     required String memberId,
   }) async {
     final response =
-        await Dio().get('http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/booki/members/$memberId');
+        await Dio().get('http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/apis/members/$memberId');
 
     return ModelMember.fromJson(response.data['body']);
   }
@@ -17,7 +17,7 @@ class MemberRepository {
     required String snsAccessToken,
   }) async {
     final response = await Dio().post(
-        'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/booki/members',
+        'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/apis/members',
         data: {"snsLoginType": snsLoginType, "snsAccessToken": snsAccessToken});
 
     return ModelMember.fromJson(response.data['body']);

@@ -6,7 +6,7 @@ class BookListRepository {
     required String categoryList,
   }) async {
     final response = await Dio().get(
-      'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/booki/bookset',
+      'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/apis/bookset',
       queryParameters: {
         'pageSize': 15,
         'pageNumber': '1',
@@ -17,6 +17,7 @@ class BookListRepository {
     return response.data['body']
         .map<ModelBook>(
           (item) => ModelBook.fromJson(item),
-        ).toList();
+        )
+        .toList();
   }
 }
