@@ -17,7 +17,7 @@ class MemberRepository {
     required String snsAccessToken,
   }) async {
     final response = await Dio().post(
-        'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/apis/members',
+        'http://ec2-43-201-150-252.ap-northeast-2.compute.amazonaws.com:3001/apis/members/join',
         data: {"snsLoginType": snsLoginType, "snsAccessToken": snsAccessToken});
 
     return ModelMember.fromJson(response.data['body']);
