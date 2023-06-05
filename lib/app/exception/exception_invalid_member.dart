@@ -1,0 +1,1 @@
+class InvalidMemberException implements Exception {}

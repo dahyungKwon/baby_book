@@ -13,6 +13,11 @@ import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../base/color_data.dart';
+import '../../../../base/color_data.dart';
+import '../../../../base/color_data.dart';
+import '../../../exception/exception_invalid_member.dart';
+
 class TabHome extends StatefulWidget {
   const TabHome({Key? key}) : super(key: key);
 
@@ -21,8 +26,18 @@ class TabHome extends StatefulWidget {
 }
 
 class _TabHomeState extends State<TabHome> {
-  List<ModelBook> bookLists = [ModelBook(),ModelBook(),ModelBook(),ModelBook(),
-    ModelBook(),ModelBook(),ModelBook(),ModelBook(),ModelBook(),ModelBook()];
+  List<ModelBook> bookLists = [
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook(),
+    ModelBook()
+  ];
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
@@ -40,15 +55,20 @@ class _TabHomeState extends State<TabHome> {
 
   Future getBookList() async {
     IsLoadingController.to.isLoading = true;
-    List<ModelBook> bookList = await BookListRepository.fetchData(
-      categoryList: 'MATH,LIFE',
-    );
-
-    setState(() {
-      bookLists = [];
-      bookLists.addAll(bookList);
-    });
-    IsLoadingController.to.isLoading = false;
+    try {
+      List<ModelBook> bookList = await BookListRepository.fetchData(
+        categoryList: 'MATH,LIFE',
+      );
+      setState(() {
+        bookLists = [];
+        bookLists.addAll(bookList);
+      });
+      IsLoadingController.to.isLoading = false;
+    } on InvalidMemberException {
+      Constant.sendToNext(context, Routes.loginRoute);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -76,21 +96,19 @@ class _TabHomeState extends State<TabHome> {
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          builder: (_) =>
-                            AgeGroupBottomSheet(ageGroupId: ageGroupId!)
-                      ).then((selectedId){
+                          builder: (_) => AgeGroupBottomSheet(ageGroupId: ageGroupId!)).then((selectedId) {
                         if (selectedId != null) {
-                          setState((){
+                          setState(() {
                             ageGroupId = selectedId;
                           });
                         }
                       });
                     },
                     child: getCustomFont(
-                      DataFile.ageGroupList[ageGroupId!].minAge.toString()
-                          + " ~ "
-                          + DataFile.ageGroupList[ageGroupId!].maxAge.toString()
-                          + "개월 ν",
+                      DataFile.ageGroupList[ageGroupId!].minAge.toString() +
+                          " ~ " +
+                          DataFile.ageGroupList[ageGroupId!].maxAge.toString() +
+                          "개월 ν",
                       18,
                       Colors.black,
                       1,
@@ -176,9 +194,7 @@ class _TabHomeState extends State<TabHome> {
               ),
               Container(
                 color: backGroundColor,
-                child: bookLists.isEmpty
-                    ? getPaddingWidget(edgeInsets, nullListView(context))
-                    : allBookingList(),
+                child: bookLists.isEmpty ? getPaddingWidget(edgeInsets, nullListView(context)) : allBookingList(),
               ),
             ],
           ),
@@ -206,15 +222,12 @@ class _TabHomeState extends State<TabHome> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("조건에 해당하는 책이 없습니다!", 20, Colors.black, 1,
-            fontWeight: FontWeight.w900),
+        getCustomFont("조건에 해당하는 책이 없습니다!", 20, Colors.black, 1, fontWeight: FontWeight.w900),
         getVerSpace(FetchPixels.getPixelHeight(25)),
-        getButton(
-            context, backGroundColor, "책 등록 요청하기", blueColor, () {}, 18,
+        getButton(context, backGroundColor, "책 등록 요청하기", blueColor, () {}, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
-            insetsGeometry: EdgeInsets.symmetric(
-                horizontal: FetchPixels.getPixelWidth(106)),
+            insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(106)),
             borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
             isBorder: true,
             borderColor: blueColor,
@@ -242,10 +255,8 @@ class _TabHomeState extends State<TabHome> {
                     width: FetchPixels.getPixelWidth(374),
                     decoration: BoxDecoration(
                         color: const Color(0xFFD0DDFF),
-                        borderRadius: BorderRadius.circular(
-                            FetchPixels.getPixelHeight(20)),
-                        image: getDecorationAssetImage(context, "maskgroup.png",
-                            fit: BoxFit.fill)),
+                        borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(20)),
+                        image: getDecorationAssetImage(context, "maskgroup.png", fit: BoxFit.fill)),
                     alignment: Alignment.center,
                   ),
                   Positioned(
@@ -267,10 +278,8 @@ class _TabHomeState extends State<TabHome> {
                             children: [
                               SizedBox(
                                   width: FetchPixels.getPixelHeight(130),
-                                  child: getMultilineCustomFont(
-                                      "Wall Painting Service", 20, Colors.black,
-                                      fontWeight: FontWeight.w900,
-                                      txtHeight: 1.3)),
+                                  child: getMultilineCustomFont("Wall Painting Service", 20, Colors.black,
+                                      fontWeight: FontWeight.w900, txtHeight: 1.3)),
                               // getVerSpace(FetchPixels.getPixelHeight(6)),
                               getCustomFont(
                                 "Make your wall stylish",
@@ -280,28 +289,22 @@ class _TabHomeState extends State<TabHome> {
                                 fontWeight: FontWeight.w400,
                               ),
                               // getVerSpace(FetchPixels.getPixelHeight(16)),
-                              getButton(context, blueColor, "Book Now",
-                                  Colors.white, () {}, 14,
+                              getButton(context, blueColor, "Book Now", Colors.white, () {}, 14,
                                   weight: FontWeight.w600,
                                   buttonWidth: FetchPixels.getPixelWidth(108),
-                                  borderRadius: BorderRadius.circular(
-                                      FetchPixels.getPixelHeight(12)),
-                                  insetsGeometrypadding: EdgeInsets.symmetric(
-                                      vertical:
-                                          FetchPixels.getPixelHeight(12))),
+                                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
+                                  insetsGeometrypadding:
+                                      EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12))),
                             ],
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(
-                                right: FetchPixels.getPixelWidth(21)),
+                            margin: EdgeInsets.only(right: FetchPixels.getPixelWidth(21)),
                             height: FetchPixels.getPixelHeight(175),
                             width: FetchPixels.getPixelHeight(142),
                             color: Colors.transparent,
                             child: getAssetImage(
-                                "washer.png",
-                                FetchPixels.getPixelHeight(142),
-                                FetchPixels.getPixelHeight(175)))
+                                "washer.png", FetchPixels.getPixelHeight(142), FetchPixels.getPixelHeight(175)))
                       ],
                     ),
                   ))
@@ -328,9 +331,7 @@ class _TabHomeState extends State<TabHome> {
                       "dot.png",
                       FetchPixels.getPixelHeight(8),
                       FetchPixels.getPixelHeight(8),
-                      color: selectedPage.value == index
-                          ? blueColor
-                          : blueColor.withOpacity(0.2),
+                      color: selectedPage.value == index ? blueColor : blueColor.withOpacity(0.2),
                     ),
                   );
                 },

@@ -20,6 +20,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    isLogin().then((isLogin) async => {
+          if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
+            {
+              MemberRepository.refreshAccessToken().then((response) async => {
+                    await PrefData.setAccessToken(response.accessToken!),
+                    await PrefData.setRefreshToken(response.refreshToken!),
+                    Constant.sendToNext(context, Routes.homeScreenRoute)
+                  })
+            }
+        });
+  }
+
   void finishView() {
     Constant.closeApp();
   }
@@ -79,8 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
                   ModelMember member =
                       await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
-                  PrefData.setAccessToken(member.accessToken!);
-                  PrefData.setRefreshToken(member.refreshToken!);
+                  await PrefData.setAccessToken(member.accessToken!);
+                  await PrefData.setRefreshToken(member.refreshToken!);
+                  await PrefData.setMemberId(member.memberId!);
                   Constant.sendToNext(context, Routes.homeScreenRoute);
                 }
               }
