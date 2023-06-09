@@ -1,10 +1,12 @@
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../routes/app_pages.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -113,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         getVerSpace(FetchPixels.getPixelHeight(20)),
         GestureDetector(
             onTap: () {
-              Constant.sendToNextWithRes(context, Routes.selectCountryRoute,
+              Constant.sendToNextWithRes(context, Routes.selectCountryPath,
                   fun: () {
                 getPrefVal();
               });
@@ -174,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         getVerSpace(FetchPixels.getPixelHeight(50)),
         getButton(context, blueColor, "Sign Up", Colors.white, () {
-          Constant.sendToNext(context, Routes.verifyRoute);
+          Get.toNamed(Routes.verifyPath);
         }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),

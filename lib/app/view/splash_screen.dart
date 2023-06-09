@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../base/constant.dart';
 import '../../base/kakao_login_util.dart';
-import '../routes/app_routes.dart';
+import '../routes/app_pages.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -22,9 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 1), () async {
       if (await isLogin()) {
         print("로그인 완료");
-        Constant.sendToNext(context, Routes.homeScreenRoute);
+        Get.toNamed(Routes.homescreenPath);
       } else {
-        Constant.sendToNext(context, Routes.loginRoute);
+        Get.toNamed(Routes.loginPath);
       }
     });
   }

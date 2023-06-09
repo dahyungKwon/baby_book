@@ -1,11 +1,13 @@
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../../base/widget_utils.dart';
+import '../../../routes/app_pages.dart';
 
 class TabProfile extends StatefulWidget {
   const TabProfile({Key? key}) : super(key: key);
@@ -59,14 +61,14 @@ class _TabProfileState extends State<TabProfile> {
         fontsize: 24,
         istext: true,
         rightimage: "notification.svg", rightFunction: () {
-      Constant.sendToNext(context, Routes.notificationRoutes);
+          Get.toNamed(Routes.notificationPath);
     });
   }
 
   Widget logoutButton(BuildContext context) {
     return getButton(context, blueColor, "Logout", Colors.white, () {
       PrefData.setLogIn(false);
-      Constant.sendToNext(context, Routes.loginRoute);
+      Get.toNamed(Routes.loginPath);
       // Constant.closeApp();
     }, 18,
         weight: FontWeight.w600,
@@ -77,7 +79,7 @@ class _TabProfileState extends State<TabProfile> {
   Widget settingButton(BuildContext context) {
     return getButtonWithIcon(context, Colors.white, "Settings", Colors.black,
         () {
-      Constant.sendToNext(context, Routes.settingRoute);
+          Get.toNamed(Routes.settingPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -95,7 +97,7 @@ class _TabProfileState extends State<TabProfile> {
   Widget myAddressButton(BuildContext context) {
     return getButtonWithIcon(context, Colors.white, "My Address", Colors.black,
         () {
-      Constant.sendToNext(context, Routes.myAddressRoute);
+          Get.toNamed(Routes.myAddressPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -113,7 +115,7 @@ class _TabProfileState extends State<TabProfile> {
   Widget myCardButton(BuildContext context) {
     return getButtonWithIcon(context, Colors.white, "My Cards", Colors.black,
         () {
-      Constant.sendToNext(context, Routes.cardRoute);
+          Get.toNamed(Routes.cardPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -131,7 +133,7 @@ class _TabProfileState extends State<TabProfile> {
   Widget myProfileButton(BuildContext context) {
     return getButtonWithIcon(context, Colors.white, "My Profile", Colors.black,
         () {
-      Constant.sendToNext(context, Routes.profileRoute);
+          Get.toNamed(Routes.profilePath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),

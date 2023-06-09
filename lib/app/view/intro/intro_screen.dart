@@ -1,13 +1,15 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/constant.dart';
 import '../../models/model_intro.dart';
+import '../../routes/app_pages.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -112,7 +114,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 getVerSpace(FetchPixels.getPixelHeight(29)),
                 getButton(context, blueColor, "Next", Colors.white, () {
                   if (index == DataFile.introList.length - 1) {
-                    Constant.sendToNext(context, Routes.loginRoute);
+                    Get.toNamed(Routes.loginPath);
                   } else {
                     _controller.animateToPage(index + 1,
                         duration: const Duration(milliseconds: 250),
@@ -130,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
                     ? Container()
                     : GestureDetector(
                         onTap: () {
-                          Constant.sendToNext(context, Routes.loginRoute);
+                          Get.toNamed(Routes.loginPath);
                         },
                         child: getCustomFont(
                           "Skip",

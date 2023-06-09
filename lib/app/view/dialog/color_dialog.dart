@@ -1,13 +1,15 @@
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_color.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/widget_utils.dart';
 import '../../models/model_cart.dart';
+import '../../routes/app_pages.dart';
 
 class ColorDialog extends StatefulWidget {
   const ColorDialog({Key? key}) : super(key: key);
@@ -34,15 +36,13 @@ class _ColorDialogState extends State<ColorDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getCustomFont("Hair Color", 20, Colors.black, 1,
-                         fontWeight: FontWeight.w900),
+                    getCustomFont("Hair Color", 20, Colors.black, 1, fontWeight: FontWeight.w900),
                     GestureDetector(
                         onTap: () {
                           Constant.backToPrev(context);
                         },
                         child: getSvgImage("close.svg",
-                            height: FetchPixels.getPixelHeight(24),
-                            width: FetchPixels.getPixelHeight(24)))
+                            height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)))
                   ],
                 ),
                 getVerSpace(FetchPixels.getPixelHeight(20)),
@@ -62,7 +62,7 @@ class _ColorDialogState extends State<ColorDialog> {
   Widget doneButton(BuildContext context) {
     return getButton(context, blueColor, "Done", Colors.white, () {
       Constant.backToPrev(context);
-      Constant.sendToNext(context, Routes.cartRoute);
+      Get.toNamed(Routes.cartPath);
     }, 18,
         weight: FontWeight.w600,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -78,10 +78,14 @@ class _ColorDialogState extends State<ColorDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getCustomFont("Total", 24, Colors.black, 1,
-                         fontWeight: FontWeight.w900),
-                    getCustomFont("\$$total", 24, Colors.black, 1,
-                        fontWeight: FontWeight.w900, )
+                    getCustomFont("Total", 24, Colors.black, 1, fontWeight: FontWeight.w900),
+                    getCustomFont(
+                      "\$$total",
+                      24,
+                      Colors.black,
+                      1,
+                      fontWeight: FontWeight.w900,
+                    )
                   ],
                 ),
                 getVerSpace(FetchPixels.getPixelHeight(30)),
@@ -111,23 +115,17 @@ class _ColorDialogState extends State<ColorDialog> {
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Row(
             children: [
               Container(
                 height: FetchPixels.getPixelHeight(104),
                 width: FetchPixels.getPixelHeight(104),
                 decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(FetchPixels.getPixelHeight(10)),
-                    image: getDecorationAssetImage(
-                        context, modelColor.image ?? "")),
+                    borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(10)),
+                    image: getDecorationAssetImage(context, modelColor.image ?? "")),
               ),
               Expanded(
                 child: Container(
@@ -135,23 +133,28 @@ class _ColorDialogState extends State<ColorDialog> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      getCustomFont(modelColor.name ?? '', 16, Colors.black, 1,
-                          fontWeight: FontWeight.w900, ),
-                      getVerSpace(FetchPixels.getPixelHeight(4)),
                       getCustomFont(
-                          modelColor.productName ?? "", 14, textColor, 1,
-                           fontWeight: FontWeight.w400),
+                        modelColor.name ?? '',
+                        16,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      getVerSpace(FetchPixels.getPixelHeight(4)),
+                      getCustomFont(modelColor.productName ?? "", 14, textColor, 1, fontWeight: FontWeight.w400),
                       getVerSpace(FetchPixels.getPixelHeight(6)),
                       Row(
                         children: [
                           getSvgImage("star.svg",
-                              height: FetchPixels.getPixelHeight(16),
-                              width: FetchPixels.getPixelHeight(16)),
+                              height: FetchPixels.getPixelHeight(16), width: FetchPixels.getPixelHeight(16)),
                           getHorSpace(FetchPixels.getPixelWidth(6)),
                           getCustomFont(
-                              modelColor.rating ?? "", 14, Colors.black, 1,
-                              fontWeight: FontWeight.w400,
-                             )
+                            modelColor.rating ?? "",
+                            14,
+                            Colors.black,
+                            1,
+                            fontWeight: FontWeight.w400,
+                          )
                         ],
                       )
                     ],
@@ -162,60 +165,51 @@ class _ColorDialogState extends State<ColorDialog> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (modelColor.quantity == 0)
-                    getButton(context, Colors.transparent, "Add", blueColor,
-                        () {
+                    getButton(context, Colors.transparent, "Add", blueColor, () {
                       modelColor.quantity = (modelColor.quantity! + 1);
                       total = total + (modelColor.price! * 1);
-                      DataFile.cartList[index.toString()] = ModelCart(
-                          modelColor.image,
-                          modelColor.name,
-                          modelColor.productName,
-                          modelColor.rating,
-                          modelColor.price,
-                          modelColor.quantity);
+                      DataFile.cartList[index.toString()] = ModelCart(modelColor.image, modelColor.name,
+                          modelColor.productName, modelColor.rating, modelColor.price, modelColor.quantity);
 
                       setState(() {});
                     }, 14,
                         weight: FontWeight.w600,
                         insetsGeometrypadding: EdgeInsets.symmetric(
-                            horizontal: FetchPixels.getPixelWidth(20),
-                            vertical: FetchPixels.getPixelHeight(12)),
+                            horizontal: FetchPixels.getPixelWidth(20), vertical: FetchPixels.getPixelHeight(12)),
                         borderColor: blueColor,
                         borderWidth: 1.5,
                         isBorder: true,
-                        borderRadius: BorderRadius.circular(
-                            FetchPixels.getPixelHeight(10)))
+                        borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(10)))
                   else
                     Row(
                       children: [
                         GestureDetector(
                           child: getSvgImage("add1.svg",
-                              width: FetchPixels.getPixelHeight(30),
-                              height: FetchPixels.getPixelHeight(30)),
+                              width: FetchPixels.getPixelHeight(30), height: FetchPixels.getPixelHeight(30)),
                           onTap: () {
                             modelColor.quantity = (modelColor.quantity! + 1);
                             total = total + (modelColor.price! * 1);
-                            DataFile.cartList[index.toString()]!.quantity =
-                                modelColor.quantity;
+                            DataFile.cartList[index.toString()]!.quantity = modelColor.quantity;
                             setState(() {});
                           },
                         ),
                         getHorSpace(FetchPixels.getPixelWidth(10)),
-                        getCustomFont(modelColor.quantity.toString(), 14,
-                            Colors.black, 1,
-                            fontWeight: FontWeight.w400,
-                            ),
+                        getCustomFont(
+                          modelColor.quantity.toString(),
+                          14,
+                          Colors.black,
+                          1,
+                          fontWeight: FontWeight.w400,
+                        ),
                         getHorSpace(FetchPixels.getPixelWidth(10)),
                         GestureDetector(
                           child: getSvgImage("minus.svg",
-                              width: FetchPixels.getPixelHeight(30),
-                              height: FetchPixels.getPixelHeight(30)),
+                              width: FetchPixels.getPixelHeight(30), height: FetchPixels.getPixelHeight(30)),
                           onTap: () {
                             modelColor.quantity = (modelColor.quantity! - 1);
                             total = total - (modelColor.price! * 1);
                             if (modelColor.quantity! > 0) {
-                              DataFile.cartList[index.toString()]!.quantity =
-                                  modelColor.quantity;
+                              DataFile.cartList[index.toString()]!.quantity = modelColor.quantity;
                             } else {
                               DataFile.cartList.remove(index.toString());
                             }
@@ -225,8 +219,7 @@ class _ColorDialogState extends State<ColorDialog> {
                       ],
                     ),
                   getVerSpace(FetchPixels.getPixelHeight(40)),
-                  getCustomFont("\$${modelColor.price}", 16, blueColor, 1,
-                       fontWeight: FontWeight.w900)
+                  getCustomFont("\$${modelColor.price}", 16, blueColor, 1, fontWeight: FontWeight.w900)
                 ],
               )
             ],

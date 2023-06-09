@@ -1,84 +1,55 @@
-import 'package:baby_book/app/IsLoadingController.dart';
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/models/model_category.dart';
 import 'package:baby_book/app/models/model_popular_service.dart';
 import 'package:baby_book/app/repository/book_list_repository.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/app/view/home/age_agoup_bottom_sheet.dart';
 import 'package:baby_book/base/book_list_utils.dart';
 import 'package:baby_book/base/color_data.dart';
-import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../controller/HomeController.dart';
+import '../../../routes/app_pages.dart';
 
-import '../../../../base/color_data.dart';
-import '../../../../base/color_data.dart';
-import '../../../../base/color_data.dart';
-import '../../../exception/exception_invalid_member.dart';
-
-class TabHome extends StatefulWidget {
-  const TabHome({Key? key}) : super(key: key);
-
-  @override
-  State<TabHome> createState() => _TabHomeState();
-}
-
-class _TabHomeState extends State<TabHome> {
-  List<ModelBook> bookLists = [
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook(),
-    ModelBook()
-  ];
+class TabHome extends GetView<HomeController> {
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
   ValueNotifier selectedPage = ValueNotifier(0);
-  final _controller = PageController();
-  int? ageGroupId;
+  final _pageController = PageController();
 
-  @override
-  void initState() {
-    super.initState();
-    ageGroupId = 2;
-
-    getBookList();
-  }
-
-  Future getBookList() async {
-    IsLoadingController.to.isLoading = true;
-    try {
-      List<ModelBook> bookList = await BookListRepository.fetchData(
-        categoryList: 'MATH,LIFE',
-      );
-      setState(() {
-        bookLists = [];
-        bookLists.addAll(bookList);
-      });
-      IsLoadingController.to.isLoading = false;
-    } on InvalidMemberException {
-      Constant.sendToNext(context, Routes.loginRoute);
-    } catch (e) {
-      print(e);
-    }
-  }
+  TabHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController(bookListRepository: BookListRepository()));
+
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
 
     return Column(
       children: [
+        // Obx(
+        //   //isLoading(obs)가 변경되면 다시 그림.
+        //       () => Offstage(
+        //     offstage: !controller.isLoading, // isLoading이 false면 감추기
+        //     child: const Stack(children: <Widget>[
+        //       //다시 stack
+        //       Opacity(
+        //         //뿌옇게~
+        //         opacity: 0.5, //0.5만큼~
+        //         child: ModalBarrier(dismissible: false, color: Colors.black), //클릭 못하게
+        //       ),
+        //       Center(
+        //         child: CircularProgressIndicator(),
+        //       ),
+        //     ]),
+        //   ),
+        // ),
         getVerSpace(FetchPixels.getPixelHeight(21)),
         getPaddingWidget(
           EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
@@ -91,48 +62,47 @@ class _TabHomeState extends State<TabHome> {
               Row(
                 children: [
                   getHorSpace(FetchPixels.getPixelWidth(4)),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => AgeGroupBottomSheet(ageGroupId: ageGroupId!)).then((selectedId) {
-                        if (selectedId != null) {
-                          setState(() {
-                            ageGroupId = selectedId;
-                          });
-                        }
-                      });
-                    },
-                    child: getCustomFont(
-                      DataFile.ageGroupList[ageGroupId!].minAge.toString() +
-                          " ~ " +
-                          DataFile.ageGroupList[ageGroupId!].maxAge.toString() +
-                          "개월 ν",
-                      18,
-                      Colors.black,
-                      1,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  )
+                  GetX<HomeController>(initState: (state) {
+                    controller.getAll();
+                  }, builder: (_) {
+                    return GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => AgeGroupBottomSheet(ageGroupId: controller.ageGroupId!)).then((selectedId) {
+                          if (selectedId != null) {
+                            controller.ageGroupId = selectedId;
+                          }
+                        });
+                      },
+                      child: getCustomFont(
+                        "${DataFile.ageGroupList[controller.ageGroupId!].minAge} ~ ${DataFile.ageGroupList[controller.ageGroupId!].maxAge}개월 ν",
+                        18,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    );
+                  })
                 ],
               ),
               Row(
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Constant.sendToNext(context, Routes.searchRoute);
+                      Get.toNamed(Routes.searchPath);
                     },
                     child: getSvgImage(
                       "search.svg",
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8.0,
                   ),
                   GestureDetector(
                     onTap: () {
-                      Constant.sendToNext(context, Routes.notificationRoutes);
+                      Get.toNamed(Routes.notificationPath);
                     },
                     child: getSvgImage(
                       "notification.svg",
@@ -168,7 +138,7 @@ class _TabHomeState extends State<TabHome> {
                     return GestureDetector(
                       onTap: () {
                         PrefData.setDefIndex(1);
-                        Constant.sendToNext(context, Routes.detailRoute);
+                        Get.toNamed(Routes.detailPath);
                       },
                       child: Container(
                         width: FetchPixels.getPixelWidth(91),
@@ -192,10 +162,11 @@ class _TabHomeState extends State<TabHome> {
                   },
                 ),
               ),
-              Container(
-                color: backGroundColor,
-                child: bookLists.isEmpty ? getPaddingWidget(edgeInsets, nullListView(context)) : allBookingList(),
-              ),
+              GetX<HomeController>(builder: (_) {
+                return _.bookList.length < 1
+                    ? getPaddingWidget(edgeInsets, nullListView(context))
+                    : allBookingList(_.bookList);
+              })
             ],
           ),
         )
@@ -203,15 +174,15 @@ class _TabHomeState extends State<TabHome> {
     );
   }
 
-  ListView allBookingList() {
+  ListView allBookingList(List<ModelBook> bookList) {
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
-      itemCount: bookLists.length,
+      itemCount: bookList.length,
       itemBuilder: (context, index) {
-        ModelBook modelBook = bookLists[index];
+        ModelBook modelBook = bookList[index];
         return buildBookListItem(modelBook, context, index, () {
-          Constant.sendToNext(context, Routes.bookingRoute, arguments: {'modelBook': modelBook});
+          Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBook});
         });
       },
     );
@@ -242,7 +213,7 @@ class _TabHomeState extends State<TabHome> {
         SizedBox(
           height: FetchPixels.getPixelHeight(184),
           child: PageView.builder(
-            controller: _controller,
+            controller: _pageController,
             onPageChanged: (value) {
               selectedPage.value = value;
             },

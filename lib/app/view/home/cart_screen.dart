@@ -1,13 +1,15 @@
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_cart.dart';
 import 'package:baby_book/app/models/model_other.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../routes/app_pages.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -107,7 +109,7 @@ class _CartScreenState extends State<CartScreen> {
     return getPaddingWidget(
       EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
       getButton(context, blueColor, "Proceed", Colors.white, () {
-        Constant.sendToNext(context, Routes.addressRoute);
+        Get.toNamed(Routes.addressPath);
       }, 18,
           weight: FontWeight.w600,
           buttonHeight: FetchPixels.getPixelHeight(60),

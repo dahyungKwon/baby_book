@@ -5,13 +5,13 @@ import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 
 class BookListRepository {
-  static var dio = Dio(BaseOptions(
+  var dio = Dio(BaseOptions(
     baseUrl: 'http://ec2-3-35-236-200.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
     receiveTimeout: 3000,
   ));
 
-  static Future<List<ModelBook>> fetchData({
+  Future<List<ModelBook>> getBookList({
     required String categoryList,
   }) async {
     var accessToken = await PrefData.getAccessToken();

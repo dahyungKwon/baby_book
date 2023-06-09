@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
-      routes: AppPages.routes,
+      getPages: AppPages.pages,
     );
   }
 }

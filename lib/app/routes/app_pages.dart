@@ -1,67 +1,70 @@
-import 'package:baby_book/app/view/address/edit_address_screen.dart';
-import 'package:baby_book/app/view/address/my_address_screen.dart';
-import 'package:baby_book/app/view/bookings/booking_detail.dart';
-import 'package:baby_book/app/view/card/card_screen.dart';
-import 'package:baby_book/app/view/home/address_screen.dart';
-import 'package:baby_book/app/view/home/cart_screen.dart';
-import 'package:baby_book/app/view/home/category_screen.dart';
-import 'package:baby_book/app/view/home/date_time_screen.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
-import 'package:baby_book/app/view/home/detail_screen.dart';
-import 'package:baby_book/app/view/home/payment_screen.dart';
-import 'package:baby_book/app/view/home/order_detail.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
-import 'package:baby_book/app/view/login/forgot_password.dart';
-import 'package:baby_book/app/view/login/login_screen.dart';
-import 'package:baby_book/app/view/login/reset_password.dart';
-import 'package:baby_book/app/view/notification_screen.dart';
-import 'package:baby_book/app/view/profile/edit_profile_screen.dart';
-import 'package:baby_book/app/view/profile/profile_screen.dart';
-import 'package:baby_book/app/view/search/search_screen.dart';
-import 'package:baby_book/app/view/setting/help_screen.dart';
-import 'package:baby_book/app/view/setting/privacy_screen.dart';
-import 'package:baby_book/app/view/setting/security_screen.dart';
-import 'package:baby_book/app/view/setting/setting_screen.dart';
-import 'package:baby_book/app/view/setting/term_of_service_screen.dart';
-import 'package:baby_book/app/view/signup/select_country.dart';
-import 'package:baby_book/app/view/signup/signup_screen.dart';
-import 'package:baby_book/app/view/signup/verify_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
+import '../binding/home_binding.dart';
+import '../view/address/edit_address_screen.dart';
+import '../view/address/my_address_screen.dart';
+import '../view/bookings/booking_detail.dart';
+import '../view/card/card_screen.dart';
+import '../view/home/address_screen.dart';
+import '../view/home/cart_screen.dart';
+import '../view/home/category_screen.dart';
+import '../view/home/date_time_screen.dart';
+import '../view/home/detail_screen.dart';
+import '../view/home/order_detail.dart';
+import '../view/home/payment_screen.dart';
+import '../view/login/forgot_password.dart';
+import '../view/login/login_screen.dart';
+import '../view/login/reset_password.dart';
+import '../view/notification_screen.dart';
+import '../view/profile/edit_profile_screen.dart';
+import '../view/profile/profile_screen.dart';
+import '../view/search/search_screen.dart';
+import '../view/setting/help_screen.dart';
+import '../view/setting/privacy_screen.dart';
+import '../view/setting/security_screen.dart';
+import '../view/setting/setting_screen.dart';
+import '../view/setting/term_of_service_screen.dart';
+import '../view/signup/select_country.dart';
+import '../view/signup/signup_screen.dart';
+import '../view/signup/verify_screen.dart';
 import '../view/splash_screen.dart';
-import 'app_routes.dart';
+
+part './app_routes.dart';
 
 class AppPages {
-  static const initialRoute = Routes.homeRoute;
-  static Map<String, WidgetBuilder> routes = {
-    Routes.homeRoute: (context) => const SplashScreen(),
-    Routes.introRoute: (context) => const IntroScreen(),
-    Routes.loginRoute: (context) => const LoginScreen(),
-    Routes.forgotRoute: (context) => const ForgotPassword(),
-    Routes.resetRoute: (context) => const ResetPassword(),
-    Routes.signupRoute: (context) => const SignUpScreen(),
-    Routes.selectCountryRoute: (context) => const SelectCountry(),
-    Routes.verifyRoute: (context) => const VerifyScreen(),
-    Routes.homeScreenRoute: (context) => const HomeScreen(0),
-    Routes.categoryRoute: (context) => const CategoryScreen(),
-    Routes.detailRoute: (context) => const DetailScreen(),
-    Routes.cartRoute: (context) => const CartScreen(),
-    Routes.addressRoute: (context) => const AddressScreen(),
-    Routes.dateTimeRoute: (context) => const DateTimeScreen(),
-    Routes.paymentRoute: (context) => const PaymentScreen(),
-    Routes.orderDetailRoute: (context) => const OrderDetail(),
-    Routes.profileRoute: (context) => const ProfileScreen(),
-    Routes.editProfileRoute: (context) => const EditProfileScreen(),
-    Routes.myAddressRoute: (context) => const MyAddressScreen(),
-    Routes.editAddressRoute: (context) => const EditAddressScreen(),
-    Routes.cardRoute: (context) => const CardScreen(),
-    Routes.settingRoute: (context) => const SettingScreen(),
-    Routes.notificationRoutes: (context) => const NotificationScreen(),
-    Routes.searchRoute: (context) => const SearchScreen(),
-    Routes.bookingRoute: (context) => const BookingDetail(),
-    Routes.helpRoute: (context) => const HelpScreen(),
-    Routes.privacyRoute: (context) => const PrivacyScreen(),
-    Routes.securityRoute: (context) => const SecurityScreen(),
-    Routes.termOfServiceRoute: (context) => const TermOfServiceScreen()
-  };
+  static final pages = [
+    GetPage(name: Routes.homepath, page: () => SplashScreen()),
+    GetPage(name: Routes.loginPath, page: () => LoginScreen()),
+    GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0)),
+    // GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), binding: HomeBinding()),
+
+    GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀
+    GetPage(name: Routes.forgotPath, page: () => ForgotPassword()), //현재 안씀
+    GetPage(name: Routes.resetPath, page: () => ResetPassword()), //현재 안씀
+    GetPage(name: Routes.signUpPath, page: () => SignUpScreen()), //현재 안씀
+    GetPage(name: Routes.selectCountryPath, page: () => SelectCountry()), //현재 안씀
+    GetPage(name: Routes.verifyPath, page: () => VerifyScreen()), //현재 안씀
+    GetPage(name: Routes.categoryPath, page: () => CategoryScreen()), //현재 안씀
+    GetPage(name: Routes.detailPath, page: () => DetailScreen()), //현재 안씀
+    GetPage(name: Routes.cartPath, page: () => CartScreen()), //현재 안씀
+    GetPage(name: Routes.addressPath, page: () => AddressScreen()), //현재 안씀
+    GetPage(name: Routes.dateTimePath, page: () => DateTimeScreen()), //현재 안씀
+    GetPage(name: Routes.paymentPath, page: () => PaymentScreen()), //현재 안씀
+    GetPage(name: Routes.orderDetailPath, page: () => OrderDetail()), //현재 안씀
+    GetPage(name: Routes.profilePath, page: () => ProfileScreen()), //현재 안씀
+    GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen()), //현재 안씀
+    GetPage(name: Routes.myAddressPath, page: () => MyAddressScreen()), //현재 안씀
+    GetPage(name: Routes.editAddressPath, page: () => EditAddressScreen()), //현재 안씀
+    GetPage(name: Routes.cardPath, page: () => CardScreen()), //현재 안씀
+    GetPage(name: Routes.settingPath, page: () => SettingScreen()), //현재 안씀
+    GetPage(name: Routes.notificationPath, page: () => NotificationScreen()), //현재 안씀
+    GetPage(name: Routes.searchPath, page: () => SearchScreen()), //현재 안씀
+    GetPage(name: Routes.bookingPath, page: () => BookingDetail()), //현재 안씀
+    GetPage(name: Routes.helpPath, page: () => HelpScreen()), //현재 안씀
+    GetPage(name: Routes.privacyPath, page: () => PrivacyScreen()), //현재 안씀
+    GetPage(name: Routes.securityPath, page: () => SecurityScreen()), //현재 안씀
+    GetPage(name: Routes.termOfServicePath, page: () => TermOfServiceScreen()), //현재 안씀
+  ];
 }

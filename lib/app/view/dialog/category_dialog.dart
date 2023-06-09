@@ -1,9 +1,11 @@
-import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../routes/app_pages.dart';
 
 class CategoryDialog extends StatefulWidget {
   const CategoryDialog({Key? key}) : super(key: key);
@@ -29,15 +31,19 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getCustomFont("Salon for", 20, Colors.black, 1,
-                        fontWeight: FontWeight.w900, ),
+                    getCustomFont(
+                      "Salon for",
+                      20,
+                      Colors.black,
+                      1,
+                      fontWeight: FontWeight.w900,
+                    ),
                     GestureDetector(
                       onTap: () {
                         Constant.backToPrev(context);
                       },
                       child: getSvgImage("close.svg",
-                          height: FetchPixels.getPixelHeight(24),
-                          width: FetchPixels.getPixelHeight(24)),
+                          height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
                     )
                   ],
                 ),
@@ -63,7 +69,7 @@ class _CategoryDialogState extends State<CategoryDialog> {
   Widget continueButton(BuildContext context) {
     return getButton(context, blueColor, "Continue", Colors.white, () {
       Constant.backToPrev(context);
-      Constant.sendToNext(context, Routes.detailRoute);
+      Get.toNamed(Routes.detailPath);
     }, 18,
         weight: FontWeight.w600,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -76,13 +82,9 @@ class _CategoryDialogState extends State<CategoryDialog> {
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: const [
-              BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0.0, 4.0)),
+              BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
             ],
-            borderRadius:
-                BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+            borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
         child: Stack(
           alignment: Alignment.topRight,
           children: [
@@ -92,33 +94,25 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 setState(() {});
               },
               child: Container(
-                padding: EdgeInsets.only(
-                    top: FetchPixels.getPixelHeight(30),
-                    bottom: FetchPixels.getPixelHeight(27)),
+                padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(30), bottom: FetchPixels.getPixelHeight(27)),
                 alignment: Alignment.topCenter,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     getSvgImage("woman.svg",
-                        width: FetchPixels.getPixelHeight(80),
-                        height: FetchPixels.getPixelHeight(80)),
+                        width: FetchPixels.getPixelHeight(80), height: FetchPixels.getPixelHeight(80)),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
-                    getCustomFont("Women", 16, Colors.black, 1,
-                         fontWeight: FontWeight.w900)
+                    getCustomFont("Women", 16, Colors.black, 1, fontWeight: FontWeight.w900)
                   ],
                 ),
               ),
             ),
             Positioned(
                 child: getPaddingWidget(
-              EdgeInsets.only(
-                  right: FetchPixels.getPixelHeight(12),
-                  top: FetchPixels.getPixelHeight(12)),
+              EdgeInsets.only(right: FetchPixels.getPixelHeight(12), top: FetchPixels.getPixelHeight(12)),
               Container(
-                child: getSvgImage(
-                    select == 2 ? "selected.svg" : "unselected.svg",
-                    height: FetchPixels.getPixelHeight(24),
-                    width: FetchPixels.getPixelHeight(24)),
+                child: getSvgImage(select == 2 ? "selected.svg" : "unselected.svg",
+                    height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
               ),
             ))
           ],
@@ -133,13 +127,9 @@ class _CategoryDialogState extends State<CategoryDialog> {
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: const [
-              BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0.0, 4.0)),
+              BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
             ],
-            borderRadius:
-                BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+            borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
         child: Stack(
           alignment: Alignment.topRight,
           children: [
@@ -149,33 +139,25 @@ class _CategoryDialogState extends State<CategoryDialog> {
                 setState(() {});
               },
               child: Container(
-                padding: EdgeInsets.only(
-                    top: FetchPixels.getPixelHeight(30),
-                    bottom: FetchPixels.getPixelHeight(27)),
+                padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(30), bottom: FetchPixels.getPixelHeight(27)),
                 alignment: Alignment.topCenter,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     getSvgImage("man.svg",
-                        width: FetchPixels.getPixelHeight(80),
-                        height: FetchPixels.getPixelHeight(80)),
+                        width: FetchPixels.getPixelHeight(80), height: FetchPixels.getPixelHeight(80)),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
-                    getCustomFont("Men", 16, Colors.black, 1,
-                         fontWeight: FontWeight.w900)
+                    getCustomFont("Men", 16, Colors.black, 1, fontWeight: FontWeight.w900)
                   ],
                 ),
               ),
             ),
             Positioned(
                 child: getPaddingWidget(
-              EdgeInsets.only(
-                  right: FetchPixels.getPixelHeight(12),
-                  top: FetchPixels.getPixelHeight(12)),
+              EdgeInsets.only(right: FetchPixels.getPixelHeight(12), top: FetchPixels.getPixelHeight(12)),
               Container(
-                child: getSvgImage(
-                    select == 1 ? "selected.svg" : "unselected.svg",
-                    height: FetchPixels.getPixelHeight(24),
-                    width: FetchPixels.getPixelHeight(24)),
+                child: getSvgImage(select == 1 ? "selected.svg" : "unselected.svg",
+                    height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
               ),
             ))
           ],

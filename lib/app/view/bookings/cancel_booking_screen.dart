@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../base/color_data.dart';
-import '../../../base/constant.dart';
 import '../../../base/pref_data.dart';
 import '../../../base/widget_utils.dart';
 import '../../data/data_file.dart';
 import '../../models/model_booking.dart';
-import '../../routes/app_routes.dart';
+import '../../routes/app_pages.dart';
 
 class CancelBookingScreen extends StatefulWidget {
   const CancelBookingScreen({Key? key}) : super(key: key);
@@ -61,7 +61,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                     0,
                     null);
                 PrefData.setBookingModel(jsonEncode(booking));
-                Constant.sendToNext(context, Routes.bookingRoute);
+                Get.toNamed(Routes.bookingPath);
               }, () {
                 setState(() {
                   bookingLists.removeAt(index);
@@ -74,17 +74,14 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
 
   Widget nullListView(BuildContext context) {
     return getPaddingWidget(
-        EdgeInsets.symmetric(
-            horizontal: FetchPixels.getDefaultHorSpace(context)),
+        EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             getSvgImage("clipboard.svg",
-                height: FetchPixels.getPixelHeight(124),
-                width: FetchPixels.getPixelHeight(124)),
+                height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
             getVerSpace(FetchPixels.getPixelHeight(40)),
-            getCustomFont("No Bookings Yet!", 20, Colors.black, 1,
-                fontWeight: FontWeight.w900),
+            getCustomFont("No Bookings Yet!", 20, Colors.black, 1, fontWeight: FontWeight.w900),
             getVerSpace(FetchPixels.getPixelHeight(10)),
             getCustomFont(
               "Go to services and book the best services. ",
@@ -94,14 +91,11 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
               fontWeight: FontWeight.w400,
             ),
             getVerSpace(FetchPixels.getPixelHeight(30)),
-            getButton(
-                context, backGroundColor, "Go to Service", blueColor, () {}, 18,
+            getButton(context, backGroundColor, "Go to Service", blueColor, () {}, 18,
                 weight: FontWeight.w600,
                 buttonHeight: FetchPixels.getPixelHeight(60),
-                insetsGeometry: EdgeInsets.symmetric(
-                    horizontal: FetchPixels.getPixelWidth(106)),
-                borderRadius:
-                    BorderRadius.circular(FetchPixels.getPixelHeight(14)),
+                insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(106)),
+                borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
                 isBorder: true,
                 borderColor: blueColor,
                 borderWidth: 1.5)

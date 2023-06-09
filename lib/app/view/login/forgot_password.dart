@@ -1,10 +1,11 @@
-import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/constant.dart';
+import '../../routes/app_pages.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -81,7 +82,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   Widget buildButton(BuildContext context) {
     return getButton(context, blueColor, "Submit", Colors.white, () {
-      Constant.sendToNext(context, Routes.resetRoute);
+      Get.toNamed(Routes.resetPath);
     }, 18,
         weight: FontWeight.w600,
         buttonHeight: FetchPixels.getPixelHeight(60),

@@ -1,13 +1,15 @@
 import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../models/model_booking.dart';
+import '../../../routes/app_pages.dart';
 
 class TabSchedule extends StatefulWidget {
   const TabSchedule({Key? key}) : super(key: key);
@@ -52,7 +54,7 @@ class _TabScheduleState extends State<TabSchedule> {
                 fontsize: 24,
                 istext: true,
                 rightimage: "notification.svg", rightFunction: () {
-              Constant.sendToNext(context, Routes.notificationRoutes);
+                  Get.toNamed(Routes.notificationPath);
             }));
   }
 

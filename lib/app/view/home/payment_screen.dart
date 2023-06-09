@@ -1,11 +1,13 @@
 import 'package:dotted_line/dotted_line.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../routes/app_pages.dart';
 import 'online_card_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -86,7 +88,7 @@ class _PaymentScreenState extends State<PaymentScreen>
           right: FetchPixels.getPixelWidth(20),
           bottom: FetchPixels.getPixelHeight(33)),
       child: getButton(context, blueColor, "Continue", Colors.white, () {
-        Constant.sendToNext(context, Routes.orderDetailRoute);
+        Get.toNamed(Routes.orderDetailPath);
       }, 18,
           weight: FontWeight.w600,
           buttonHeight: FetchPixels.getPixelHeight(60),

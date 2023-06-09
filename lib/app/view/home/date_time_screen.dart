@@ -1,7 +1,8 @@
 import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -9,6 +10,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../routes/app_pages.dart';
 
 class DateTimeScreen extends StatefulWidget {
   const DateTimeScreen({Key? key}) : super(key: key);
@@ -84,7 +86,7 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
               right: FetchPixels.getPixelWidth(20),
               bottom: FetchPixels.getPixelHeight(33)),
           child: getButton(context, blueColor, "Done", Colors.white, () {
-            Constant.sendToNext(context, Routes.paymentRoute);
+            Get.toNamed(Routes.paymentPath);
           }, 18,
               weight: FontWeight.w600,
               buttonHeight: FetchPixels.getPixelHeight(60),

@@ -1,16 +1,18 @@
 import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
+import '../../routes/app_pages.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,9 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
           if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
             {
               MemberRepository.refreshAccessToken().then((response) async => {
-                    await PrefData.setAccessToken(response.accessToken!),
-                    await PrefData.setRefreshToken(response.refreshToken!),
-                    Constant.sendToNext(context, Routes.homeScreenRoute)
+                    if (response.accessToken != null && response.refreshToken != null)
+                      {
+                        await PrefData.setAccessToken(response.accessToken!),
+                        await PrefData.setRefreshToken(response.refreshToken!),
+                        Get.toNamed(Routes.homescreenPath)
+                      }
                   })
             }
         });
@@ -86,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
               //토큰 존재 체크 및 유효성 체크
               if (await isLogin()) {
                 print("토큰 존재하고 유효함");
-                Constant.sendToNext(context, Routes.homeScreenRoute);
+                Get.toNamed(Routes.homescreenPath);
               } else {
                 OAuthToken? token = await kakaoLogin();
                 if (token == null) {
@@ -98,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   await PrefData.setAccessToken(member.accessToken!);
                   await PrefData.setRefreshToken(member.refreshToken!);
                   await PrefData.setMemberId(member.memberId!);
-                  Constant.sendToNext(context, Routes.homeScreenRoute);
+                  Get.toNamed(Routes.homescreenPath);
                 }
               }
             },

@@ -1,37 +1,6 @@
-abstract class Routes{
-  static const homeRoute = Paths.homepath;
-  static const introRoute = Paths.introPath;
-  static const loginRoute  = Paths.loginPath;
-  static const forgotRoute = Paths.forgotPath;
-  static const resetRoute = Paths.resetPath;
-  static const signupRoute = Paths.signUpPath;
-  static const selectCountryRoute = Paths.selectCountryPath;
-  static const verifyRoute = Paths.verifyPath;
-  static const homeScreenRoute = Paths.homescreenPath;
-  static const categoryRoute = Paths.categoryPath;
-  static const detailRoute = Paths.detailPath;
-  static const cartRoute = Paths.cartPath;
-  static const addressRoute = Paths.addressPath;
-  static const dateTimeRoute = Paths.dateTimePath;
-  static const paymentRoute = Paths.paymentPath;
-  static const orderDetailRoute = Paths.orderDetailPath;
-  static const profileRoute = Paths.profilePath;
-  static const editProfileRoute = Paths.editProfilePath;
-  static const myAddressRoute = Paths.myAddressPath;
-  static const editAddressRoute = Paths.editAddressPath;
-  static const cardRoute = Paths.cardPath;
-  static const settingRoute = Paths.settingPath;
-  static const notificationRoutes = Paths.notificationPath;
-  static const searchRoute = Paths.searchPath;
-  static const bookingRoute = Paths.bookingPath;
-  static const helpRoute = Paths.helpPath;
-  static const privacyRoute = Paths.privacyPath;
-  static const securityRoute = Paths.securityPath;
-  static const termOfServiceRoute = Paths.termOfServicePath;
-}
+part of './app_pages.dart';
 
-
-abstract class Paths {
+abstract class Routes {
   static const homepath = "/";
   static const introPath = "/IntroScreen";
   static const loginPath = "/LoginScreen";

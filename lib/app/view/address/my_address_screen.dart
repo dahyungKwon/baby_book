@@ -1,14 +1,15 @@
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_address.dart';
-import 'package:baby_book/app/routes/app_routes.dart';
 import 'package:baby_book/app/view/dialog/delete_dialog.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
+import '../../routes/app_pages.dart';
 
 class MyAddressScreen extends StatefulWidget {
   const MyAddressScreen({Key? key}) : super(key: key);
@@ -187,7 +188,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                     setState(() {});
                   }
                   if (value == 1) {
-                    Constant.sendToNext(context, Routes.editAddressRoute);
+                    Get.toNamed(Routes.editAddressPath);
                   }
                 },
                 padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(15)),
@@ -246,7 +247,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
     return Column(
       children: [
         getButton(context, blueColor, "Add New Address", Colors.white, () {
-          Constant.sendToNext(context, Routes.editAddressRoute);
+          Get.toNamed(Routes.editAddressPath);
         }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),

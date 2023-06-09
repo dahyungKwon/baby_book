@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../base/color_data.dart';
-import '../../../base/constant.dart';
 import '../../../base/pref_data.dart';
 import '../../../base/widget_utils.dart';
 import '../../data/data_file.dart';
 import '../../models/model_booking.dart';
-import '../../routes/app_routes.dart';
+import '../../routes/app_pages.dart';
 
 class ActiveBookingScreen extends StatefulWidget {
   const ActiveBookingScreen({Key? key}) : super(key: key);
@@ -53,7 +53,7 @@ class _ActiveBookingScreenState extends State<ActiveBookingScreen> {
                     0,
                     null);
                 PrefData.setBookingModel(jsonEncode(booking));
-                Constant.sendToNext(context, Routes.bookingRoute);
+                Get.toNamed(Routes.bookingPath);
               }, () {
                 setState(() {
                   bookingLists.removeAt(index);

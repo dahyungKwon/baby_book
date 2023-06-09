@@ -1,10 +1,12 @@
-import 'package:baby_book/app/routes/app_routes.dart';
+
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../routes/app_pages.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -78,7 +80,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget termOfServiceButton(BuildContext context) {
     return getButtonWithIcon(
         context, Colors.white, "Terms of Service", Colors.black, () {
-      Constant.sendToNext(context, Routes.termOfServiceRoute);
+      Get.toNamed(Routes.termOfServicePath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -96,7 +98,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget securityButton(BuildContext context) {
     return getButtonWithIcon(context, Colors.white, "Security", Colors.black,
         () {
-      Constant.sendToNext(context, Routes.securityRoute);
+          Get.toNamed(Routes.securityPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -114,7 +116,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget privacyButton(BuildContext context) {
     return getButtonWithIcon(
         context, Colors.white, "Privacy Policy", Colors.black, () {
-      Constant.sendToNext(context, Routes.privacyRoute);
+      Get.toNamed(Routes.privacyPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -132,7 +134,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget helpButton(BuildContext context) {
     return getButtonWithIcon(
         context, Colors.white, "Help & Support", Colors.black, () {
-      Constant.sendToNext(context, Routes.helpRoute);
+      Get.toNamed(Routes.helpPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
@@ -150,7 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget notificationButton(BuildContext context) {
     return getButtonWithIcon(
         context, Colors.white, "Notifications", Colors.black, () {
-      Constant.sendToNext(context, Routes.notificationRoutes);
+      Get.toNamed(Routes.notificationPath);
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),
