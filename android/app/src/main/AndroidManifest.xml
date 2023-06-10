@@ -14,7 +14,7 @@
         </intent>
     </queries>
    <application
-        android:label="엄마곰 책육아"
+        android:label="아기곰 책육아"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
