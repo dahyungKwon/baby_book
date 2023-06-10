@@ -11,10 +11,10 @@ import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controller/HomeController.dart';
+import '../../../controller/TabHomeController.dart';
 import '../../../routes/app_pages.dart';
 
-class TabHome extends GetView<HomeController> {
+class TabHome extends GetView<TabHomeController> {
   TextEditingController searchController = TextEditingController();
   static List<ModelCategory> categoryLists = DataFile.categoryList;
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
@@ -25,153 +25,132 @@ class TabHome extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController(bookListRepository: BookListRepository()));
+    Get.put(TabHomeController(0, bookListRepository: BookListRepository()));
+    controller.getAll();
 
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
 
-    return Column(
-      children: [
-        // Obx(
-        //   //isLoading(obs)가 변경되면 다시 그림.
-        //       () => Offstage(
-        //     offstage: !controller.isLoading, // isLoading이 false면 감추기
-        //     child: const Stack(children: <Widget>[
-        //       //다시 stack
-        //       Opacity(
-        //         //뿌옇게~
-        //         opacity: 0.5, //0.5만큼~
-        //         child: ModalBarrier(dismissible: false, color: Colors.black), //클릭 못하게
-        //       ),
-        //       Center(
-        //         child: CircularProgressIndicator(),
-        //       ),
-        //     ]),
-        //   ),
-        // ),
-        getVerSpace(FetchPixels.getPixelHeight(21)),
-        getPaddingWidget(
-          EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // getSvgImage(
-              //   "menu.svg",
-              // ),
+    return Obx(() => Column(
+          children: [
+            getVerSpace(FetchPixels.getPixelHeight(21)),
+            getPaddingWidget(
+              EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  getHorSpace(FetchPixels.getPixelWidth(4)),
-                  GetX<HomeController>(initState: (state) {
-                    controller.getAll();
-                  }, builder: (_) {
-                    return GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => AgeGroupBottomSheet(ageGroupId: controller.ageGroupId!)).then((selectedId) {
-                          if (selectedId != null) {
-                            controller.ageGroupId = selectedId;
-                          }
-                        });
-                      },
-                      child: getCustomFont(
-                        "${DataFile.ageGroupList[controller.ageGroupId!].minAge} ~ ${DataFile.ageGroupList[controller.ageGroupId!].maxAge}개월 ν",
-                        18,
-                        Colors.black,
-                        1,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    );
-                  })
-                ],
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(Routes.searchPath);
-                    },
-                    child: getSvgImage(
-                      "search.svg",
-                    ),
+                  // getSvgImage(
+                  //   "menu.svg",
+                  // ),
+                  Row(
+                    children: [
+                      getHorSpace(FetchPixels.getPixelWidth(4)),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (_) => AgeGroupBottomSheet(ageGroupId: controller.ageGroupId!))
+                              .then((selectedId) {
+                            if (selectedId != null) {
+                              controller.ageGroupId = selectedId;
+                            }
+                          });
+                        },
+                        child: getCustomFont(
+                          "${DataFile.ageGroupList[controller.ageGroupId!].minAge} ~ ${DataFile.ageGroupList[controller.ageGroupId!].maxAge}개월 ν",
+                          18,
+                          Colors.black,
+                          1,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(Routes.notificationPath);
-                    },
-                    child: getSvgImage(
-                      "notification.svg",
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // getVerSpace(FetchPixels.getPixelHeight(10)),
-        // getPaddingWidget(
-        //     EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-        //     getSearchWidget(context, searchController, () {
-        //       Constant.sendToNext(context, Routes.searchRoute);
-        //     }, (value) {})),
-        getVerSpace(FetchPixels.getPixelHeight(20)),
-        Expanded(
-          child: ListView(
-            primary: true,
-            shrinkWrap: true,
-            children: [
-              SizedBox(
-                height: FetchPixels.getPixelHeight(40),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  primary: false,
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    ModelCategory modelCategory = categoryLists[index];
-                    return GestureDetector(
-                      onTap: () {
-                        PrefData.setDefIndex(1);
-                        Get.toNamed(Routes.detailPath);
-                      },
-                      child: Container(
-                        width: FetchPixels.getPixelWidth(91),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE0E0E0),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15.0),
-                                ),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                              child: Text(modelCategory.name ?? ""),
-                            )
-                          ],
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routes.searchPath);
+                        },
+                        child: getSvgImage(
+                          "search.svg",
                         ),
                       ),
-                    );
-                  },
-                ),
+                      const SizedBox(
+                        width: 8.0,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routes.notificationPath);
+                        },
+                        child: getSvgImage(
+                          "notification.svg",
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              GetX<HomeController>(builder: (_) {
-                return _.bookList.length < 1
-                    ? getPaddingWidget(edgeInsets, nullListView(context))
-                    : allBookingList(_.bookList);
-              })
-            ],
-          ),
-        )
-      ],
-    );
+            ),
+            // getVerSpace(FetchPixels.getPixelHeight(10)),
+            // getPaddingWidget(
+            //     EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+            //     getSearchWidget(context, searchController, () {
+            //       Constant.sendToNext(context, Routes.searchRoute);
+            //     }, (value) {})),
+            getVerSpace(FetchPixels.getPixelHeight(20)),
+            Expanded(
+              child: ListView(
+                primary: true,
+                shrinkWrap: true,
+                children: [
+                  SizedBox(
+                    height: FetchPixels.getPixelHeight(40),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      primary: false,
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        ModelCategory modelCategory = categoryLists[index];
+                        return GestureDetector(
+                          onTap: () {
+                            PrefData.setDefIndex(1);
+                            Get.toNamed(Routes.detailPath);
+                          },
+                          child: Container(
+                            width: FetchPixels.getPixelWidth(91),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFE0E0E0),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                                  child: Text(modelCategory.name ?? ""),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  controller.bookList.length < 1
+                      ? getPaddingWidget(edgeInsets, nullListView(context))
+                      : allBookingList(controller.bookList)
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
   ListView allBookingList(List<ModelBook> bookList) {

@@ -24,9 +24,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(FetchPixels.getPixelHeight(20))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(20))),
         backgroundColor: backGroundColor,
         content: Builder(
           builder: (context) {
@@ -36,31 +34,27 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
               children: [
                 getVerSpace(FetchPixels.getPixelHeight(20)),
                 getSvgImage("confirm.svg",
-                    width: FetchPixels.getPixelHeight(71.37),
-                    height: FetchPixels.getPixelHeight(99.92)),
+                    width: FetchPixels.getPixelHeight(71.37), height: FetchPixels.getPixelHeight(99.92)),
                 getVerSpace(FetchPixels.getPixelHeight(40)),
-                getCustomFont("Booking Confirmed", 22, Colors.black, 1,
-                    fontWeight: FontWeight.w900, ),
+                getCustomFont(
+                  "Booking Confirmed",
+                  22,
+                  Colors.black,
+                  1,
+                  fontWeight: FontWeight.w900,
+                ),
                 getVerSpace(FetchPixels.getPixelHeight(10)),
-                getMultilineCustomFont(
-                    "Your booking has been successfully confirmed!",
-                    16,
-                    Colors.black,
-                    
-                    fontWeight: FontWeight.w400,
-                    txtHeight:1.3,
-                    textAlign: TextAlign.center),
+                getMultilineCustomFont("Your booking has been successfully confirmed!", 16, Colors.black,
+                    fontWeight: FontWeight.w400, txtHeight: 1.3, textAlign: TextAlign.center),
                 getVerSpace(FetchPixels.getPixelHeight(30)),
                 getButton(context, blueColor, "Ok", Colors.white, () {
                   Constant.backToPrev(context);
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen(1)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(1)));
                 }, 18,
                     weight: FontWeight.w600,
                     buttonHeight: FetchPixels.getPixelHeight(60),
-                    borderRadius:
-                        BorderRadius.circular(FetchPixels.getPixelHeight(14))),
+                    borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14))),
                 getVerSpace(FetchPixels.getPixelHeight(10)),
               ],
             );

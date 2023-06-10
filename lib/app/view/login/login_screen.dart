@@ -14,32 +14,8 @@ import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
 import '../../routes/app_pages.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    isLogin().then((isLogin) async => {
-          if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
-            {
-              MemberRepository.refreshAccessToken().then((response) async => {
-                    if (response.accessToken != null && response.refreshToken != null)
-                      {
-                        await PrefData.setAccessToken(response.accessToken!),
-                        await PrefData.setRefreshToken(response.refreshToken!),
-                        Get.toNamed(Routes.homescreenPath)
-                      }
-                  })
-            }
-        });
-  }
+class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
 
   void finishView() {
     Constant.closeApp();
@@ -51,6 +27,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    isLogin().then((isLogin) async =>
+    {
+      if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
+        {
+          MemberRepository.refreshAccessToken().then((response) async =>
+          {
+            if (response.accessToken != null && response.refreshToken != null)
+              {
+                await PrefData.setAccessToken(response.accessToken!),
+                await PrefData.setRefreshToken(response.refreshToken!),
+                Get.toNamed(Routes.homescreenPath)
+              }
+          })
+        }
+    });
+
     return WillPopScope(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -99,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else {
                   print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
                   ModelMember member =
-                      await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+                  await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
                   await PrefData.setAccessToken(member.accessToken!);
                   await PrefData.setRefreshToken(member.refreshToken!);
                   await PrefData.setMemberId(member.memberId!);
