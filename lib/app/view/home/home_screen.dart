@@ -1,4 +1,5 @@
-import 'package:baby_book/app/view/home/tab/tab_bookings.dart';
+import 'package:baby_book/app/view/home/tab/tab_book_case.dart';
+import 'package:baby_book/app/view/home/tab/tab_community.dart';
 import 'package:baby_book/app/view/home/tab/tab_home.dart';
 import 'package:baby_book/app/view/home/tab/tab_profile.dart';
 import 'package:baby_book/app/view/home/tab/tab_schedule.dart';
@@ -12,12 +13,19 @@ import '../../../base/constant.dart';
 import '../../controller/HomeScreenController.dart';
 
 class HomeScreen extends GetView<HomeScreenController> {
-  List<String> bottomBarList = ["home.svg", "documnet.svg", "calender.svg", "profile.svg"];
+  List<String> bottomBarNoSelectedImgList = ["home.svg", "book.svg", "chatbubbles.svg", "person.svg"];
+  List<String> bottomBarSelectedImgList = [
+    "home_selected.svg",
+    "book_selected.svg",
+    "chatbubbles_selected.svg",
+    "person_selected.svg"
+  ];
+  List<String> bottomBarStringList = ["홈", "책장", "커뮤니티", "프로필"];
 
   List<Widget> tabList = [
     TabHome(),
-    const TabBookings(),
-    const TabSchedule(),
+    const TabBookCase(),
+    TabCommunity(),
     const TabProfile(),
   ];
 
@@ -28,8 +36,8 @@ class HomeScreen extends GetView<HomeScreenController> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
-    double size = FetchPixels.getPixelHeight(45);
-    double iconSize = FetchPixels.getPixelHeight(32);
+    double size = FetchPixels.getPixelHeight(50);
+    double iconSize = FetchPixels.getPixelHeight(26);
     return WillPopScope(
         child: Obx(() => Scaffold(
             resizeToAvoidBottomInset: true,
@@ -42,10 +50,10 @@ class HomeScreen extends GetView<HomeScreenController> {
               ],
             ),
             bottomNavigationBar: Container(
-                height: FetchPixels.getPixelHeight(100),
+                height: FetchPixels.getPixelHeight(55),
                 color: Colors.white,
                 child: Row(
-                    children: List.generate(bottomBarList.length, (selectedTabIndex) {
+                    children: List.generate(bottomBarNoSelectedImgList.length, (selectedTabIndex) {
                   return Expanded(
                     flex: 1,
                     child: InkWell(
@@ -56,14 +64,36 @@ class HomeScreen extends GetView<HomeScreenController> {
                         child: Container(
                           width: size,
                           height: size,
-                          decoration: BoxDecoration(
-                              color: controller.tabIndex == selectedTabIndex ? blueColor : Colors.transparent,
-                              shape: BoxShape.circle),
+                          // decoration: BoxDecoration(
+                          //     color: controller.tabIndex == selectedTabIndex ? Colors.black : Colors.transparent,
+                          //     shape: BoxShape.circle),
                           child: Center(
-                            child: getSvgImage(bottomBarList[selectedTabIndex],
-                                width: iconSize,
-                                height: iconSize,
-                                color: controller.tabIndex == selectedTabIndex ? Colors.white : null),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  getSvgImage(
+                                      controller.tabIndex == selectedTabIndex
+                                          ? bottomBarSelectedImgList[selectedTabIndex]
+                                          : bottomBarNoSelectedImgList[selectedTabIndex],
+                                      width: iconSize,
+                                      height: iconSize),
+                                  getVerSpace(FetchPixels.getPixelHeight(2)),
+                                  Text(
+                                    bottomBarStringList[selectedTabIndex],
+                                    style: TextStyle(
+                                        fontSize: 9,
+                                        // fontStyle: FontStyle.normal,
+                                        color: controller.tabIndex == selectedTabIndex
+                                            ? Colors.black
+                                            : Colors.black.withOpacity(0.8),
+                                        // fontFamily: fontFamily,
+                                        // height: txtHeight,
+                                        fontWeight: controller.tabIndex == selectedTabIndex
+                                            ? FontWeight.w500
+                                            : FontWeight.w300),
+                                  )
+                                ]),
                           ),
                         ),
                       ),
