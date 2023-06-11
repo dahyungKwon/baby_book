@@ -3,9 +3,13 @@ import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 import '../app/models/model_booking.dart';
+import '../app/models/model_post.dart';
 import 'constant.dart';
+
+var numberFormat = NumberFormat('###,###,###,###');
 
 Widget getVerSpace(double verSpace) {
   return SizedBox(
@@ -13,7 +17,18 @@ Widget getVerSpace(double verSpace) {
   );
 }
 
-Widget getAssetImage(String image, double width, double height,
+Widget getAssetImage(String image, double width, double height, {Color? color, BoxFit boxFit = BoxFit.contain}) {
+  return Image.asset(
+    Constant.assetImagePath + image,
+    color: color,
+    width: width,
+    height: height,
+    fit: boxFit,
+    scale: FetchPixels.getScale(),
+  );
+}
+
+Widget getAssetImageCircle(BuildContext context, String image, double width, double height,
     {Color? color, BoxFit boxFit = BoxFit.contain}) {
   return Image.asset(
     Constant.assetImagePath + image,
@@ -25,24 +40,7 @@ Widget getAssetImage(String image, double width, double height,
   );
 }
 
-Widget getAssetImageCircle(
-    BuildContext context, String image, double width, double height,
-    {Color? color, BoxFit boxFit = BoxFit.contain}) {
-  return Image.asset(
-    Constant.assetImagePath + image,
-    color: color,
-    width: width,
-    height: height,
-    fit: boxFit,
-    scale: FetchPixels.getScale(),
-  );
-}
-
-Widget getSvgImage(String image,
-    {double? width,
-    double? height,
-    Color? color,
-    BoxFit boxFit = BoxFit.contain}) {
+Widget getSvgImage(String image, {double? width, double? height, Color? color, BoxFit boxFit = BoxFit.contain}) {
   return SvgPicture.asset(
     Constant.assetImagePath + image,
     color: color,
@@ -52,8 +50,7 @@ Widget getSvgImage(String image,
   );
 }
 
-Widget getCircularImage(BuildContext context, double width, double height,
-    double radius, String img,
+Widget getCircularImage(BuildContext context, double width, double height, double radius, String img,
     {BoxFit boxFit = BoxFit.contain}) {
   return SizedBox(
     height: height,
@@ -72,8 +69,8 @@ Widget getPaddingWidget(EdgeInsets edgeInsets, Widget widget) {
   );
 }
 
-GestureDetector buildBookingListItem(ModelBooking modelBooking,
-    BuildContext context, int index, Function function, Function funDelete) {
+GestureDetector buildBookingListItem(
+    ModelBooking modelBooking, BuildContext context, int index, Function function, Function funDelete) {
   return GestureDetector(
     onTap: () {
       function();
@@ -84,16 +81,12 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
           bottom: FetchPixels.getPixelHeight(20),
           left: FetchPixels.getDefaultHorSpace(context),
           right: FetchPixels.getDefaultHorSpace(context)),
-      padding: EdgeInsets.symmetric(
-          vertical: FetchPixels.getPixelHeight(16),
-          horizontal: FetchPixels.getPixelWidth(16)),
+      padding:
+          EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(16), horizontal: FetchPixels.getPixelWidth(16)),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: const [
-            BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                offset: Offset(0.0, 4.0)),
+            BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
           ],
           borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
       child: Column(
@@ -105,8 +98,7 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                   height: FetchPixels.getPixelHeight(91),
                   width: FetchPixels.getPixelHeight(91),
                   decoration: BoxDecoration(
-                    image: getDecorationAssetImage(
-                        context, modelBooking.image ?? "",fit: BoxFit.cover),
+                    image: getDecorationAssetImage(context, modelBooking.image ?? "", fit: BoxFit.cover),
                   ),
                 ),
                 getHorSpace(FetchPixels.getPixelWidth(16)),
@@ -117,10 +109,11 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                     mainAxisAlignment: MainAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(flex: 1,child: getHorSpace(0),),
-                      getCustomFont(
-                          modelBooking.name ?? "", 16, Colors.black, 1,
-                          fontWeight: FontWeight.w900),
+                      Expanded(
+                        flex: 1,
+                        child: getHorSpace(0),
+                      ),
+                      getCustomFont(modelBooking.name ?? "", 16, Colors.black, 1, fontWeight: FontWeight.w900),
                       getVerSpace(FetchPixels.getPixelHeight(12)),
                       getCustomFont(
                         modelBooking.date ?? "",
@@ -133,15 +126,15 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                       Row(
                         children: [
                           getSvgImage("star.svg",
-                              height: FetchPixels.getPixelHeight(16),
-                              width: FetchPixels.getPixelHeight(16)),
+                              height: FetchPixels.getPixelHeight(16), width: FetchPixels.getPixelHeight(16)),
                           getHorSpace(FetchPixels.getPixelWidth(6)),
-                          getCustomFont(
-                              modelBooking.rating ?? "", 14, Colors.black, 1,
-                              fontWeight: FontWeight.w400),
+                          getCustomFont(modelBooking.rating ?? "", 14, Colors.black, 1, fontWeight: FontWeight.w400),
                         ],
                       ),
-                      Expanded(flex: 1,child: getHorSpace(0),),
+                      Expanded(
+                        flex: 1,
+                        child: getHorSpace(0),
+                      ),
                     ],
                   ),
                 ),
@@ -154,29 +147,27 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
                         funDelete();
                       },
                       child: getSvgImage("trash.svg",
-                          width: FetchPixels.getPixelHeight(20),
-                          height: FetchPixels.getPixelHeight(20)),
+                          width: FetchPixels.getPixelHeight(20), height: FetchPixels.getPixelHeight(20)),
                     ),
-                   // getPaddingWidget(
-                   //     EdgeInsets.only(bottom:FetchPixels.getPixelHeight(10) ),
-                   //     getCustomFont("\$${modelBooking.price}",
-                   //   16,
-                   //   blueColor,
-                   //   1,
-                   //   fontWeight: FontWeight.w900,
-                   // )),
-                   //  Row(
-                   //    children: [
-                   //      getSvgImage("star.svg",
-                   //          height: FetchPixels.getPixelHeight(16),
-                   //          width: FetchPixels.getPixelHeight(16)),
-                   //      getHorSpace(FetchPixels.getPixelWidth(6)),
-                   //      getCustomFont(
-                   //          modelBooking.rating ?? "", 14, Colors.black, 1,
-                   //          fontWeight: FontWeight.w400),
-                   //    ],
-                   //  )
-
+                    // getPaddingWidget(
+                    //     EdgeInsets.only(bottom:FetchPixels.getPixelHeight(10) ),
+                    //     getCustomFont("\$${modelBooking.price}",
+                    //   16,
+                    //   blueColor,
+                    //   1,
+                    //   fontWeight: FontWeight.w900,
+                    // )),
+                    //  Row(
+                    //    children: [
+                    //      getSvgImage("star.svg",
+                    //          height: FetchPixels.getPixelHeight(16),
+                    //          width: FetchPixels.getPixelHeight(16)),
+                    //      getHorSpace(FetchPixels.getPixelWidth(6)),
+                    //      getCustomFont(
+                    //          modelBooking.rating ?? "", 14, Colors.black, 1,
+                    //          fontWeight: FontWeight.w400),
+                    //    ],
+                    //  )
                   ],
                 )
               ],
@@ -221,12 +212,118 @@ GestureDetector buildBookingListItem(ModelBooking modelBooking,
   );
 }
 
-DecorationImage getDecorationAssetImage(BuildContext buildContext, String image,
-    {BoxFit fit = BoxFit.contain}) {
-  return DecorationImage(
-      image: AssetImage((Constant.assetImagePath) + image),
-      fit: fit,
-      scale: FetchPixels.getScale());
+GestureDetector buildPostListItem(
+    ModelPost modelPost, BuildContext context, int index, Function function, Function funDelete) {
+  return GestureDetector(
+    onTap: () {
+      function();
+    },
+    child: Container(
+      height: FetchPixels.getPixelHeight(180),
+      margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
+      // left: FetchPixels.getPixelWidth(10),
+      // right: FetchPixels.getPixelWidth(10)),
+      padding:
+          EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(20)),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(0.0, 1.0)),
+          ],
+          borderRadius: BorderRadius.zero),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                // getHorSpace(FetchPixels.getPixelWidth(5)),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: getHorSpace(0),
+                      ),
+                      getCustomFont(modelPost.postType.desc ?? "", 11, modelPost.postType.color, 1,
+                          fontWeight: FontWeight.w400),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      getCustomFont(modelPost.title ?? "", 19, Colors.black, 1, fontWeight: FontWeight.w700),
+                      getVerSpace(FetchPixels.getPixelHeight(6)),
+                      getCustomFont("${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 11, Colors.black54, 1,
+                          fontWeight: FontWeight.w400),
+                      getVerSpace(FetchPixels.getPixelHeight(15)),
+                      getCustomFont(
+                        modelPost.contents ?? "",
+                        14,
+                        Colors.black54,
+                        2,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      getVerSpace(FetchPixels.getPixelHeight(20)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //Center Row contents horizontally,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              getSvgImage("heart.svg",
+                                  height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                              getHorSpace(FetchPixels.getPixelWidth(6)),
+                              getCustomFont(numberFormat.format(modelPost.likeCount), 14, Colors.black54, 1,
+                                  fontWeight: FontWeight.w400),
+                              getHorSpace(FetchPixels.getPixelHeight(30))
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              getSvgImage("chatbox_ellipses_outline.svg",
+                                  height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                              getHorSpace(FetchPixels.getPixelWidth(6)),
+                              getCustomFont(numberFormat.format(modelPost.commentCount), 14, Colors.black54, 1,
+                                  fontWeight: FontWeight.w400),
+                              getHorSpace(FetchPixels.getPixelHeight(30))
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              getSvgImage("eye_outline.svg",
+                                  height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                              getHorSpace(FetchPixels.getPixelWidth(6)),
+                              getCustomFont(numberFormat.format(modelPost.viewCount), 14, Colors.black54, 1,
+                                  fontWeight: FontWeight.w400),
+                              getHorSpace(FetchPixels.getPixelHeight(30))
+                            ],
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: getHorSpace(0),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+DecorationImage getDecorationAssetImage(BuildContext buildContext, String image, {BoxFit fit = BoxFit.contain}) {
+  return DecorationImage(image: AssetImage((Constant.assetImagePath) + image), fit: fit, scale: FetchPixels.getScale());
 }
 
 Widget getCustomFont(String text, double fontSize, Color fontColor, int maxLine,
@@ -277,20 +374,11 @@ Widget getMultilineCustomFont(String text, double fontSize, Color fontColor,
 }
 
 BoxDecoration getButtonDecoration(Color bgColor,
-    {BorderRadius? borderRadius,
-    Border? border,
-    List<BoxShadow> shadow = const [],
-    DecorationImage? image}) {
-  return BoxDecoration(
-      color: bgColor,
-      borderRadius: borderRadius,
-      border: border,
-      boxShadow: shadow,
-      image: image);
+    {BorderRadius? borderRadius, Border? border, List<BoxShadow> shadow = const [], DecorationImage? image}) {
+  return BoxDecoration(color: bgColor, borderRadius: borderRadius, border: border, boxShadow: shadow, image: image);
 }
 
-Widget getButton(BuildContext context, Color bgColor, String text,
-    Color textColor, Function function, double fontsize,
+Widget getButton(BuildContext context, Color bgColor, String text, Color textColor, Function function, double fontsize,
     {bool isBorder = false,
     EdgeInsetsGeometry? insetsGeometry,
     borderColor = Colors.transparent,
@@ -320,9 +408,7 @@ Widget getButton(BuildContext context, Color bgColor, String text,
         bgColor,
         borderRadius: borderRadius,
         shadow: boxShadow,
-        border: (isBorder)
-            ? Border.all(color: borderColor, width: borderWidth!)
-            : null,
+        border: (isBorder) ? Border.all(color: borderColor, width: borderWidth!) : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -330,9 +416,7 @@ Widget getButton(BuildContext context, Color bgColor, String text,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           (isIcon) ? getSvgImage(image!) : getHorSpace(0),
-          (isIcon)
-              ? getHorSpace(FetchPixels.getPixelWidth(10))
-              : getHorSpace(0),
+          (isIcon) ? getHorSpace(FetchPixels.getPixelWidth(10)) : getHorSpace(0),
           getCustomFont(
             text,
             fontsize,
@@ -347,8 +431,8 @@ Widget getButton(BuildContext context, Color bgColor, String text,
   );
 }
 
-Widget getButtonWithIcon(BuildContext context, Color bgColor, String text,
-    Color textColor, Function function, double fontsize,
+Widget getButtonWithIcon(
+    BuildContext context, Color bgColor, String text, Color textColor, Function function, double fontsize,
     {bool isBorder = false,
     EdgeInsetsGeometry? insetsGeometry,
     borderColor = Colors.transparent,
@@ -381,9 +465,7 @@ Widget getButtonWithIcon(BuildContext context, Color bgColor, String text,
         bgColor,
         borderRadius: borderRadius,
         shadow: boxShadow,
-        border: (isBorder)
-            ? Border.all(color: borderColor, width: borderWidth!)
-            : null,
+        border: (isBorder) ? Border.all(color: borderColor, width: borderWidth!) : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -392,21 +474,15 @@ Widget getButtonWithIcon(BuildContext context, Color bgColor, String text,
             children: [
               getHorSpace(FetchPixels.getPixelWidth(18)),
               (prefixIcon) ? getSvgImage(prefixImage!) : getHorSpace(0),
-              (prefixIcon)
-                  ? getHorSpace(FetchPixels.getPixelWidth(12))
-                  : getHorSpace(0),
+              (prefixIcon) ? getHorSpace(FetchPixels.getPixelWidth(12)) : getHorSpace(0),
               getCustomFont(text, fontsize, textColor, 1,
-                  textAlign: TextAlign.center,
-                  fontWeight: weight,
-                  fontFamily: fontFamily)
+                  textAlign: TextAlign.center, fontWeight: weight, fontFamily: fontFamily)
             ],
           ),
           Row(
             children: [
               (sufixIcon) ? getSvgImage(suffixImage!) : getHorSpace(0),
-              (sufixIcon)
-                  ? getHorSpace(FetchPixels.getPixelWidth(18))
-                  : getHorSpace(0),
+              (sufixIcon) ? getHorSpace(FetchPixels.getPixelWidth(18)) : getHorSpace(0),
             ],
           )
         ],
@@ -415,8 +491,8 @@ Widget getButtonWithIcon(BuildContext context, Color bgColor, String text,
   );
 }
 
-Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
-    TextEditingController textEditingController, Color fontColor,
+Widget getDefaultTextFiledWithLabel(
+    BuildContext context, String s, TextEditingController textEditingController, Color fontColor,
     {bool withprefix = false,
     bool withSufix = false,
     bool minLines = false,
@@ -435,8 +511,7 @@ Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
   return StatefulBuilder(
     builder: (context, setState) {
       final mqData = MediaQuery.of(context);
-      final mqDataNew =
-          mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
       return AbsorbPointer(
         absorbing: isEnable,
@@ -447,13 +522,9 @@ Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Focus(
               onFocusChange: (hasFocus) {
                 if (hasFocus) {
@@ -474,11 +545,9 @@ Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
                         ? getHorSpace(FetchPixels.getPixelWidth(16))
                         : Padding(
                             padding: EdgeInsets.only(
-                                right: FetchPixels.getPixelWidth(12),
-                                left: FetchPixels.getPixelWidth(18)),
+                                right: FetchPixels.getPixelWidth(12), left: FetchPixels.getPixelWidth(18)),
                             child: getSvgImage(image!,
-                                height: FetchPixels.getPixelHeight(24),
-                                width: FetchPixels.getPixelHeight(24)),
+                                height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
                           ),
                     Expanded(
                       child: TextField(
@@ -512,8 +581,7 @@ Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
                         ? getHorSpace(FetchPixels.getPixelWidth(16))
                         : Padding(
                             padding: EdgeInsets.only(
-                                right: FetchPixels.getPixelWidth(18),
-                                left: FetchPixels.getPixelWidth(12)),
+                                right: FetchPixels.getPixelWidth(18), left: FetchPixels.getPixelWidth(12)),
                             child: InkWell(
                               onTap: () {
                                 if (imagefunction != null) {
@@ -521,8 +589,7 @@ Widget getDefaultTextFiledWithLabel(BuildContext context, String s,
                                 }
                               },
                               child: getSvgImage(suffiximage!,
-                                  height: FetchPixels.getPixelHeight(24),
-                                  width: FetchPixels.getPixelHeight(24)),
+                                  height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
                             ),
                           ),
                   ],
@@ -550,8 +617,7 @@ Widget getCardDateTextField(
   return StatefulBuilder(
     builder: (context, setState) {
       final mqData = MediaQuery.of(context);
-      final mqDataNew =
-          mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
       return AbsorbPointer(
         absorbing: isEnable,
@@ -559,18 +625,13 @@ Widget getCardDateTextField(
           height: height,
           margin: margin,
           alignment: Alignment.centerLeft,
-          padding:
-              EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(18)),
+          padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(18)),
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Focus(
               onFocusChange: (hasFocus) {
                 if (hasFocus) {
@@ -650,8 +711,7 @@ class CardNumberFormatter extends TextInputFormatter {
   }
 }
 
-Widget getCardEditText(BuildContext context, String s,
-    TextEditingController textEditingController, Color fontColor,
+Widget getCardEditText(BuildContext context, String s, TextEditingController textEditingController, Color fontColor,
     {bool withprefix = false,
     bool withSufix = false,
     bool minLines = false,
@@ -669,8 +729,7 @@ Widget getCardEditText(BuildContext context, String s,
   return StatefulBuilder(
     builder: (context, setState) {
       final mqData = MediaQuery.of(context);
-      final mqDataNew =
-          mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
       return AbsorbPointer(
         absorbing: isEnable,
@@ -681,13 +740,9 @@ Widget getCardEditText(BuildContext context, String s,
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Focus(
               onFocusChange: (hasFocus) {
                 if (hasFocus) {
@@ -729,25 +784,21 @@ Widget getCardEditText(BuildContext context, String s,
                       prefixIcon: (withprefix)
                           ? Padding(
                               padding: EdgeInsets.only(
-                                  right: FetchPixels.getPixelWidth(12),
-                                  left: FetchPixels.getPixelWidth(18)),
+                                  right: FetchPixels.getPixelWidth(12), left: FetchPixels.getPixelWidth(18)),
                               child: getSvgImage(image!,
-                                  height: FetchPixels.getPixelHeight(24),
-                                  width: FetchPixels.getPixelHeight(24)),
+                                  height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
                             )
                           : null,
                       suffixIcon: (withSufix)
                           ? Padding(
                               padding: EdgeInsets.only(
-                                  right: FetchPixels.getPixelWidth(18),
-                                  left: FetchPixels.getPixelWidth(12)),
+                                  right: FetchPixels.getPixelWidth(18), left: FetchPixels.getPixelWidth(12)),
                               child: InkWell(
                                 onTap: () {
                                   imagefunction!();
                                 },
                                 child: getSvgImage(suffiximage!,
-                                    height: FetchPixels.getPixelHeight(24),
-                                    width: FetchPixels.getPixelHeight(24)),
+                                    height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
                               ),
                             )
                           : null,
@@ -766,8 +817,8 @@ Widget getCardEditText(BuildContext context, String s,
   );
 }
 
-Widget getCountryTextField(BuildContext context, String s,
-    TextEditingController textEditingController, Color fontColor, String code,
+Widget getCountryTextField(
+    BuildContext context, String s, TextEditingController textEditingController, Color fontColor, String code,
     {bool withprefix = false,
     bool withSufix = false,
     bool minLines = false,
@@ -782,8 +833,7 @@ Widget getCountryTextField(BuildContext context, String s,
   return StatefulBuilder(
     builder: (context, setState) {
       final mqData = MediaQuery.of(context);
-      final mqDataNew =
-          mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
       return AbsorbPointer(
         absorbing: isEnable,
@@ -793,19 +843,14 @@ Widget getCountryTextField(BuildContext context, String s,
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               getHorSpace(FetchPixels.getPixelWidth(18)),
-              getAssetImage(image!, FetchPixels.getPixelHeight(24),
-                  FetchPixels.getPixelHeight(24)),
+              getAssetImage(image!, FetchPixels.getPixelHeight(24), FetchPixels.getPixelHeight(24)),
               getHorSpace(FetchPixels.getPixelWidth(12)),
               getCustomFont(
                 code,
@@ -855,8 +900,7 @@ Widget getCountryTextField(BuildContext context, String s,
   );
 }
 
-Widget getSvgImageWithSize(
-    BuildContext context, String image, double width, double height,
+Widget getSvgImageWithSize(BuildContext context, String image, double width, double height,
     {Color? color, BoxFit fit = BoxFit.fill}) {
   return SvgPicture.asset(
     Constant.assetImagePath + image,
@@ -868,17 +912,12 @@ Widget getSvgImageWithSize(
 }
 
 Widget getSearchWidget(
-    BuildContext context,
-    TextEditingController searchController,
-    Function filterClick,
-    ValueChanged<String> onChanged,
-    {bool withPrefix = true,
-    ValueChanged<String>? onSubmit}) {
+    BuildContext context, TextEditingController searchController, Function filterClick, ValueChanged<String> onChanged,
+    {bool withPrefix = true, ValueChanged<String>? onSubmit}) {
   double height = FetchPixels.getPixelHeight(60);
 
   final mqData = MediaQuery.of(context);
-  final mqDataNew =
-      mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+  final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
   double iconSize = FetchPixels.getPixelHeight(24);
 
@@ -889,8 +928,7 @@ Widget getSearchWidget(
     decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: const [
-          BoxShadow(
-              color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
+          BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
         ],
         borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
     child: Row(
@@ -919,10 +957,7 @@ Widget getSearchWidget(
                           fontWeight: FontWeight.w400,
                           color: textColor)),
                   style: const TextStyle(
-                      fontFamily: Constant.fontsFamily,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black),
+                      fontFamily: Constant.fontsFamily, fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black),
                   textAlign: TextAlign.start,
                   maxLines: 1,
                 ),
@@ -994,15 +1029,12 @@ Widget gettoolbarMenu(BuildContext context, String image, Function function,
           onTap: () {
             function();
           },
-          child: getSvgImage(image,
-              height: FetchPixels.getPixelHeight(24),
-              width: FetchPixels.getPixelHeight(24))),
+          child: getSvgImage(image, height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24))),
       Expanded(
         child: Container(
           alignment: Alignment.center,
           child: (istext)
-              ? getCustomFont(title!, fontsize!, textColor!, 1,
-                  fontWeight: weight!, fontFamily: fontFamily)
+              ? getCustomFont(title!, fontsize!, textColor!, 1, fontWeight: weight!, fontFamily: fontFamily)
               : null,
         ),
       ),
@@ -1012,8 +1044,7 @@ Widget gettoolbarMenu(BuildContext context, String image, Function function,
                 rightFunction!();
               },
               child: getSvgImage(rightimage!,
-                  height: FetchPixels.getPixelHeight(24),
-                  width: FetchPixels.getPixelHeight(24)))
+                  height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)))
           : Container(),
     ],
   );
@@ -1036,8 +1067,7 @@ Widget withoutleftIconToolbar(BuildContext context,
         child: Container(
           alignment: Alignment.center,
           child: (istext)
-              ? getCustomFont(title!, fontsize!, textColor!, 1,
-                  fontWeight: weight!, fontFamily: fontFamily)
+              ? getCustomFont(title!, fontsize!, textColor!, 1, fontWeight: weight!, fontFamily: fontFamily)
               : null,
         ),
       ),
@@ -1049,8 +1079,7 @@ Widget withoutleftIconToolbar(BuildContext context,
                 }
               },
               child: getSvgImage(rightimage!,
-                  height: FetchPixels.getPixelHeight(24),
-                  width: FetchPixels.getPixelHeight(24)))
+                  height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)))
           : Container(),
     ],
   );

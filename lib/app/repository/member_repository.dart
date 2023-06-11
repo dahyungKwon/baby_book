@@ -6,7 +6,7 @@ import '../models/model_refresh_accesstoken.dart';
 
 class MemberRepository {
   static var dio = Dio(BaseOptions(
-    baseUrl: 'http://ec2-3-35-236-200.ap-northeast-2.compute.amazonaws.com:3001/apis',
+    baseUrl: 'http://ec2-52-79-255-107.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
     receiveTimeout: 3000,
   ));

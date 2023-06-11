@@ -27,21 +27,19 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    isLogin().then((isLogin) async =>
-    {
-      if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
-        {
-          MemberRepository.refreshAccessToken().then((response) async =>
-          {
-            if (response.accessToken != null && response.refreshToken != null)
-              {
-                await PrefData.setAccessToken(response.accessToken!),
-                await PrefData.setRefreshToken(response.refreshToken!),
-                Get.toNamed(Routes.homescreenPath)
-              }
-          })
-        }
-    });
+    isLogin().then((isLogin) async => {
+          if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
+            {
+              MemberRepository.refreshAccessToken().then((response) => {
+                    if (response.accessToken != null && response.refreshToken != null)
+                      {
+                        PrefData.setAccessToken(response.accessToken!),
+                        PrefData.setRefreshToken(response.refreshToken!),
+                        Get.toNamed(Routes.homescreenPath)
+                      }
+                  })
+            }
+        });
 
     return WillPopScope(
         child: Scaffold(
@@ -91,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                 } else {
                   print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
                   ModelMember member =
-                  await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+                      await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
                   await PrefData.setAccessToken(member.accessToken!);
                   await PrefData.setRefreshToken(member.refreshToken!);
                   await PrefData.setMemberId(member.memberId!);

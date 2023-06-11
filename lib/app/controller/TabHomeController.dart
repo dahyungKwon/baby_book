@@ -27,6 +27,8 @@ class TabHomeController extends GetxController {
   getAll() {
     bookListRepository.getBookList(categoryList: 'MATH,LIFE').then((data) {
       bookList = data;
-    }).catchError((onError) => {Get.toNamed(Routes.loginPath)});
+    }, onError: (e) {
+      print(e);
+    }).catchError((onError) => {print(onError), Get.toNamed(Routes.loginPath)});
   }
 }

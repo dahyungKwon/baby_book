@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 
-class BookListRepository {
+class CommentRepository {
   var dio = Dio(BaseOptions(
     baseUrl: 'http://ec2-52-79-255-107.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
