@@ -1,4 +1,3 @@
-import 'package:baby_book/app/view/community/community_list_screen.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
@@ -6,24 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/TabCommunityController.dart';
-import '../../community/post_type.dart';
 
 /// 여기선 position이 obs값이나 set만 하고 감지할 필요가 없기에 obx를 안 넣어줘도 됨
 /// 참고 : https://annhee.tistory.com/82
 class TabCommunity extends GetView<TabCommunityController> {
-  TabCommunity({super.key}) {
-    Get.put(TabCommunityController());
+  // const TabCommunity({super.key}): super(key: key);
+  TabCommunity({Key? key}) : super(key: key) {
+    print("TabCommunity constructor");
   }
 
   @override
   Widget build(BuildContext context) {
+    Get.delete<TabCommunityController>();
+    Get.put(TabCommunityController());
+
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
 
     ///임시 더 좋은 방법이 있을지 고민 필요 (재현, 상단탭을 변경후 책장 -> 커뮤니티 다시 진입 시)
-    controller.position = 0;
-    controller.tabController.animateTo(0);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -40,10 +40,12 @@ class TabCommunity extends GetView<TabCommunityController> {
         physics: const BouncingScrollPhysics(),
         controller: controller.pageController,
         scrollDirection: Axis.horizontal,
-        children: PostType.values.map((e) => CommunityListScreen(e)).toList(),
+        children: controller.widgetList,
         onPageChanged: (value) {
+          print("pageViewer onPageChanged");
           controller.tabController.animateTo(value);
           controller.position = value;
+          controller.widgetList[value].controller.getAll(controller.postTypeList[value]);
         },
       ),
     );
@@ -65,6 +67,7 @@ class TabCommunity extends GetView<TabCommunityController> {
             labelPadding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
             // labelStyle: TextStyle(fontSize: 5),
             onTap: (index) {
+              print("tabBar onTap index : $index");
               controller.pageController.jumpToPage(index);
               controller.position = index;
             },

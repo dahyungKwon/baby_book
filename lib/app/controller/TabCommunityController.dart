@@ -2,13 +2,19 @@ import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../view/community/community_list_screen.dart';
+
 class TabCommunityController extends GetxController with GetSingleTickerProviderStateMixin {
-  final PageController pageController = PageController(
-    initialPage: 0,
+  ///controller
+  late PageController pageController = PageController(
+    initialPage: position,
   );
+  late TabController tabController;
+
+  ///data
   List<PostType> postTypeList = PostType.values;
   List<String> tabsList = PostType.findDescList();
-  late TabController tabController;
+  List<CommunityListScreen> widgetList = PostType.values.map((e) => CommunityListScreen(e)).toList();
 
   ///position
   final _position = 0.obs;
@@ -17,18 +23,15 @@ class TabCommunityController extends GetxController with GetSingleTickerProvider
 
   set position(value) => _position.value = value;
 
-  TabCommunityController() {
-    print("TabCommunityController constructor");
-  }
-
   @override
   void onInit() {
-    tabController = TabController(vsync: this, initialIndex: 0, length: tabsList.length);
     super.onInit();
+    tabController = TabController(vsync: this, length: tabsList.length);
   }
 
   @override
   onClose() {
+    pageController.dispose();
     tabController.dispose();
     super.onClose();
   }

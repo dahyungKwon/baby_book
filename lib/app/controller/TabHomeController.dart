@@ -1,3 +1,4 @@
+import 'package:baby_book/app/exception/exception_invalid_member.dart';
 import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/routes/app_pages.dart';
 import 'package:get/get.dart';
@@ -27,8 +28,7 @@ class TabHomeController extends GetxController {
   getAll() {
     bookListRepository.getBookList(categoryList: 'MATH,LIFE').then((data) {
       bookList = data;
-    }, onError: (e) {
-      print(e);
-    }).catchError((onError) => {print(onError), Get.toNamed(Routes.loginPath)});
+    }, onError: (e) => e is InvalidMemberException ? Get.toNamed(Routes.loginPath) : e).catchError(
+        (onError) => {print(onError + "error"), Get.toNamed(Routes.loginPath)});
   }
 }
