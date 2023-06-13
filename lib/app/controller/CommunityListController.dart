@@ -9,7 +9,7 @@ import '../view/community/post_type.dart';
 class CommunityListController extends GetxController {
   final PostRepository postRepository;
 
-  // Map<PostType, List<ModelPost>> map = Map();
+  Map<PostType, List<ModelPost>> map = Map();
 
   /// post
   final _postList = <ModelPost>[].obs;
@@ -36,15 +36,20 @@ class CommunityListController extends GetxController {
   }
 
   getAll(PostType postType) async {
-    /// 캐시 필요 고민
-    // if (map.containsKey(postType)) {
-    //   postList = map[postType];
-    //   return;
-    // }
+    /// 캐시처리, all일경우 제외
+    if (map.containsKey(postType) && postType != PostType.all) {
+      postList = map[postType];
+      return;
+    }
 
+    getAllForPullToRefresh(postType);
+  }
+
+  getAllForPullToRefresh(PostType postType) async {
+    /// no cache & 저장만함
     loading = true;
     await postRepository.getPostList(postTypeRequest: postType.code).then((data) {
-      // map[postType] = data;
+      map[postType] = data;
       postList = data;
 
       ///사용자경험 위해 0.2초 딜레이

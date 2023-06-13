@@ -12,7 +12,9 @@ import '../../controller/CommunityListController.dart';
 import '../../repository/post_repository.dart';
 
 class CommunityListScreen extends GetView<CommunityListController> {
-  CommunityListScreen(PostType postType, {super.key}) {
+  late PostType postType;
+
+  CommunityListScreen(this.postType, {super.key}) {
     Get.put(CommunityListController(postRepository: PostRepository()));
   }
 
@@ -32,19 +34,25 @@ class CommunityListScreen extends GetView<CommunityListController> {
         ));
   }
 
-  ListView drawPostList() {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: controller.postList.length,
-      itemBuilder: (context, index) {
-        ModelPost modelPost = controller.postList[index];
-        return buildPostListItem(modelPost, context, index, () {
-          //click function
-        }, () {
-          //delete function
-        });
-      },
-    );
+  RefreshIndicator drawPostList() {
+    return RefreshIndicator(
+        color: Colors.black87,
+        backgroundColor: Colors.white,
+        onRefresh: () async {
+          controller.getAllForPullToRefresh(postType);
+        },
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: controller.postList.length,
+          itemBuilder: (context, index) {
+            ModelPost modelPost = controller.postList[index];
+            return buildPostListItem(modelPost, context, index, () {
+              //click function
+            }, () {
+              //delete function
+            });
+          },
+        ));
   }
 
   Column nullListView(BuildContext context) {
@@ -63,13 +71,13 @@ class CommunityListScreen extends GetView<CommunityListController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "글쓰러가기", blueColor, () {}, 18,
+        getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () {}, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
             insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(120)),
             borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
             isBorder: true,
-            borderColor: blueColor,
+            borderColor: Colors.grey,
             borderWidth: 1.5)
       ],
     );
