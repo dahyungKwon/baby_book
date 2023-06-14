@@ -27,6 +27,7 @@ class TabCommunityController extends GetxController with GetSingleTickerProvider
   void onInit() {
     super.onInit();
     tabController = TabController(vsync: this, length: tabsList.length);
+    widgetList[0].controller.getAllForInit(postTypeList[0]);
   }
 
   @override

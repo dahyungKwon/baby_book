@@ -9,10 +9,7 @@ import '../../../controller/TabCommunityController.dart';
 /// 여기선 position이 obs값이나 set만 하고 감지할 필요가 없기에 obx를 안 넣어줘도 됨
 /// 참고 : https://annhee.tistory.com/82
 class TabCommunity extends GetView<TabCommunityController> {
-  // const TabCommunity({super.key}): super(key: key);
-  TabCommunity({Key? key}) : super(key: key) {
-    print("TabCommunity constructor");
-  }
+  const TabCommunity({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +38,12 @@ class TabCommunity extends GetView<TabCommunityController> {
         controller: controller.pageController,
         scrollDirection: Axis.horizontal,
         children: controller.widgetList,
-        onPageChanged: (value) {
-          print("pageViewer onPageChanged");
-          controller.tabController.animateTo(value);
-          controller.position = value;
-          controller.widgetList[value].controller.getAll(controller.postTypeList[value]);
+        onPageChanged: (index) {
+          print("pageViewer onPageChanged pageIndex : $index");
+          controller.widgetList[index].initPageNumber();
+          controller.widgetList[index].controller.getAllForInit(controller.postTypeList[index]);
+          controller.tabController.animateTo(index);
+          controller.position = index;
         },
       ),
     );

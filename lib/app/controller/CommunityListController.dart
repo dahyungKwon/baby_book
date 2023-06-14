@@ -1,3 +1,4 @@
+import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:get/get.dart';
 
@@ -9,9 +10,10 @@ import '../view/community/post_type.dart';
 class CommunityListController extends GetxController {
   final PostRepository postRepository;
 
-  Map<PostType, List<ModelPost>> map = Map();
+  //map(로컬 캐시용)
+  Map<PostType, List<ModelPost>> map = {};
 
-  /// post
+  ///post
   final _postList = <ModelPost>[].obs;
 
   get postList => _postList.value;
@@ -32,33 +34,81 @@ class CommunityListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getAll(PostType.all);
+    getAllForInit(PostType.all);
   }
 
-  getAll(PostType postType) async {
+  /// 첫 페이지 로딩 시 사용, 페이지 변경시에도 사용됨
+  getAllForInit(PostType postType) async {
     /// 캐시처리, all일경우 제외
     if (map.containsKey(postType) && postType != PostType.all) {
-      postList = map[postType];
+      _postList.clear();
+      _postList.addAll(map[postType]!);
       return;
     }
 
     getAllForPullToRefresh(postType);
   }
 
+  ///pull to refresh 시 사용
   getAllForPullToRefresh(PostType postType) async {
-    /// no cache & 저장만함
     loading = true;
-    await postRepository.getPostList(postTypeRequest: postType.code).then((data) {
-      map[postType] = data;
-      postList = data;
+    List<ModelPost> list = await _request(postType, PagingRequest.createDefault());
 
-      ///사용자경험 위해 0.2초 딜레이
-      Future.delayed(const Duration(milliseconds: 200), () {
-        loading = false;
-      });
-    },
-        onError: (e) => {
-              e is InvalidMemberException ? {loading = false, Get.toNamed(Routes.loginPath)} : e
-            }).catchError((onError) => {print(onError + "error"), loading = false, Get.toNamed(Routes.loginPath)});
+    ///리스트 초기화
+    _initList(postType, list);
+
+    ///사용자경험 위해 0.2초 딜레이
+    Future.delayed(const Duration(milliseconds: 200), () {
+      loading = false;
+    });
+  }
+
+  ///next page 요청 시 사용
+  Future<List<ModelPost>> getAllForLoading(PostType postType, PagingRequest pagingRequest) async {
+    List<ModelPost> list = await _request(postType, pagingRequest);
+
+    ///데이터 추가
+    _addAll(postType, list);
+    return list;
+  }
+
+  Future<List<ModelPost>> _request(PostType postType, PagingRequest pagingRequest) async {
+    /// no cache & 저장만함
+    try {
+      print("_request......${postType.code}........${pagingRequest.pageNumber}");
+      return await postRepository.getPostList(postType: postType, pagingRequest: pagingRequest);
+    } on InvalidMemberException catch (e) {
+      print(e);
+      loading = false;
+      Get.toNamed(Routes.loginPath);
+    } catch (e) {
+      print(e);
+      loading = false;
+      Get.toNamed(Routes.loginPath);
+    }
+
+    return [];
+  }
+
+  void _initList(PostType postType, List<ModelPost> list) {
+    if (postType != PostType.all) {
+      if (map.containsKey(postType)) {
+        map.remove(postType);
+      }
+      map[postType] = [];
+      map[postType]!.addAll(list);
+    }
+
+    _postList.clear();
+    _postList.addAll(list);
+  }
+
+  void _addAll(PostType postType, List<ModelPost> list) {
+    // 이미 map -> list가 맵핑된 상태임으로 list에만 넣어주면 됨
+    // 참고로 map에 직접 넣던지 , postList = map[postType]; 이렇게 하면 obx동작 안하는 이슈가 있음
+    map[postType]?.addAll(list);
+    _postList.addAll(list);
+
+    // _postList.refresh(); 이방법도 존재하나 obx사용을 위해 사용하지 않고 스터디를 위해 해당 코드 남겨둠
   }
 }

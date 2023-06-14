@@ -1,8 +1,10 @@
+import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:dio/dio.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 import '../models/model_post.dart';
+import '../view/community/post_type.dart';
 
 class PostRepository {
   var dio = Dio(BaseOptions(
@@ -11,17 +13,15 @@ class PostRepository {
     receiveTimeout: 3000,
   ));
 
-  Future<List<ModelPost>> getPostList({
-    required String? postTypeRequest,
-  }) async {
+  Future<List<ModelPost>> getPostList({required PostType? postType, required PagingRequest pagingRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
       '/posts',
       queryParameters: {
-        'pageSize': 15,
-        'pageNumber': '1',
-        'postTypeRequest': postTypeRequest ?? "ALL",
+        'pageSize': pagingRequest.pageSize,
+        'pageNumber': pagingRequest.pageNumber,
+        'postTypeRequest': postType?.code ?? "ALL",
       },
       options: Options(
         headers: {"at": accessToken},

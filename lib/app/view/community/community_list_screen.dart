@@ -1,4 +1,5 @@
 import 'package:baby_book/app/models/model_post.dart';
+import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
@@ -6,16 +7,59 @@ import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../controller/CommunityListController.dart';
 import '../../repository/post_repository.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+/// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityListScreen extends GetView<CommunityListController> {
   late PostType postType;
+  late RefreshController refreshController;
+  int pageNumber = 1;
 
   CommunityListScreen(this.postType, {super.key}) {
     Get.put(CommunityListController(postRepository: PostRepository()));
+    refreshController = RefreshController(initialRefresh: false);
+  }
+
+  void initPageNumber() {
+    print("initPageNumber.... start...... ${postType.code}");
+
+    ///캐시된게 있으면 맨 마지막 number를 넣어야함
+    if (controller.map.containsKey(postType)) {
+      // 1 12345 -1 01234 /5 = 0 +1 => 1
+      // 2 678910 -1 56789 / 5 = 1 +1 => 2
+      pageNumber = (controller.map[postType]!.length - 1) ~/ PagingRequest.defaultPageSize + 1;
+    } else {
+      pageNumber = 1;
+    }
+    print("initPageNumber.... end...pageNumber...$pageNumber...${postType.code}");
+  }
+
+  void plusPageNumber() {
+    print("plusPageNumber.... start.....${postType.code}");
+    pageNumber++;
+    print("plusPageNumber.... end...pageNumber...$pageNumber...${postType.code}");
+  }
+
+  void onRefresh() async {
+    await controller.getAllForPullToRefresh(postType);
+    initPageNumber(); //순서중요
+
+    await Future.delayed(Duration(milliseconds: 500));
+
+    refreshController.refreshCompleted();
+  }
+
+  void onLoading() async {
+    List<ModelPost>? list = await controller.getAllForLoading(postType, PagingRequest.create(pageNumber + 1));
+    if (list != null && list.isNotEmpty) {
+      plusPageNumber();
+    }
+
+    await Future.delayed(Duration(milliseconds: 500));
+    refreshController.loadComplete();
   }
 
   @override
@@ -30,18 +74,27 @@ class CommunityListScreen extends GetView<CommunityListController> {
               ? const ListSkeleton()
               : controller.postList.isEmpty
                   ? getPaddingWidget(edgeInsets, nullListView(context))
-                  : drawPostList(),
+                  : draw(),
         ));
   }
 
-  RefreshIndicator drawPostList() {
-    return RefreshIndicator(
-        color: Colors.black87,
-        backgroundColor: Colors.white,
-        onRefresh: () async {
-          controller.getAllForPullToRefresh(postType);
-        },
+  SmartRefresher draw() {
+    return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const MaterialClassicHeader(
+          color: Colors.black,
+        ),
+        footer: const ClassicFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            loadingText: "Loading...",
+            idleText: "Loading...",
+            canLoadingText: "Loading..."),
+        controller: refreshController,
+        onRefresh: onRefresh,
+        onLoading: onLoading,
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemCount: controller.postList.length,
           itemBuilder: (context, index) {
