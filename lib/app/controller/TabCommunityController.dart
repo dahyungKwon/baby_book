@@ -12,9 +12,9 @@ class TabCommunityController extends GetxController with GetSingleTickerProvider
   late TabController tabController;
 
   ///data
-  List<PostType> postTypeList = PostType.values;
-  List<String> tabsList = PostType.findDescList();
-  List<CommunityListScreen> widgetList = PostType.values.map((e) => CommunityListScreen(e)).toList();
+  List<PostType> postTypeList = PostType.findListViewList();
+  late List<String> tabsList = postTypeList.map((e) => e.desc).toList();
+  late List<CommunityListScreen> widgetList = postTypeList.map((e) => CommunityListScreen(e)).toList();
 
   ///position
   final _position = 0.obs;
@@ -35,5 +35,9 @@ class TabCommunityController extends GetxController with GetSingleTickerProvider
     pageController.dispose();
     tabController.dispose();
     super.onClose();
+  }
+
+  PostType selectedPostType() {
+    return postTypeList[position];
   }
 }

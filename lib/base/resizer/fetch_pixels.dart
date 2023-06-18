@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 import '../device_util.dart';
 
@@ -8,9 +9,9 @@ class FetchPixels {
   static double width = 0;
   static double height = 0;
 
-    FetchPixels(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+  FetchPixels(BuildContext context) {
+    width = 100.w;
+    height = 100.h;
   }
 
   static double getHeightPercentSize(double percent) {
@@ -29,8 +30,7 @@ class FetchPixels {
     return val / mockupHeight * height;
   }
 
-  static double getDefaultHorSpace(BuildContext context)
-  {
+  static double getDefaultHorSpace(BuildContext context) {
     return FetchPixels.getPixelWidth(20);
   }
 
@@ -44,8 +44,7 @@ class FetchPixels {
   }
 
   static double getScale() {
-    double scale =
-        (width > height) ? mockupWidth / width : mockupHeight / height;
+    double scale = (width > height) ? mockupWidth / width : mockupHeight / height;
 
     if (DeviceUtil.isTablet) {
       scale = height / mockupHeight;

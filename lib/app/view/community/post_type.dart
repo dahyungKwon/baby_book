@@ -11,8 +11,8 @@ enum PostType {
   question("QUESTION", "육아고민", Color(0xFF1E90FF)),
   grow("GROW", "성장일기", Color(0xFF2E8B57)),
   recommend("RECOMMEND", "강추", Color(0xFFD2691E)),
-  free("FREE", "자유이야기", Color(0xFF778899));
-  // etc("ETC", "기타", Colors.black);
+  free("FREE", "자유이야기", Color(0xFF778899)),
+  none("NONE", "글타입을 선택해주세요.", Colors.black45);
 
   final String code;
   final String desc;
@@ -26,5 +26,15 @@ enum PostType {
 
   static List<String> findDescList() {
     return PostType.values.map((e) => e.desc).toList();
+  }
+
+  ///탭 리스트에 노출용 ("전체" 노출)
+  static List<PostType> findListViewList() {
+    return PostType.values.where((element) => element != PostType.none).toList();
+  }
+
+  ///글쓰기에 노출용
+  static List<PostType> findAddViewList() {
+    return PostType.values.where((element) => element != PostType.all && element != PostType.none).toList();
   }
 }

@@ -25,7 +25,7 @@ class ListSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [row(), row(), row(), row()]);
+    return SingleChildScrollView(child: Column(children: [row(), row(), row(), row()]));
   }
 
   Widget row() {

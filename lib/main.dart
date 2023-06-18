@@ -5,6 +5,7 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:get/get.dart';
 
 import 'base/color_data.dart';
+import 'package:sizer/sizer.dart';
 
 void main() {
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
@@ -29,10 +30,12 @@ class MyApp extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.homepath,
-      getPages: AppPages.pages,
-    );
+    return Sizer(builder: (context, orientation, deviceType) {
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: Routes.homepath,
+        getPages: AppPages.pages,
+      );
+    });
   }
 }

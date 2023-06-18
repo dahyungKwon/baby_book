@@ -212,6 +212,7 @@ GestureDetector buildBookingListItem(
   );
 }
 
+///custom
 GestureDetector buildPostListItem(
     ModelPost modelPost, BuildContext context, int index, Function function, Function funDelete) {
   return GestureDetector(
@@ -557,7 +558,7 @@ Widget getDefaultTextFiledWithLabel(
                         autofocus: false,
                         focusNode: myFocusNode,
                         obscureText: isPass,
-                        showCursor: false,
+                        showCursor: true,
                         onTap: () {
                           function();
                         },
@@ -571,7 +572,7 @@ Widget getDefaultTextFiledWithLabel(
                             border: InputBorder.none,
                             hintText: s,
                             hintStyle: TextStyle(
-                              color: textColor,
+                              color: textColor.withOpacity(0.5),
                               fontWeight: FontWeight.w400,
                               fontSize: FetchPixels.getPixelHeight(16),
                             )),
@@ -597,6 +598,120 @@ Widget getDefaultTextFiledWithLabel(
               )),
         ),
       );
+    },
+  );
+}
+
+///custom
+Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hintColor,
+    TextEditingController textEditingController, Color fontColor, double fontSize, FontWeight fontWeight,
+    {bool withprefix = false,
+    bool withSufix = false,
+    bool minLines = false,
+    EdgeInsetsGeometry margin = EdgeInsets.zero,
+    bool isPass = false,
+    bool isEnable = true,
+    double? height,
+    double? imageHeight,
+    double? imageWidth,
+    String? image,
+    String? suffiximage,
+    required Function function,
+    Function? imagefunction,
+    AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
+    bool enableEditing = true}) {
+  FocusNode myFocusNode = FocusNode();
+  return StatefulBuilder(
+    builder: (context, setState) {
+      final mqData = MediaQuery.of(context);
+      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+
+      return AbsorbPointer(
+          absorbing: isEnable,
+          child: GestureDetector(
+            onTap: () {
+              function();
+            },
+            child: Container(
+              height: height,
+              // margin: margin,
+              alignment: alignmentGeometry,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                // boxShadow: const [
+                //   BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 1.0)),
+                // ],
+              ),
+              // borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              child: Focus(
+                  onFocusChange: (hasFocus) {
+                    if (hasFocus) {
+                      setState(() {
+                        myFocusNode.canRequestFocus = true;
+                      });
+                    } else {
+                      setState(() {
+                        myFocusNode.canRequestFocus = false;
+                      });
+                    }
+                  },
+                  child: MediaQuery(
+                    data: mqDataNew,
+                    child: Row(
+                      children: [
+                        (!withprefix)
+                            ? getHorSpace(FetchPixels.getPixelWidth(16))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    top: FetchPixels.getPixelWidth(12),
+                                    bottom: FetchPixels.getPixelWidth(12),
+                                    right: FetchPixels.getPixelWidth(12),
+                                    left: FetchPixels.getPixelWidth(18)),
+                                child: getSvgImage(image!,
+                                    height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
+                              ),
+                        Expanded(
+                          child: TextField(
+                            enabled: enableEditing,
+                            maxLines: (minLines) ? null : 1,
+                            controller: textEditingController,
+                            obscuringCharacter: "*",
+                            autofocus: false,
+                            focusNode: myFocusNode,
+                            obscureText: isPass,
+                            showCursor: true,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: fontWeight,
+                              fontSize: fontSize,
+                            ),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.only(
+                                    top: FetchPixels.getPixelWidth(12), bottom: FetchPixels.getPixelWidth(12)),
+                                border: InputBorder.none,
+                                hintText: hint,
+                                hintStyle: TextStyle(
+                                  color: hintColor,
+                                  fontWeight: fontWeight,
+                                  fontSize: fontSize,
+                                )),
+                          ),
+                        ),
+                        (!withSufix)
+                            ? getHorSpace(FetchPixels.getPixelWidth(16))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    right: FetchPixels.getPixelWidth(18), left: FetchPixels.getPixelWidth(12)),
+                                child: InkWell(
+                                  child: getSvgImage(suffiximage!,
+                                      height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
+                                ),
+                              ),
+                      ],
+                    ),
+                  )),
+            ),
+          ));
     },
   );
 }
@@ -1046,6 +1161,47 @@ Widget gettoolbarMenu(BuildContext context, String image, Function function,
               child: getSvgImage(rightimage!,
                   height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)))
           : Container(),
+    ],
+  );
+}
+
+Widget getToolbarMenuWithoutImg(BuildContext context, String leftText, Color? leftTextColor, Function function,
+    {bool istext = false,
+    double? fontsize,
+    String? title,
+    Color? textColor,
+    FontWeight? weight,
+    String fontFamily = "",
+    bool isRight = false,
+    String? rightText,
+    Color? rightTextColor,
+    Function? rightFunction}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      getHorSpace(FetchPixels.getPixelWidth(20)),
+      InkWell(
+          onTap: () {
+            function();
+          },
+          child: getCustomFont(leftText!, fontsize!, leftTextColor!, 1, fontWeight: weight!, fontFamily: fontFamily)),
+      Expanded(
+        child: Container(
+          alignment: Alignment.center,
+          child: (istext)
+              ? getCustomFont(title!, fontsize!, textColor!, 1, fontWeight: weight!, fontFamily: fontFamily)
+              : null,
+        ),
+      ),
+      (isRight)
+          ? InkWell(
+              onTap: () {
+                rightFunction!();
+              },
+              child:
+                  getCustomFont(rightText!, fontsize!, rightTextColor!, 1, fontWeight: weight!, fontFamily: fontFamily))
+          : Container(),
+      getHorSpace(FetchPixels.getPixelWidth(20)),
     ],
   );
 }

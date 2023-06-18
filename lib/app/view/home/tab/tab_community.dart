@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/TabCommunityController.dart';
+import '../../../routes/app_pages.dart';
 
 /// 여기선 position이 obs값이나 set만 하고 감지할 필요가 없기에 obx를 안 넣어줘도 됨
 /// 참고 : https://annhee.tistory.com/82
@@ -23,12 +24,31 @@ class TabCommunity extends GetView<TabCommunityController> {
     ///임시 더 좋은 방법이 있을지 고민 필요 (재현, 상단탭을 변경후 책장 -> 커뮤니티 다시 진입 시)
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backGroundColor,
-      body: Column(
-        children: [tabBar(edgeInsets), getVerSpace(FetchPixels.getPixelHeight(25)), pageViewer()],
-      ),
-    );
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: Column(
+          children: [tabBar(edgeInsets), getVerSpace(FetchPixels.getPixelHeight(25)), pageViewer()],
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            backgroundColor: Color(0xFF4B4B4B),
+            onPressed: () => Get.toNamed("${Routes.communityAddPath}?postType=${controller.selectedPostType().code}"),
+          ),
+        ));
+  }
+
+  Future<void> _incrementCounter() async {
+    print("_incrementCounter");
+    // final Map<String, Object> values = await _prefs.getAll();
+    // final int counter = ((values[_prefKey] as int?) ?? 0) + 1;
+
+    // setState(() {
+    //   _counter = _prefs.setValue('Int', _prefKey, counter).then((bool success) {
+    //     return counter;
+    //   });
+    // });
   }
 
   Expanded pageViewer() {

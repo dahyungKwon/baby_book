@@ -1,25 +1,24 @@
-import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_age_group.dart';
+import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class AgeGroupBottomSheet extends StatefulWidget {
-  final int ageGroupId;
+class PostTypeBottomSheet extends StatefulWidget {
+  final PostType postType;
 
-  const AgeGroupBottomSheet({required this.ageGroupId, Key? key}) : super(key: key);
+  const PostTypeBottomSheet({required this.postType, Key? key}) : super(key: key);
 
   @override
-  State<AgeGroupBottomSheet> createState() => _AgeGroupBottomSheetState();
+  State<PostTypeBottomSheet> createState() => _PostTypeBottomSheetState();
 }
 
-class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
-  int? selectedAgeGroupId;
+class _PostTypeBottomSheetState extends State<PostTypeBottomSheet> {
+  PostType? selectedPostType;
 
   @override
   void initState() {
     super.initState();
-    selectedAgeGroupId = widget.ageGroupId;
+    selectedPostType = widget.postType;
   }
 
   @override
@@ -34,7 +33,7 @@ class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
             height: 10,
           ),
           getCustomFont(
-            "개월수",
+            "글타입",
             18,
             Colors.black,
             1,
@@ -45,12 +44,12 @@ class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
             color: Colors.white,
             child: Wrap(
               children: [
-                _AgeGroupPicker(
-                    ageGroups: DataFile.ageGroupList,
-                    selectedAgeGroupId: selectedAgeGroupId!,
-                    ageGroupSetter: (int id) {
+                _PostTypeBottomSheetPicker(
+                    postTypeList: PostType.findAddViewList(),
+                    selectedPostType: selectedPostType!,
+                    postTypeBottomSheetSetter: (PostType postType) {
                       setState(() {
-                        selectedAgeGroupId = id;
+                        selectedPostType = postType;
                       });
                     })
               ],
@@ -62,15 +61,15 @@ class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
   }
 }
 
-typedef AgeGroupSetter = void Function(int id);
+typedef PostTypeBottomSheetSetter = void Function(PostType postType);
 
-class _AgeGroupPicker extends StatelessWidget {
-  final List<ModelAgeGroup> ageGroups;
-  final int selectedAgeGroupId;
-  final AgeGroupSetter ageGroupSetter;
+class _PostTypeBottomSheetPicker extends StatelessWidget {
+  final List<PostType> postTypeList;
+  final PostType selectedPostType;
+  final PostTypeBottomSheetSetter postTypeBottomSheetSetter;
 
-  const _AgeGroupPicker(
-      {required this.ageGroups, required this.selectedAgeGroupId, required this.ageGroupSetter, Key? key})
+  const _PostTypeBottomSheetPicker(
+      {required this.postTypeList, required this.selectedPostType, required this.postTypeBottomSheetSetter, Key? key})
       : super(key: key);
 
   @override
@@ -78,21 +77,21 @@ class _AgeGroupPicker extends StatelessWidget {
     return Wrap(
       spacing: 20.0,
       runSpacing: 10.0,
-      children: ageGroups
+      children: postTypeList
           .map(
             (e) => GestureDetector(
               onTap: () {
-                ageGroupSetter(e.groupId!);
-                Navigator.pop(context, e.groupId);
+                postTypeBottomSheetSetter(e!);
+                Navigator.pop(context, e);
               },
-              child: renderAge(e, selectedAgeGroupId == e.groupId),
+              child: renderPostType(e, selectedPostType == e),
             ),
           )
           .toList(),
     );
   }
 
-  Widget renderAge(ModelAgeGroup ageGroup, bool isSelected) {
+  Widget renderPostType(PostType postType, bool isSelected) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
@@ -100,7 +99,7 @@ class _AgeGroupPicker extends StatelessWidget {
           ),
           color: Colors.black12,
           border: isSelected ? Border.all(color: Colors.blue, width: 4.0) : null),
-      child: Center(child: Text('${ageGroup.minAge} ~ ${ageGroup.maxAge}')),
+      child: Center(child: Text('${postType.desc}')),
       width: 70.0,
       height: 32.0,
     );

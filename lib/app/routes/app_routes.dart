@@ -30,4 +30,9 @@ abstract class Routes {
   static const privacyPath = "/PrivacyScreen";
   static const securityPath = "/SecurityScreen";
   static const termOfServicePath = "/TermOfServiceScreen";
+
+  static const communityListPath = "/CommunityListScreen";
+  static const communityAddPath = "/CommunityAddScreen";
+  static const communityDetailPath = "/CommunityDetailScreen";
+  static const communityModifyPath = "/CommunityModifyScreen";
 }
