@@ -3,6 +3,8 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../base/resizer/fetch_pixels.dart';
+
 class PostTypeBottomSheet extends StatefulWidget {
   final PostType postType;
 
@@ -23,41 +25,45 @@ class _PostTypeBottomSheetState extends State<PostTypeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
     return SizedBox(
-      height: 100.h / 4 + bottomInset,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10,
+        height: 40.h,
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getVerSpace(FetchPixels.getPixelHeight(20)),
+              Row(children: [
+                getHorSpace(FetchPixels.getPixelHeight(10)),
+                getCustomFont(
+                  "글 타입을 선택해주세요.",
+                  18,
+                  Colors.black,
+                  1,
+                  fontWeight: FontWeight.w500,
+                )
+              ]),
+              getVerSpace(FetchPixels.getPixelHeight(10)),
+              Container(
+                color: Colors.white,
+                child: Wrap(
+                  children: [
+                    _PostTypeBottomSheetPicker(
+                        postTypeList: PostType.findAddViewList(),
+                        selectedPostType: selectedPostType!,
+                        postTypeBottomSheetSetter: (PostType postType) {
+                          setState(() {
+                            selectedPostType = postType;
+                          });
+                        })
+                  ],
+                ),
+              ),
+            ],
           ),
-          getCustomFont(
-            "글타입",
-            18,
-            Colors.black,
-            1,
-            fontWeight: FontWeight.w700,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 7),
-            color: Colors.white,
-            child: Wrap(
-              children: [
-                _PostTypeBottomSheetPicker(
-                    postTypeList: PostType.findAddViewList(),
-                    selectedPostType: selectedPostType!,
-                    postTypeBottomSheetSetter: (PostType postType) {
-                      setState(() {
-                        selectedPostType = postType;
-                      });
-                    })
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
 
@@ -74,34 +80,26 @@ class _PostTypeBottomSheetPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 20.0,
-      runSpacing: 10.0,
-      children: postTypeList
-          .map(
-            (e) => GestureDetector(
-              onTap: () {
-                postTypeBottomSheetSetter(e!);
-                Navigator.pop(context, e);
-              },
-              child: renderPostType(e, selectedPostType == e),
-            ),
-          )
-          .toList(),
+    return Column(
+      children: postTypeList.map((e) => renderPostType(context, e, selectedPostType == e)).toList(),
     );
   }
 
-  Widget renderPostType(PostType postType, bool isSelected) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(15.0),
-          ),
-          color: Colors.black12,
-          border: isSelected ? Border.all(color: Colors.blue, width: 4.0) : null),
-      child: Center(child: Text('${postType.desc}')),
-      width: 70.0,
-      height: 32.0,
-    );
+  Widget renderPostType(BuildContext context, PostType postType, bool isSelected) {
+    return RadioListTile<PostType>(
+        visualDensity: const VisualDensity(
+          horizontal: VisualDensity.minimumDensity,
+          vertical: VisualDensity.minimumDensity,
+        ),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        contentPadding: EdgeInsets.zero,
+        title: Text(postType.desc),
+        value: postType,
+        activeColor: selectedPostType != null ? selectedPostType.color : Colors.black,
+        groupValue: selectedPostType,
+        onChanged: (PostType? postType) {
+          postTypeBottomSheetSetter(postType!);
+          Navigator.pop(context, postType);
+        });
   }
 }

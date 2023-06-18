@@ -12,6 +12,8 @@ import '../../controller/CommunityListController.dart';
 import '../../repository/post_repository.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../routes/app_pages.dart';
+
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityListScreen extends GetView<CommunityListController> {
   late PostType postType;
@@ -124,7 +126,9 @@ class CommunityListScreen extends GetView<CommunityListController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () {}, 18,
+        getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () {
+          Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
+        }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
             insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(120)),

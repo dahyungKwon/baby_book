@@ -4,11 +4,9 @@ import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
 import '../../../base/color_data.dart';
 import '../../../base/widget_utils.dart';
 import '../../repository/post_repository.dart';
-import '../home/age_agoup_bottom_sheet.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityAddScreen extends GetView<CommunityAddController> {

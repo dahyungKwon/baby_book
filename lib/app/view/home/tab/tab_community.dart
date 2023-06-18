@@ -39,18 +39,6 @@ class TabCommunity extends GetView<TabCommunityController> {
         ));
   }
 
-  Future<void> _incrementCounter() async {
-    print("_incrementCounter");
-    // final Map<String, Object> values = await _prefs.getAll();
-    // final int counter = ((values[_prefKey] as int?) ?? 0) + 1;
-
-    // setState(() {
-    //   _counter = _prefs.setValue('Int', _prefKey, counter).then((bool success) {
-    //     return counter;
-    //   });
-    // });
-  }
-
   Expanded pageViewer() {
     return Expanded(
       child: PageView(

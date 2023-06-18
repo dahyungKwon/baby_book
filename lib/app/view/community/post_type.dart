@@ -12,7 +12,7 @@ enum PostType {
   grow("GROW", "성장일기", Color(0xFF2E8B57)),
   recommend("RECOMMEND", "강추", Color(0xFFD2691E)),
   free("FREE", "자유이야기", Color(0xFF778899)),
-  none("NONE", "글타입을 선택해주세요.", Colors.black45);
+  none("NONE", "글 타입을 선택해주세요.", Colors.black45);
 
   final String code;
   final String desc;
