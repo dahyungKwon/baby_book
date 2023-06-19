@@ -80,12 +80,23 @@ class CommunityAddController extends GetxController {
     bool result = await Get.dialog(
       AlertDialog(
         // title: const Text('dialog title'),
-        content: const Text('등록 하시겠습니까?'),
+        content: const Text(
+          '등록 하시겠습니까?',
+          style: TextStyle(fontSize: 15),
+        ),
+        contentPadding: EdgeInsets.only(
+            top: FetchPixels.getPixelHeight(20),
+            left: FetchPixels.getPixelHeight(20),
+            bottom: FetchPixels.getPixelHeight(10)),
         actions: [
-          TextButton(onPressed: Get.back, child: const Text('취소', style: TextStyle(color: Colors.black))),
           TextButton(
+              style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+              onPressed: Get.back,
+              child: const Text('취소', style: TextStyle(color: Colors.black, fontSize: 14))),
+          TextButton(
+            style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
             onPressed: requestAdd,
-            child: const Text('등록', style: TextStyle(color: Colors.black)),
+            child: const Text('등록', style: TextStyle(color: Colors.black, fontSize: 14)),
           ),
         ],
       ),
