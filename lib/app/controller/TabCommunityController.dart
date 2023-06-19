@@ -40,4 +40,12 @@ class TabCommunityController extends GetxController with GetSingleTickerProvider
   PostType selectedPostType() {
     return postTypeList[position];
   }
+
+  changePosition(PostType postType) async {
+    int position = postTypeList.indexOf(postType);
+    this.position = position;
+    widgetList[position].initPageNumber();
+    tabController.index = position;
+    pageController.jumpToPage(position);
+  }
 }

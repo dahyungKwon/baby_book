@@ -1,12 +1,18 @@
 import 'package:baby_book/app/controller/CommunityAddController.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
+import 'package:baby_book/app/view/dialog/confirm_dialog.dart';
+import 'package:baby_book/app/view/dialog/error_dialog.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../base/color_data.dart';
 import '../../../base/widget_utils.dart';
+import '../../exception/exception_invalid_member.dart';
+import '../../exception/exception_invalid_param.dart';
+import '../../models/model_post.dart';
 import '../../repository/post_repository.dart';
+import '../../routes/app_pages.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityAddScreen extends GetView<CommunityAddController> {
@@ -104,7 +110,6 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
     return Obx(() => Container(
         color: backGroundColor,
         child: Column(children: [
-          getVerSpace(FetchPixels.getPixelHeight(10)),
           getToolbarMenuWithoutImg(
               context,
               "취소",
@@ -118,20 +123,10 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               fontsize: 18,
               rightText: "등록",
               rightTextColor: controller.canRegister ? Colors.redAccent : Colors.grey.shade400,
-              rightFunction: () {
-                try {
-                  controller.add().then((value) => Get.back());
-                } catch (e) {
-                  print(e);
-                  // showDialog(
-                  //     barrierDismissible: false,
-                  //     builder: (context) {
-                  //       return const ResetDialog();
-                  //     },
-                  //     context: context);
-                }
+              rightFunction: () async {
+                controller.add();
               }),
-          getVerSpace(FetchPixels.getPixelHeight(10))
+          // getVerSpace(FetchPixels.getPixelHeight(10))
         ])));
   }
 

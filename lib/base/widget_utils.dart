@@ -1181,8 +1181,9 @@ Widget getToolbarMenuWithoutImg(BuildContext context, String leftText, Color? le
             function();
           },
           child: Container(
-              width: 50,
-              height: 40,
+              width: 70,
+              height: 60,
+              color: backGroundColor,
               child: Center(
                   child: getCustomFont(leftText!, fontsize!, leftTextColor!, 1,
                       fontWeight: weight!, fontFamily: fontFamily)))),
@@ -1200,8 +1201,9 @@ Widget getToolbarMenuWithoutImg(BuildContext context, String leftText, Color? le
                 rightFunction!();
               },
               child: Container(
-                  width: 50,
-                  height: 40,
+                  width: 70,
+                  height: 60,
+                  color: backGroundColor,
                   child: Center(
                       child: getCustomFont(rightText!, fontsize!, rightTextColor!, 1,
                           fontWeight: weight!, fontFamily: fontFamily))))
