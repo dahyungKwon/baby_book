@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import 'base/color_data.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
@@ -35,6 +36,24 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: Routes.homepath,
         getPages: AppPages.pages,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('ko'), // English
+          Locale('en'), // Spanish
+        ],
+        theme: ThemeData(
+          // accentColor: Color(0xffBA379B).withOpacity(.6),
+          // primaryColor: Color(0xffBA379B),
+          textSelectionTheme: TextSelectionThemeData(
+            selectionColor: Color(0xff9d9d9d).withOpacity(.5),
+            cursorColor: Color(0xff000000).withOpacity(.6),
+            selectionHandleColor: Color(0xff000000),
+          ),
+        ),
       );
     });
   }

@@ -675,7 +675,7 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
                             focusNode: myFocusNode,
                             obscureText: isPass,
                             showCursor: true,
-                            cursorColor: Colors.black87,
+                            // cursorColor: Colors.black87,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: fontWeight,

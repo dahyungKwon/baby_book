@@ -37,7 +37,7 @@ dependencies:
   dots_indicator: ^2.1.0
   dotted_line: ^3.1.0
   syncfusion_flutter_datepicker: ^20.1.56
-  intl: ^0.17.0
+  intl: any
   flutter_masked_text2: ^0.9.1
 
   url_launcher: ^6.1.10
@@ -53,6 +53,8 @@ dependencies:
   shimmer: ^3.0.0
   pull_to_refresh: ^2.0.0
   sizer: ^2.0.15
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
