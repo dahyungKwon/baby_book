@@ -75,7 +75,7 @@ class ModelPost {
         liked = json['liked'],
         disliked = json['disliked'],
         bookmark = json['bookmark'],
-        nickName = json['nickName'],
-        createdAtToString = json['createdAtToString'],
-        timeDiffForUi = json['timeDiffForUi'];
+        nickName = json['nickName'] ?? "",
+        createdAtToString = json['createdAtToString'] ?? "",
+        timeDiffForUi = json['timeDiffForUi'] ?? "";
 }

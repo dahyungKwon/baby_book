@@ -50,8 +50,10 @@ class HomeScreen extends GetView<HomeScreenController> {
               ],
             ),
             bottomNavigationBar: Container(
-                height: FetchPixels.getPixelHeight(55),
-                color: Colors.white,
+                height: FetchPixels.getPixelHeight(60),
+                // color: Colors.white,
+                decoration: const BoxDecoration(
+                    color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
                 child: Row(
                     children: List.generate(bottomBarNoSelectedImgList.length, (selectedTabIndex) {
                   return Expanded(

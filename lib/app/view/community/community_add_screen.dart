@@ -37,14 +37,10 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
           bottomNavigationBar: buildBottom(context),
           body: SafeArea(
             child: Container(
+              color: Colors.white,
               // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
               child: Column(
-                children: [
-                  getVerSpace(FetchPixels.getPixelHeight(20)),
-                  buildToolbar(context),
-                  getVerSpace(FetchPixels.getPixelHeight(30)),
-                  buildExpand(context)
-                ],
+                children: [buildToolbar(context), buildExpand(context)],
               ),
             ),
           ),
@@ -85,7 +81,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               enableEditing: false),
           getVerSpace(FetchPixels.getPixelHeight(0)),
           getDefaultTextFiledWithLabel2(context, "제목을 입력해주세요.", Colors.black45.withOpacity(0.3),
-              controller.titleController, Colors.grey, FetchPixels.getPixelHeight(22), FontWeight.w400,
+              controller.titleController, Colors.grey, FetchPixels.getPixelHeight(22), FontWeight.w500,
               function: () {},
               isEnable: false,
               withprefix: false,
@@ -105,16 +101,38 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
   }
 
   Widget buildToolbar(BuildContext context) {
-    return Obx(() => getToolbarMenuWithoutImg(context, "취소", Colors.black54, () {
-          Get.back();
-        },
-            istext: false,
-            isRight: true,
-            weight: FontWeight.w500,
-            fontsize: 18,
-            rightText: "등록",
-            rightTextColor: controller.canRegister ? Colors.redAccent : Colors.grey.shade400,
-            rightFunction: () {}));
+    return Obx(() => Container(
+        color: backGroundColor,
+        child: Column(children: [
+          getVerSpace(FetchPixels.getPixelHeight(10)),
+          getToolbarMenuWithoutImg(
+              context,
+              "취소",
+              Colors.black54,
+              () {
+                Get.back();
+              },
+              istext: false,
+              isRight: true,
+              weight: FontWeight.w500,
+              fontsize: 18,
+              rightText: "등록",
+              rightTextColor: controller.canRegister ? Colors.redAccent : Colors.grey.shade400,
+              rightFunction: () {
+                try {
+                  controller.add().then((value) => Get.back());
+                } catch (e) {
+                  print(e);
+                  // showDialog(
+                  //     barrierDismissible: false,
+                  //     builder: (context) {
+                  //       return const ResetDialog();
+                  //     },
+                  //     context: context);
+                }
+              }),
+          getVerSpace(FetchPixels.getPixelHeight(10))
+        ])));
   }
 
   Container buildBottom(BuildContext context) {
@@ -123,7 +141,9 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
 
     return Container(
         height: FetchPixels.getPixelHeight(55),
-        color: Colors.white,
+        // color: Colors.white,
+        decoration: const BoxDecoration(
+            color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(
             children: List.generate(helpToolList.length, (selectedTabIndex) {
           return Expanded(

@@ -630,19 +630,14 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
           absorbing: isEnable,
           child: GestureDetector(
             onTap: () {
+              myFocusNode.requestFocus();
               function();
             },
             child: Container(
               height: height,
               // margin: margin,
               alignment: alignmentGeometry,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                // boxShadow: const [
-                //   BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 1.0)),
-                // ],
-              ),
-              // borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+              decoration: BoxDecoration(color: Colors.white),
               child: Focus(
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
@@ -680,6 +675,7 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
                             focusNode: myFocusNode,
                             obscureText: isPass,
                             showCursor: true,
+                            cursorColor: Colors.black87,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: fontWeight,
@@ -1180,11 +1176,16 @@ Widget getToolbarMenuWithoutImg(BuildContext context, String leftText, Color? le
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       getHorSpace(FetchPixels.getPixelWidth(20)),
-      InkWell(
+      GestureDetector(
           onTap: () {
             function();
           },
-          child: getCustomFont(leftText!, fontsize!, leftTextColor!, 1, fontWeight: weight!, fontFamily: fontFamily)),
+          child: Container(
+              width: 50,
+              height: 40,
+              child: Center(
+                  child: getCustomFont(leftText!, fontsize!, leftTextColor!, 1,
+                      fontWeight: weight!, fontFamily: fontFamily)))),
       Expanded(
         child: Container(
           alignment: Alignment.center,
@@ -1194,12 +1195,16 @@ Widget getToolbarMenuWithoutImg(BuildContext context, String leftText, Color? le
         ),
       ),
       (isRight)
-          ? InkWell(
+          ? GestureDetector(
               onTap: () {
                 rightFunction!();
               },
-              child:
-                  getCustomFont(rightText!, fontsize!, rightTextColor!, 1, fontWeight: weight!, fontFamily: fontFamily))
+              child: Container(
+                  width: 50,
+                  height: 40,
+                  child: Center(
+                      child: getCustomFont(rightText!, fontsize!, rightTextColor!, 1,
+                          fontWeight: weight!, fontFamily: fontFamily))))
           : Container(),
       getHorSpace(FetchPixels.getPixelWidth(20)),
     ],
