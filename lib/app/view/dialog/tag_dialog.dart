@@ -11,10 +11,11 @@ import '../../controller/CommunityAddController.dart';
 import 'error_dialog.dart';
 
 class TagDialog extends GetView<CommunityTagAddController> {
-  TagDialog(List<String> addedTagList, {Key? key}) : super(key: key) {
+  TagDialog(List<String> selectedTagList, {Key? key}) : super(key: key) {
     Get.put(CommunityTagAddController());
+    controller.tagController.text = "";
     controller.selectedTagList = <String>[];
-    controller.selectedTagList.addAll(addedTagList);
+    controller.selectedTagList.addAll(selectedTagList);
   }
 
   SizedBox selectedTagList() {

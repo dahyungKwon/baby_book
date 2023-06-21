@@ -18,7 +18,7 @@ import '../dialog/tag_dialog.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityAddScreen extends GetView<CommunityAddController> {
-  List<String> helpToolList = ["images_outline.svg", "link_outline.svg", "tag_outline.svg"];
+  List<String> helpToolList = ["images_outline.svg", "tag_outline.svg", "link_outline.svg"];
 
   CommunityAddScreen({super.key}) {
     Get.delete<CommunityAddController>();
@@ -104,9 +104,11 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               isEnable: false,
               withprefix: false,
               minLines: true,
-              height: FetchPixels.getPixelHeight(500),
+              height: FetchPixels.getPixelHeight(450),
               alignmentGeometry: Alignment.topLeft),
           getVerSpace(FetchPixels.getPixelHeight(10)),
+          selectedLinkList(),
+          // getVerSpace(FetchPixels.getPixelHeight(10)),
           selectedTagList()
         ])));
   }
@@ -179,6 +181,46 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
     );
   }
 
+  GestureDetector selectedLinkList() {
+    return GestureDetector(
+      onTap: () {
+        if (controller.selectedLinkList.length > 0) {
+          Get.dialog(LinkDialog(controller.selectedLinkList));
+        }
+      },
+      child: SizedBox(
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              // scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.zero,
+              itemCount: controller.selectedLinkList.length,
+              itemBuilder: (context, index) {
+                String link = controller.selectedLinkList[index];
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // getVerSpace(FetchPixels.getPixelHeight(10)),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF5F6F8),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15.0),
+                          ),
+                        ),
+                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                        child: Expanded(child: Text(link, style: TextStyle(fontSize: 13, color: Colors.blueAccent))),
+                        // getVerSpace(FetchPixels.getPixelHeight(10)),
+                        // getSvgImage("close_outline.svg", width: 15, height: 15),
+                      ),
+                      getVerSpace(FetchPixels.getPixelHeight(5))
+                    ]);
+              })),
+    );
+  }
+
   Container buildBottom(BuildContext context) {
     double size = FetchPixels.getPixelHeight(50);
     double iconSize = FetchPixels.getPixelHeight(26);
@@ -197,9 +239,9 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
                 if (selectedTabIndex == 0) {
                   print("이미지 업로드");
                 } else if (selectedTabIndex == 1) {
-                  Get.dialog(LinkDialog(null));
-                } else if (selectedTabIndex == 2) {
                   Get.dialog(TagDialog(controller.selectedTagList));
+                } else if (selectedTabIndex == 2) {
+                  Get.dialog(LinkDialog(controller.selectedLinkList));
                 } else {
                   print("정의되지 않은 tab select $selectedTabIndex");
                 }

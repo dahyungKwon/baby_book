@@ -1,55 +1,136 @@
-import 'package:baby_book/app/view/home/home_screen.dart';
-import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
+import '../../controller/CommunityAddController.dart';
+import '../../controller/CommunityLinkAddController.dart';
 
-class LinkDialog extends StatefulWidget {
-  List<String>? selectedLinkList;
+class LinkDialog extends GetView<CommunityLinkAddController> {
+  LinkDialog(List<String> selectedLinkList, {Key? key}) : super(key: key) {
+    Get.put(CommunityLinkAddController());
+    controller.linkController.text = "";
+    controller.selectedLinkList = <String>[];
+    controller.selectedLinkList.addAll(selectedLinkList);
+  }
 
-  LinkDialog(this.selectedLinkList, {Key? key}) : super(key: key);
-
-  @override
-  State<LinkDialog> createState() => _LinkDialogState(selectedLinkList);
-}
-
-class _LinkDialogState extends State<LinkDialog> {
-  List<String>? selectedLinkList;
-
-  _LinkDialogState(this.selectedLinkList);
-
-  Future<bool> _onWillPop() async {
-    return false;
+  SizedBox selectedLinkList() {
+    return SizedBox(
+        height: 120,
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: controller.selectedLinkList.length,
+          itemBuilder: (context, index) {
+            String link = controller.selectedLinkList[index];
+            return GestureDetector(
+                onTap: () {
+                  controller.removeLink(index);
+                },
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF5F6F8),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15.0),
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                          child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  "$link",
+                                  style: TextStyle(fontSize: 15),
+                                )),
+                                getHorSpace(FetchPixels.getPixelHeight(10)),
+                                getSvgImage("close_outline.svg", width: 15, height: 15),
+                              ])),
+                      getVerSpace(FetchPixels.getPixelHeight(10))
+                    ]));
+          },
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () async {
+        Get.back();
+        return false;
+      },
       child: AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(20))),
         backgroundColor: backGroundColor,
         content: Builder(
           builder: (context) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                getVerSpace(FetchPixels.getPixelHeight(10)),
-                // getMultilineCustomFont(selectedTagList ?? "잠시 후 다시 시도해주세요.", 16, Colors.black,
-                //     fontWeight: FontWeight.w400, txtHeight: 1.3, textAlign: TextAlign.center),
-                getVerSpace(FetchPixels.getPixelHeight(30)),
-                getButton(context, const Color(0xffd2d2d2), "링크 추가", Colors.black, () {
-                  Constant.backToPrev(context);
-                }, 15,
-                    weight: FontWeight.w400,
-                    buttonHeight: FetchPixels.getPixelHeight(40),
-                    borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
-              ],
-            );
+            return Obx(() => Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    getVerSpace(FetchPixels.getPixelHeight(10)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                              child: getDefaultTextFiledWithLabel2(
+                                  context,
+                                  "링크(URL)를 입력해주세요.",
+                                  Colors.black45.withOpacity(0.3),
+                                  controller.linkController,
+                                  Colors.grey,
+                                  FetchPixels.getPixelHeight(15),
+                                  FontWeight.w400,
+                                  function: () {},
+                                  isEnable: false,
+                                  withprefix: false,
+                                  minLines: true,
+                                  height: FetchPixels.getPixelHeight(50),
+                                  alignmentGeometry: Alignment.center)),
+                          getButton(context, Color(0xFFF5F6F8), "추가", Colors.black, () {
+                            controller.addLink();
+                          }, 15,
+                              weight: FontWeight.w500,
+                              buttonWidth: FetchPixels.getPixelHeight(50),
+                              buttonHeight: FetchPixels.getPixelHeight(50),
+                              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8)))
+                        ]),
+                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                    selectedLinkList(),
+                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          getButton(context, Colors.transparent, "취소", Colors.black, () {
+                            Get.back();
+                          }, 15,
+                              weight: FontWeight.w500,
+                              buttonWidth: FetchPixels.getPixelHeight(60),
+                              buttonHeight: FetchPixels.getPixelHeight(40),
+                              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
+                          getHorSpace(FetchPixels.getPixelHeight(20)),
+                          getButton(context, Colors.transparent, "완료", Colors.black, () {
+                            Get.find<CommunityAddController>().selectedLinkList = <String>[];
+                            Get.find<CommunityAddController>().selectedLinkList.addAll(controller.selectedLinkList);
+                            Get.back();
+                          }, 15,
+                              weight: FontWeight.w500,
+                              buttonWidth: FetchPixels.getPixelHeight(60),
+                              buttonHeight: FetchPixels.getPixelHeight(40),
+                              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8)))
+                        ])
+                  ],
+                ));
           },
         ),
       ),

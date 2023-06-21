@@ -40,6 +40,13 @@ class CommunityAddController extends GetxController {
 
   set selectedTagList(value) => _selectedTagList.value = value;
 
+  ///선택된 링크 리스트
+  final _selectedLinkList = <String>[].obs;
+
+  get selectedLinkList => _selectedLinkList.value;
+
+  set selectedLinkList(value) => _selectedLinkList.value = value;
+
   // late PostType postType;
   TextEditingController titleController = TextEditingController();
   TextEditingController contentsController = TextEditingController();
@@ -126,14 +133,14 @@ class CommunityAddController extends GetxController {
     try {
       ModelPost post = await postRepository.add(
           modelPostRequest: ModelPostRequest(
-        postType: postType,
-        memberId: memberId!,
-        title: titleController.text,
-        contents: contentsController.text,
-        postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
-        postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
-        postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
-      ));
+              postType: postType,
+              memberId: memberId!,
+              title: titleController.text,
+              contents: contentsController.text,
+              postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
+              postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
+              postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
+              externalLink: selectedLinkList.length > 0 ? selectedLinkList[0] : null));
 
       Get.back(result: true);
     } on InvalidMemberException catch (e) {
@@ -143,12 +150,6 @@ class CommunityAddController extends GetxController {
       print(e);
       Get.toNamed(Routes.loginPath);
     }
-  }
-
-  Future<bool> resetTagList(List<String> tagList) async {
-    // _selectedTagList.clear();
-    selectedTagList.addAll(tagList);
-    return true;
   }
 
   @override
