@@ -606,23 +606,31 @@ Widget getDefaultTextFiledWithLabel(
 }
 
 ///custom
-Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hintColor,
-    TextEditingController textEditingController, Color fontColor, double fontSize, FontWeight fontWeight,
-    {bool withprefix = false,
-    bool withSufix = false,
-    bool minLines = false,
-    EdgeInsetsGeometry margin = EdgeInsets.zero,
-    bool isPass = false,
-    bool isEnable = true,
-    double? height,
-    double? imageHeight,
-    double? imageWidth,
-    String? image,
-    String? suffiximage,
-    required Function function,
-    Function? imagefunction,
-    AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
-    bool enableEditing = true}) {
+Widget getDefaultTextFiledWithLabel2(
+  BuildContext context,
+  String hint,
+  Color hintColor,
+  TextEditingController textEditingController,
+  Color fontColor,
+  double fontSize,
+  FontWeight fontWeight, {
+  bool withprefix = false,
+  bool withSufix = false,
+  bool minLines = false,
+  EdgeInsetsGeometry margin = EdgeInsets.zero,
+  bool isPass = false,
+  bool isEnable = true,
+  double? height,
+  double? imageHeight,
+  double? imageWidth,
+  String? image,
+  String? suffiximage,
+  required Function function,
+  Function? imagefunction,
+  AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
+  bool enableEditing = true,
+  Function? onEnter,
+}) {
   FocusNode myFocusNode = FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {

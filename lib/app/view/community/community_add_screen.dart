@@ -3,6 +3,7 @@ import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
 import 'package:baby_book/app/view/dialog/confirm_dialog.dart';
 import 'package:baby_book/app/view/dialog/error_dialog.dart';
+import 'package:baby_book/app/view/dialog/link_dialog.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,12 +14,14 @@ import '../../exception/exception_invalid_param.dart';
 import '../../models/model_post.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
+import '../dialog/tag_dialog.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityAddScreen extends GetView<CommunityAddController> {
   List<String> helpToolList = ["images_outline.svg", "link_outline.svg", "tag_outline.svg"];
 
   CommunityAddScreen({super.key}) {
+    Get.delete<CommunityAddController>();
     Get.put(CommunityAddController(postRepository: PostRepository()));
     PostType postType = PostType.findByCode(Get.parameters['postType'] ?? PostType.none.code);
     if (postType == PostType.all) {
@@ -101,8 +104,10 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               isEnable: false,
               withprefix: false,
               minLines: true,
-              height: FetchPixels.getPixelHeight(550),
+              height: FetchPixels.getPixelHeight(500),
               alignmentGeometry: Alignment.topLeft),
+          getVerSpace(FetchPixels.getPixelHeight(10)),
+          selectedTagList()
         ])));
   }
 
@@ -130,6 +135,50 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
         ])));
   }
 
+  GestureDetector selectedTagList() {
+    return GestureDetector(
+      onTap: () {
+        if (controller.selectedTagList.length > 0) {
+          Get.dialog(TagDialog(controller.selectedTagList));
+        }
+      },
+      child: SizedBox(
+          height: 120,
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              // scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.zero,
+              itemCount: controller.selectedTagList.length,
+              itemBuilder: (context, index) {
+                String tag = controller.selectedTagList[index];
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // getVerSpace(FetchPixels.getPixelHeight(10)),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF5F6F8),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15.0),
+                          ),
+                        ),
+                        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                        child: Text(
+                          "#$tag",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        // getVerSpace(FetchPixels.getPixelHeight(10)),
+                        // getSvgImage("close_outline.svg", width: 15, height: 15),
+                      ),
+                      getVerSpace(FetchPixels.getPixelHeight(5))
+                    ]);
+              })),
+    );
+  }
+
   Container buildBottom(BuildContext context) {
     double size = FetchPixels.getPixelHeight(50);
     double iconSize = FetchPixels.getPixelHeight(26);
@@ -145,7 +194,15 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
             flex: 1,
             child: InkWell(
               onTap: () {
-                // controller.tabIndex = selectedTabIndex;
+                if (selectedTabIndex == 0) {
+                  print("이미지 업로드");
+                } else if (selectedTabIndex == 1) {
+                  Get.dialog(LinkDialog(null));
+                } else if (selectedTabIndex == 2) {
+                  Get.dialog(TagDialog(controller.selectedTagList));
+                } else {
+                  print("정의되지 않은 tab select $selectedTabIndex");
+                }
               },
               child: Center(
                 child: Container(
