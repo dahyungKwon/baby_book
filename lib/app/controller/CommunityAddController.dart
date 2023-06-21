@@ -7,6 +7,7 @@ import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../base/pref_data.dart';
 import '../../base/resizer/fetch_pixels.dart';
@@ -51,6 +52,14 @@ class CommunityAddController extends GetxController {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentsController = TextEditingController();
   TextEditingController postTypeController = TextEditingController();
+
+  /// 선택된 이미지 리스트
+  final ImagePicker _picker = ImagePicker();
+  final _selectedImageList = <XFile>[].obs;
+
+  get selectedImageList => _selectedImageList.value;
+
+  set selectedImageList(value) => _selectedImageList.value = value;
 
   CommunityAddController({required this.postRepository}) {
     assert(postRepository != null);
@@ -149,6 +158,18 @@ class CommunityAddController extends GetxController {
     } catch (e) {
       print(e);
       Get.toNamed(Routes.loginPath);
+    }
+  }
+
+  Future<void> pickImage() async {
+    List<XFile> imageList = await _picker.pickMultiImage(maxWidth: 720, maxHeight: 1440, imageQuality: 100);
+    if (imageList != null) {
+      if (imageList.length > 3) {
+        Get.dialog(ErrorDialog("이미지는 최대 3장까지 등록 가능합니다."));
+        selectedImageList = imageList.sublist(0, 3);
+      } else {
+        selectedImageList = imageList;
+      }
     }
   }
 

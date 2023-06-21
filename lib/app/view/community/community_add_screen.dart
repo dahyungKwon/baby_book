@@ -1,19 +1,17 @@
+import 'dart:io';
+
 import 'package:baby_book/app/controller/CommunityAddController.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
-import 'package:baby_book/app/view/dialog/confirm_dialog.dart';
-import 'package:baby_book/app/view/dialog/error_dialog.dart';
 import 'package:baby_book/app/view/dialog/link_dialog.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:sizer/sizer.dart';
 import '../../../base/color_data.dart';
 import '../../../base/widget_utils.dart';
-import '../../exception/exception_invalid_member.dart';
-import '../../exception/exception_invalid_param.dart';
-import '../../models/model_post.dart';
 import '../../repository/post_repository.dart';
-import '../../routes/app_pages.dart';
 import '../dialog/tag_dialog.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
@@ -104,12 +102,14 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               isEnable: false,
               withprefix: false,
               minLines: true,
-              height: FetchPixels.getPixelHeight(450),
+              height: FetchPixels.getPixelHeight(400),
               alignmentGeometry: Alignment.topLeft),
           getVerSpace(FetchPixels.getPixelHeight(10)),
           selectedLinkList(),
+          selectedTagList(),
+          getVerSpace(FetchPixels.getPixelHeight(10)),
+          selectedImageList(),
           // getVerSpace(FetchPixels.getPixelHeight(10)),
-          selectedTagList()
         ])));
   }
 
@@ -139,45 +139,110 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
 
   GestureDetector selectedTagList() {
     return GestureDetector(
-      onTap: () {
-        if (controller.selectedTagList.length > 0) {
-          Get.dialog(TagDialog(controller.selectedTagList));
-        }
-      },
-      child: SizedBox(
-          height: 120,
-          child: ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              // scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.zero,
-              itemCount: controller.selectedTagList.length,
-              itemBuilder: (context, index) {
-                String tag = controller.selectedTagList[index];
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // getVerSpace(FetchPixels.getPixelHeight(10)),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF5F6F8),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                        child: Text(
-                          "#$tag",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                        // getVerSpace(FetchPixels.getPixelHeight(10)),
-                        // getSvgImage("close_outline.svg", width: 15, height: 15),
+        onTap: () {
+          if (controller.selectedTagList.length > 0) {
+            Get.dialog(TagDialog(controller.selectedTagList));
+          }
+        },
+        child: Wrap(
+            direction: Axis.horizontal, // 정렬 방향
+            alignment: WrapAlignment.start, // 정렬 방식
+            spacing: 1, // 상하(좌우) 공간
+            runSpacing: 5, // 좌우(상하) 공간
+            children: controller.selectedTagList
+                .map<Widget>((e) => Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF5F6F8),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    ),
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                    child: Expanded(child: Text("#$e", style: TextStyle(fontSize: 15)))))
+                .toList()));
+
+// return GestureDetector(
+//   onTap: () {
+//     if (controller.selectedTagList.length > 0) {
+//       Get.dialog(TagDialog(controller.selectedTagList));
+//     }
+//   },
+//   child: SizedBox(
+//       child: ListView.builder(
+//           shrinkWrap: true,
+//           physics: NeverScrollableScrollPhysics(),
+//           // scrollDirection: Axis.horizontal,
+//           padding: EdgeInsets.zero,
+//           itemCount: controller.selectedTagList.length,
+//           itemBuilder: (context, index) {
+//             String tag = controller.selectedTagList[index];
+//             return Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   // getVerSpace(FetchPixels.getPixelHeight(10)),
+//                   Container(
+//                     decoration: const BoxDecoration(
+//                       color: Color(0xFFF5F6F8),
+//                       borderRadius: BorderRadius.all(
+//                         Radius.circular(15.0),
+//                       ),
+//                     ),
+//                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+//                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+//                     child: Expanded(
+//                         child: Text(
+//                       "#$tag",
+//                       style: TextStyle(fontSize: 15),
+//                     )),
+//                     // getVerSpace(FetchPixels.getPixelHeight(10)),
+//                     // getSvgImage("close_outline.svg", width: 15, height: 15),
+//                   ),
+//                   getVerSpace(FetchPixels.getPixelHeight(5))
+//                 ]);
+//           })),
+  }
+
+  SizedBox selectedImageList() {
+    return SizedBox(
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          // scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.zero,
+          itemCount: controller.selectedImageList.length,
+          itemBuilder: (context, index) {
+            XFile image = controller.selectedImageList[index];
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // getVerSpace(FetchPixels.getPixelHeight(10)),
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: 100, //minimum height
+                      minWidth: 100.w, // minimum width
+
+                      maxHeight: 800,
+                      //maximum height set to 100% of vertical height
+
+                      maxWidth: 100.w,
+                      //maximum width set to 100% of width
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF5F6F8),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
                       ),
-                      getVerSpace(FetchPixels.getPixelHeight(5))
-                    ]);
-              })),
+                    ),
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.file(File(image.path), fit: BoxFit.cover)),
+                  ),
+                  getVerSpace(FetchPixels.getPixelHeight(5))
+                ]);
+          }),
     );
   }
 
@@ -237,7 +302,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
             child: InkWell(
               onTap: () {
                 if (selectedTabIndex == 0) {
-                  print("이미지 업로드");
+                  controller.pickImage();
                 } else if (selectedTabIndex == 1) {
                   Get.dialog(TagDialog(controller.selectedTagList));
                 } else if (selectedTabIndex == 2) {
