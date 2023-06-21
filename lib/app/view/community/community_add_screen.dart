@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 import '../../../base/color_data.dart';
 import '../../../base/widget_utils.dart';
+import '../../repository/post_image_repository.dart';
 import '../../repository/post_repository.dart';
 import '../dialog/tag_dialog.dart';
 
@@ -20,7 +21,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
 
   CommunityAddScreen({super.key}) {
     Get.delete<CommunityAddController>();
-    Get.put(CommunityAddController(postRepository: PostRepository()));
+    Get.put(CommunityAddController(postRepository: PostRepository(), postImageRepository: PostImageRepository()));
     PostType postType = PostType.findByCode(Get.parameters['postType'] ?? PostType.none.code);
     if (postType == PostType.all) {
       postType = PostType.none;

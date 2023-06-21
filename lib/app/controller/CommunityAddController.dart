@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../base/pref_data.dart';
 import '../../base/resizer/fetch_pixels.dart';
 import '../exception/exception_invalid_member.dart';
+import '../repository/post_image_repository.dart';
 import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
 import '../view/dialog/error_dialog.dart';
@@ -20,6 +21,7 @@ import 'CommunityListController.dart';
 
 class CommunityAddController extends GetxController {
   final PostRepository postRepository;
+  final PostImageRepository postImageRepository;
 
   ///right color
   final _canRegister = false.obs;
@@ -61,7 +63,7 @@ class CommunityAddController extends GetxController {
 
   set selectedImageList(value) => _selectedImageList.value = value;
 
-  CommunityAddController({required this.postRepository}) {
+  CommunityAddController({required this.postRepository, required this.postImageRepository}) {
     assert(postRepository != null);
 
     titleController.addListener(_titleListener);
@@ -151,7 +153,9 @@ class CommunityAddController extends GetxController {
               postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
               externalLink: selectedLinkList.length > 0 ? selectedLinkList[0] : null));
 
-      Get.back(result: true);
+      bool result = await postImageRepository.addImage(postId: post.postId, selectedImageList: selectedImageList);
+
+      Get.back(result: result);
     } on InvalidMemberException catch (e) {
       print(e);
       Get.toNamed(Routes.loginPath);
