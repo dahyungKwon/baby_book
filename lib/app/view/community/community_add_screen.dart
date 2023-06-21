@@ -159,47 +159,6 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
                     child: Expanded(child: Text("#$e", style: TextStyle(fontSize: 15)))))
                 .toList()));
-
-// return GestureDetector(
-//   onTap: () {
-//     if (controller.selectedTagList.length > 0) {
-//       Get.dialog(TagDialog(controller.selectedTagList));
-//     }
-//   },
-//   child: SizedBox(
-//       child: ListView.builder(
-//           shrinkWrap: true,
-//           physics: NeverScrollableScrollPhysics(),
-//           // scrollDirection: Axis.horizontal,
-//           padding: EdgeInsets.zero,
-//           itemCount: controller.selectedTagList.length,
-//           itemBuilder: (context, index) {
-//             String tag = controller.selectedTagList[index];
-//             return Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   // getVerSpace(FetchPixels.getPixelHeight(10)),
-//                   Container(
-//                     decoration: const BoxDecoration(
-//                       color: Color(0xFFF5F6F8),
-//                       borderRadius: BorderRadius.all(
-//                         Radius.circular(15.0),
-//                       ),
-//                     ),
-//                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-//                     child: Expanded(
-//                         child: Text(
-//                       "#$tag",
-//                       style: TextStyle(fontSize: 15),
-//                     )),
-//                     // getVerSpace(FetchPixels.getPixelHeight(10)),
-//                     // getSvgImage("close_outline.svg", width: 15, height: 15),
-//                   ),
-//                   getVerSpace(FetchPixels.getPixelHeight(5))
-//                 ]);
-//           })),
   }
 
   SizedBox selectedImageList() {
@@ -212,36 +171,69 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
           itemCount: controller.selectedImageList.length,
           itemBuilder: (context, index) {
             XFile image = controller.selectedImageList[index];
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // getVerSpace(FetchPixels.getPixelHeight(10)),
-                  Container(
-                    constraints: BoxConstraints(
-                      minHeight: 100, //minimum height
-                      minWidth: 100.w, // minimum width
+            return Stack(children: [
+              // getVerSpace(FetchPixels.getPixelHeight(10)),
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: 100, //minimum height
+                  minWidth: 100.w, // minimum width
 
-                      maxHeight: 800,
-                      //maximum height set to 100% of vertical height
+                  maxHeight: 800,
+                  //maximum height set to 100% of vertical height
 
-                      maxWidth: 100.w,
-                      //maximum width set to 100% of width
-                    ),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF5F6F8),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15.0),
-                      ),
-                    ),
-                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.file(File(image.path), fit: BoxFit.cover)),
+                  maxWidth: 100.w,
+                  //maximum width set to 100% of width
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF5F6F8),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15.0),
                   ),
-                  getVerSpace(FetchPixels.getPixelHeight(5))
-                ]);
+                ),
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0), child: Image.file(File(image.path), fit: BoxFit.cover)),
+              ),
+              getVerSpace(FetchPixels.getPixelHeight(5)),
+              Positioned(
+                  top: 15,
+                  right: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.dialog(AlertDialog(
+                        // title: const Text('dialog title'),
+                        content: const Text(
+                          '이미지를 삭제하시겠습니까?',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        contentPadding: EdgeInsets.only(
+                            top: FetchPixels.getPixelHeight(20),
+                            left: FetchPixels.getPixelHeight(20),
+                            bottom: FetchPixels.getPixelHeight(10)),
+                        actions: [
+                          TextButton(
+                              style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+                              onPressed: Get.back,
+                              child: const Text('취소', style: TextStyle(color: Colors.black, fontSize: 14))),
+                          TextButton(
+                            style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+                            onPressed: () {
+                              controller.selectedImageList.removeAt(index);
+                              controller.refreshSelectedImageList();
+                              Get.back();
+                            },
+                            child: const Text('삭제', style: TextStyle(color: Colors.black, fontSize: 14)),
+                          ),
+                        ],
+                      ));
+                    },
+                    child: const Icon(
+                      Icons.cancel_rounded,
+                      color: Colors.black87,
+                    ),
+                  )),
+            ]);
           }),
     );
   }

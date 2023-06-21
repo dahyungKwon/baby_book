@@ -163,14 +163,28 @@ class CommunityAddController extends GetxController {
 
   Future<void> pickImage() async {
     List<XFile> imageList = await _picker.pickMultiImage(maxWidth: 720, maxHeight: 1440, imageQuality: 100);
-    if (imageList != null) {
-      if (imageList.length > 3) {
+    if (imageList != null && imageList.isNotEmpty) {
+      selectedImageList.addAll(imageList);
+
+      if (selectedImageList.length > 3) {
         Get.dialog(ErrorDialog("이미지는 최대 3장까지 등록 가능합니다."));
-        selectedImageList = imageList.sublist(0, 3);
-      } else {
-        selectedImageList = imageList;
+        selectedImageList = selectedImageList.sublist(0, 3);
       }
+
+      refreshSelectedImageList();
     }
+  }
+
+  refreshSelectedImageList() {
+    _selectedImageList.refresh();
+  }
+
+  refreshSelectedTagList() {
+    _selectedTagList.refresh();
+  }
+
+  refreshSelectedLinkList() {
+    _selectedLinkList.refresh();
   }
 
   @override
