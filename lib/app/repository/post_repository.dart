@@ -44,6 +44,27 @@ class PostRepository {
         .toList();
   }
 
+  Future<ModelPost> get({required String postId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/posts/$postId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return ModelPost.fromJson(response.data['body']);
+  }
+
   Future<ModelPost> add({required ModelPostRequest modelPostRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 

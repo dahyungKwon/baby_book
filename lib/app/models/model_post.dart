@@ -1,5 +1,7 @@
 import 'package:baby_book/app/view/community/post_type.dart';
 
+import 'model_post_file.dart';
+
 class ModelPost {
   String postId;
   PostType postType;
@@ -26,33 +28,46 @@ class ModelPost {
   bool? bookmark = false;
 
   String nickName;
-  String createdAtToString;
-  String timeDiffForUi;
+  String? createdAtToString;
+  String? timeDiffForUi;
 
-  ModelPost({
-    required this.postId,
-    required this.postType,
-    required this.memberId,
-    required this.title,
-    required this.contents,
-    this.externalLink,
-    this.likeCount,
-    this.dislikeCount,
-    this.viewCount,
-    this.commentCount,
-    this.bookmarkCount,
-    required this.createdAt,
-    this.updatedAt,
-    this.postTag1,
-    this.postTag2,
-    this.postTag3,
-    this.liked,
-    this.disliked,
-    this.bookmark,
-    required this.nickName,
-    required this.createdAtToString,
-    required this.timeDiffForUi,
-  });
+  List<ModelPostFile>? postFileList;
+
+  ModelPost(
+      {required this.postId,
+      required this.postType,
+      required this.memberId,
+      required this.title,
+      required this.contents,
+      this.externalLink,
+      this.likeCount,
+      this.dislikeCount,
+      this.viewCount,
+      this.commentCount,
+      this.bookmarkCount,
+      required this.createdAt,
+      this.updatedAt,
+      this.postTag1,
+      this.postTag2,
+      this.postTag3,
+      this.liked,
+      this.disliked,
+      this.bookmark,
+      required this.nickName,
+      this.createdAtToString,
+      this.timeDiffForUi,
+      this.postFileList});
+
+  static ModelPost createModelPostForObsInit() {
+    return ModelPost(
+        postId: "",
+        postType: PostType.none,
+        memberId: "",
+        title: "",
+        contents: "",
+        createdAt: DateTime.now(),
+        nickName: "");
+  }
 
   // JSON형태에서부터 데이터를 받아온다.
   ModelPost.fromJson(Map<String, dynamic> json)
@@ -77,5 +92,33 @@ class ModelPost {
         bookmark = json['bookmark'],
         nickName = json['nickName'] ?? "",
         createdAtToString = json['createdAtToString'] ?? "",
-        timeDiffForUi = json['timeDiffForUi'] ?? "";
+        timeDiffForUi = json['timeDiffForUi'] ?? "",
+        postFileList =
+            List<ModelPostFile>.from(json['postFileList'].map((item) => ModelPostFile.fromJson(item))).toList();
+
+  copyWith({required ModelPost selectedPost}) {
+    postId = selectedPost.postId;
+    postType = selectedPost.postType;
+    memberId = selectedPost.memberId;
+    title = selectedPost.title;
+    contents = selectedPost.contents;
+    externalLink = selectedPost.externalLink;
+    likeCount = selectedPost.likeCount;
+    dislikeCount = selectedPost.dislikeCount;
+    viewCount = selectedPost.viewCount;
+    commentCount = selectedPost.commentCount;
+    bookmarkCount = selectedPost.bookmarkCount;
+    createdAt = selectedPost.createdAt;
+    updatedAt = selectedPost.updatedAt;
+    postTag1 = selectedPost.postTag1;
+    postTag2 = selectedPost.postTag2;
+    postTag3 = selectedPost.postTag3;
+    liked = selectedPost.liked;
+    disliked = selectedPost.disliked;
+    bookmark = selectedPost.bookmark;
+    nickName = selectedPost.nickName;
+    createdAtToString = selectedPost.createdAtToString;
+    timeDiffForUi = selectedPost.timeDiffForUi;
+    postFileList = selectedPost.postFileList;
+  }
 }
