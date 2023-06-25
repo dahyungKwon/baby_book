@@ -1,5 +1,6 @@
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
+import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -7,16 +8,19 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/CommunityDetailController.dart';
+import '../../models/model_comment_response.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
   CommunityDetailScreen({super.key}) {
     Get.delete<CommunityDetailController>();
-    Get.put(CommunityDetailController(postRepository: PostRepository(), postId: Get.parameters['postId']!));
+    Get.put(CommunityDetailController(
+        postRepository: PostRepository(), commentRepository: CommentRepository(), postId: Get.parameters['postId']!));
   }
 
   @override
@@ -37,7 +41,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 child: Obx(() => Container(
                     child: controller.loading
                         ? const ListSkeleton()
-                        : Column(children: [top(context), body(context, controller.post)]))))));
+                        : Column(children: [top(context), body(context, controller.post, controller.commentList)]))))));
   }
 
   Widget top(BuildContext context) {
@@ -63,7 +67,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         ));
   }
 
-  Widget body(BuildContext context, ModelPost modelPost) {
+  Widget body(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {
     return Expanded(
       flex: 1,
       child: ListView(
@@ -73,7 +77,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         children: [
           post(context, modelPost),
           Container(height: FetchPixels.getPixelHeight(25), color: backGroundColor),
-          comment(context),
+          comment(context, commentList),
         ],
       ),
     );
@@ -264,7 +268,29 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     );
   }
 
-  Widget comment(BuildContext context) {
-    return Text("코멘트");
+  Widget comment(BuildContext context, List<ModelCommentResponse> commentList) {
+    ModelCommentResponse comment = commentList[0];
+    return Container(
+        // height: 50.h,
+        // margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(15)),
+        padding:
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
+        decoration: const BoxDecoration(
+            color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+          getVerSpace(FetchPixels.getPixelHeight(10)),
+          Row(children: [
+            getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.redAccent, 1, fontWeight: FontWeight.w400),
+            getCustomFont(comment.myComment ? "*" : "", 13, Colors.orangeAccent, 1, fontWeight: FontWeight.w400)
+          ]),
+          getVerSpace(FetchPixels.getPixelHeight(15)),
+          getCustomFont(comment.comment.body ?? "", 14, Colors.black, 3, fontWeight: FontWeight.w400),
+          getVerSpace(FetchPixels.getPixelHeight(15)),
+          getCustomFont("${DateFormat('yyyy-MM-dd HH:mm').format(comment.comment.updatedAt!)} ${comment.timeDiffForUi}",
+              12, Colors.black54, 1,
+              fontWeight: FontWeight.w400),
+          getVerSpace(FetchPixels.getPixelHeight(20))
+        ]));
   }
 }

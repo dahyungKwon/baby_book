@@ -1,4 +1,4 @@
-import 'package:baby_book/app/models/model_book.dart';
+import 'package:baby_book/app/models/model_comment_response.dart';
 import 'package:dio/dio.dart';
 
 import '../../base/pref_data.dart';
@@ -11,18 +11,14 @@ class CommentRepository {
     receiveTimeout: 3000,
   ));
 
-  Future<List<ModelBook>> getBookList({
-    required String categoryList,
+  Future<List<ModelCommentResponse>> get({
+    required String commentTargetId,
   }) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
-      '/bookset',
-      queryParameters: {
-        'pageSize': 15,
-        'pageNumber': '1',
-        'categoryList': categoryList, //'MATH,LIFE'
-      },
+      '/comments',
+      queryParameters: {'commentTargetId': commentTargetId},
       options: Options(
         headers: {"at": accessToken},
       ),
@@ -37,9 +33,87 @@ class CommentRepository {
     }
 
     return response.data['body']
-        .map<ModelBook>(
-          (item) => ModelBook.fromJson(item),
+        .map<ModelCommentResponse>(
+          (item) => ModelCommentResponse.fromJson(item),
         )
         .toList();
+  }
+
+  Future<bool> post({
+    String commentType = "COMMUNITY",
+    required String commentTargetId,
+    required String body,
+    String? parentId,
+  }) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.post(
+      '/comments',
+      data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
+  }
+
+  Future<bool> modify({
+    String commentType = "COMMUNITY",
+    required String commentId,
+    required String commentTargetId,
+    required String body,
+    String? parentId,
+  }) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.put(
+      '/comments/$commentId',
+      data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
+  }
+
+  Future<bool> delete({
+    required String commentId,
+  }) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.delete(
+      '/comments/$commentId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
   }
 }
