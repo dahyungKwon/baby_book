@@ -33,8 +33,12 @@ class CommunityDetailController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    loading = true;
+
     ModelPost selectedPost = await postRepository.get(postId: postId);
     post.copyWith(selectedPost: selectedPost);
     _post.refresh();
+
+    loading = false;
   }
 }

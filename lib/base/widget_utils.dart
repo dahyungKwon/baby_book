@@ -330,7 +330,7 @@ DecorationImage getDecorationAssetImage(BuildContext buildContext, String image,
   return DecorationImage(image: AssetImage((Constant.assetImagePath) + image), fit: fit, scale: FetchPixels.getScale());
 }
 
-Widget getCustomFont(String text, double fontSize, Color fontColor, int maxLine,
+Widget getCustomFont(String text, double fontSize, Color fontColor, int? maxLine,
     {String fontFamily = Constant.fontsFamily,
     TextOverflow overflow = TextOverflow.ellipsis,
     TextDecoration decoration = TextDecoration.none,
@@ -1270,5 +1270,21 @@ Widget getDivider(Color color, double height, double thickness) {
     color: color,
     height: height,
     thickness: thickness,
+  );
+}
+
+Widget getSimpleButton(String svgImageName, Function? function) {
+  return GestureDetector(
+    onTap: () {
+      if (function != null) {
+        function();
+      }
+    },
+    child: Container(
+        alignment: Alignment.center,
+        width: FetchPixels.getPixelHeight(50),
+        height: FetchPixels.getPixelHeight(50),
+        child:
+            getSvgImage(width: FetchPixels.getPixelHeight(26), height: FetchPixels.getPixelHeight(26), svgImageName)),
   );
 }

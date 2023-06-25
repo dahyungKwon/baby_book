@@ -10,11 +10,11 @@ class ModelPost {
   String contents;
   String? externalLink;
 
-  int? likeCount = 0;
-  int? dislikeCount = 0;
-  int? viewCount = 0;
-  int? commentCount = 0;
-  int? bookmarkCount = 0;
+  int likeCount = 0;
+  int dislikeCount = 0;
+  int viewCount = 0;
+  int commentCount = 0;
+  int bookmarkCount = 0;
 
   DateTime createdAt;
   DateTime? updatedAt;
@@ -22,6 +22,7 @@ class ModelPost {
   String? postTag1;
   String? postTag2;
   String? postTag3;
+  List<String> postTagList = [];
 
   bool? liked = false;
   bool? disliked = false;
@@ -31,7 +32,7 @@ class ModelPost {
   String? createdAtToString;
   String? timeDiffForUi;
 
-  List<ModelPostFile>? postFileList;
+  List<ModelPostFile> postFileList;
 
   ModelPost(
       {required this.postId,
@@ -40,11 +41,11 @@ class ModelPost {
       required this.title,
       required this.contents,
       this.externalLink,
-      this.likeCount,
-      this.dislikeCount,
-      this.viewCount,
-      this.commentCount,
-      this.bookmarkCount,
+      this.likeCount = 0,
+      this.dislikeCount = 0,
+      this.viewCount = 0,
+      this.commentCount = 0,
+      this.bookmarkCount = 0,
       required this.createdAt,
       this.updatedAt,
       this.postTag1,
@@ -56,7 +57,9 @@ class ModelPost {
       required this.nickName,
       this.createdAtToString,
       this.timeDiffForUi,
-      this.postFileList});
+      this.postFileList = const []}) {
+    postTagList = initPostTagList(postTag1, postTag2, postTag3);
+  }
 
   static ModelPost createModelPostForObsInit() {
     return ModelPost(
@@ -87,6 +90,7 @@ class ModelPost {
         postTag1 = json['postTag1'],
         postTag2 = json['postTag2'],
         postTag3 = json['postTag3'],
+        postTagList = initPostTagList(json['postTag1'], json['postTag2'], json['postTag3']),
         liked = json['liked'],
         disliked = json['disliked'],
         bookmark = json['bookmark'],
@@ -113,6 +117,8 @@ class ModelPost {
     postTag1 = selectedPost.postTag1;
     postTag2 = selectedPost.postTag2;
     postTag3 = selectedPost.postTag3;
+    postTagList = initPostTagList(postTag1, postTag2, postTag3);
+
     liked = selectedPost.liked;
     disliked = selectedPost.disliked;
     bookmark = selectedPost.bookmark;
@@ -120,5 +126,27 @@ class ModelPost {
     createdAtToString = selectedPost.createdAtToString;
     timeDiffForUi = selectedPost.timeDiffForUi;
     postFileList = selectedPost.postFileList;
+  }
+
+  static List<String> initPostTagList(String? postTag1, String? postTag2, String? postTag3) {
+    List<String> list = [];
+
+    if (postTag1 != null && postTag1 != "") {
+      list.add(postTag1!);
+    }
+
+    if (postTag2 != null && postTag2 != "") {
+      list.add(postTag2!);
+    }
+
+    if (postTag3 != null && postTag3 != "") {
+      list.add(postTag3!);
+    }
+
+    return list;
+  }
+
+  bool existExternalLink() {
+    return externalLink != null && externalLink!.isNotEmpty;
   }
 }
