@@ -1,3 +1,4 @@
+import 'package:baby_book/app/models/model_comment.dart';
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
@@ -41,33 +42,50 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 child: Obx(() => Container(
                     child: controller.loading
                         ? const ListSkeleton()
-                        : Column(children: [top(context), body(context, controller.post, controller.commentList)]))))));
+                        : Column(children: [
+                            buildTop(context),
+                            buildBody(context, controller.post, controller.commentList)
+                          ]))))));
   }
 
-  Widget top(BuildContext context) {
+  Widget buildTop(BuildContext context) {
     return Container(
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            getSimpleButton("back_outline.svg", () {
+            getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
               Get.back();
             }),
             Row(children: [
-              getSimpleButton("notification.svg", () {
+              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
                 Get.toNamed(Routes.notificationPath);
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
-              getSimpleButton("bookmark_unchecked.svg", () {}),
+              getSimpleImageButton(
+                  "bookmark_unchecked.svg",
+                  FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(26),
+                  FetchPixels.getPixelHeight(26),
+                  () {}),
               getHorSpace(FetchPixels.getPixelHeight(5)),
-              getSimpleButton("ellipsis_horizontal_outline.svg", () {}),
+              getSimpleImageButton(
+                  "ellipsis_horizontal_outline.svg",
+                  FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(26),
+                  FetchPixels.getPixelHeight(26),
+                  () {}),
               getHorSpace(FetchPixels.getPixelHeight(5)),
             ])
           ],
         ));
   }
 
-  Widget body(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {
+  Widget buildBody(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {
     return Expanded(
       flex: 1,
       child: ListView(
@@ -77,7 +95,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         children: [
           post(context, modelPost),
           Container(height: FetchPixels.getPixelHeight(25), color: backGroundColor),
-          comment(context, commentList),
+          commentList.isEmpty ? Container(height: 100.h, color: backGroundColor) : buildComment(context, commentList)
         ],
       ),
     );
@@ -268,29 +286,78 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     );
   }
 
-  Widget comment(BuildContext context, List<ModelCommentResponse> commentList) {
-    ModelCommentResponse comment = commentList[0];
+  Wrap buildComment(BuildContext context, List<ModelCommentResponse> commentList) {
+    return Wrap(
+        direction: Axis.vertical,
+        // 정렬 방향
+        alignment: WrapAlignment.start,
+        children: commentList
+            .map<Widget>((comment) => Wrap(
+                direction: Axis.vertical,
+                // 정렬 방향
+                alignment: WrapAlignment.start,
+                children: [mainComment(comment), replyComment(comment)]))
+            .toList());
+  }
+
+  Container mainComment(ModelCommentResponse comment) {
     return Container(
-        // height: 50.h,
-        // margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(15)),
+        width: 100.w,
         padding:
             EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-          getVerSpace(FetchPixels.getPixelHeight(10)),
-          Row(children: [
-            getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.redAccent, 1, fontWeight: FontWeight.w400),
-            getCustomFont(comment.myComment ? "*" : "", 13, Colors.orangeAccent, 1, fontWeight: FontWeight.w400)
-          ]),
-          getVerSpace(FetchPixels.getPixelHeight(15)),
-          getCustomFont(comment.comment.body ?? "", 14, Colors.black, 3, fontWeight: FontWeight.w400),
-          getVerSpace(FetchPixels.getPixelHeight(15)),
-          getCustomFont("${DateFormat('yyyy-MM-dd HH:mm').format(comment.comment.updatedAt!)} ${comment.timeDiffForUi}",
-              12, Colors.black54, 1,
+        child: innerComment(comment));
+  }
+
+  Container replyComment(ModelCommentResponse parentComment) {
+    return Container(
+        color: parentComment.childComments.isEmpty ? backGroundColor : Color(0xfff4f4f4),
+        child: Column(
+            children: parentComment.childComments
+                .map<Widget>((comment) => Container(
+                    width: 100.w,
+                    margin: EdgeInsets.only(left: FetchPixels.getPixelWidth(40)),
+                    padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(60)),
+                    decoration: const BoxDecoration(
+                        color: Color(0xfff4f4f4),
+                        border: Border(bottom: BorderSide(color: Color(0xffe5e4e4), width: 0.8))),
+                    child: innerComment(comment)))
+                .toList()));
+  }
+
+  Column innerComment(ModelCommentResponse comment) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+      getVerSpace(FetchPixels.getPixelHeight(10)),
+      Row(children: [
+        getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w600),
+        getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
+      ]),
+      getVerSpace(FetchPixels.getPixelHeight(7)),
+      getCustomFont(comment.comment.body ?? "", 14, Colors.black, 20, fontWeight: FontWeight.w400, txtHeight: 1.5),
+      getVerSpace(FetchPixels.getPixelHeight(5)),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Row(children: [
+          getCustomFont(
+              "${DateFormat('yyyy.MM.dd. HH:mm').format(comment.comment.updatedAt!)}      ${comment.timeDiffForUi}",
+              12,
+              Colors.black54,
+              1,
               fontWeight: FontWeight.w400),
-          getVerSpace(FetchPixels.getPixelHeight(20))
-        ]));
+          getHorSpace(FetchPixels.getPixelHeight(10)),
+          getSimpleTextButton("답글 쓰기", 12, Colors.black54, FontWeight.w400, FetchPixels.getPixelWidth(75),
+              FetchPixels.getPixelHeight(25), () {
+            print("답글쓰기 버튼 클릭");
+          })
+        ]),
+        comment.myComment
+            ? getSimpleImageButton("ellipsis_horizontal_outline_comment.svg", FetchPixels.getPixelHeight(50),
+                FetchPixels.getPixelHeight(30), FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(15), () {
+                print("댓글 내 상세 기능 버튼 클릭");
+              })
+            : Container()
+      ]),
+      getVerSpace(FetchPixels.getPixelHeight(10))
+    ]);
   }
 }

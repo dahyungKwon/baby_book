@@ -1273,7 +1273,25 @@ Widget getDivider(Color color, double height, double thickness) {
   );
 }
 
-Widget getSimpleButton(String svgImageName, Function? function) {
+Widget getSimpleImageButton(String svgImageName, double containerWidth, double containerHeight, double imageWidth,
+    double imageHeight, Function? function) {
+  return GestureDetector(
+    onTap: () {
+      if (function != null) {
+        function();
+      }
+    },
+    child: Container(
+        // color: Colors.green,
+        alignment: Alignment.center,
+        width: containerWidth,
+        height: containerHeight,
+        child: getSvgImage(width: imageWidth, height: imageHeight, svgImageName)),
+  );
+}
+
+Widget getSimpleTextButton(String text, double textSize, Color textColor, FontWeight fontWeight, double width,
+    double height, Function? function) {
   return GestureDetector(
     onTap: () {
       if (function != null) {
@@ -1282,9 +1300,8 @@ Widget getSimpleButton(String svgImageName, Function? function) {
     },
     child: Container(
         alignment: Alignment.center,
-        width: FetchPixels.getPixelHeight(50),
-        height: FetchPixels.getPixelHeight(50),
-        child:
-            getSvgImage(width: FetchPixels.getPixelHeight(26), height: FetchPixels.getPixelHeight(26), svgImageName)),
+        width: width,
+        height: height,
+        child: getCustomFont(text, textSize, textColor, 1, fontWeight: fontWeight)),
   );
 }

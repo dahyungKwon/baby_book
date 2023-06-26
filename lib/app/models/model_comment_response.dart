@@ -2,7 +2,7 @@ import 'package:baby_book/app/models/model_comment.dart';
 
 class ModelCommentResponse {
   ModelComment comment;
-  List<ModelComment> childComments;
+  List<ModelCommentResponse> childComments;
   bool myComment;
   bool deleted;
   String? commentWriterNickName;
@@ -20,7 +20,8 @@ class ModelCommentResponse {
   ModelCommentResponse.fromJson(Map<String, dynamic> json)
       : comment = ModelComment.fromJson(json['comment']),
         childComments =
-            List<ModelComment>.from(json['childComments'].map((item) => ModelComment.fromJson(item))).toList(),
+            List<ModelCommentResponse>.from(json['childComments'].map((item) => ModelCommentResponse.fromJson(item)))
+                .toList(),
         myComment = json['myComment'],
         deleted = json['deleted'],
         commentWriterNickName = json['commentWriterNickName'],
