@@ -2,6 +2,7 @@ import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:get/get.dart';
 
+import '../../base/pref_data.dart';
 import '../models/model_comment_response.dart';
 import '../models/model_post.dart';
 import '../repository/post_feedback_repository.dart';
@@ -12,6 +13,7 @@ class CommunityDetailController extends GetxController {
   final PostFeedbackRepository postFeedbackRepository;
 
   String postId;
+  bool myPost = false;
 
   //loading
   final _loading = false.obs;
@@ -77,6 +79,11 @@ class CommunityDetailController extends GetxController {
     List<ModelCommentResponse> commentResponseList = await commentRepository.get(commentTargetId: postId);
     commentList.addAll(commentResponseList);
     _commentList.refresh();
+
+    var memberId = await PrefData.getMemberId();
+    if (memberId == post.memberId) {
+      myPost = true;
+    }
 
     loading = false;
   }

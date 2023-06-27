@@ -1274,7 +1274,8 @@ Widget getDivider(Color color, double height, double thickness) {
 }
 
 Widget getSimpleImageButton(String svgImageName, double containerWidth, double containerHeight, double imageWidth,
-    double imageHeight, Function? function) {
+    double imageHeight, Function? function,
+    {EdgeInsets? containerPadding}) {
   return GestureDetector(
     onTap: () {
       if (function != null) {
@@ -1283,6 +1284,7 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
     },
     child: Container(
         // color: Colors.green,
+        padding: containerPadding,
         alignment: Alignment.center,
         width: containerWidth,
         height: containerHeight,

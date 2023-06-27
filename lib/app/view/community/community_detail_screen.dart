@@ -2,6 +2,7 @@ import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_feedback_repository.dart';
+import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -58,7 +59,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
 
   Widget buildTop(BuildContext context, ModelPost post) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(5, 10, 5, 20),
+        margin: const EdgeInsets.fromLTRB(5, 10, 0, 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -67,28 +68,33 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               Get.back();
             }),
             Row(children: [
-              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(40), FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
                 Get.toNamed(Routes.notificationPath);
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
               getSimpleImageButton(
                   controller.bookmark ? "bookmark_checked.svg" : "bookmark_unchecked.svg",
-                  FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(40),
                   FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(26),
                   FetchPixels.getPixelHeight(26), () {
                 controller.clickBookmark();
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
-              getSimpleImageButton(
-                  "ellipsis_horizontal_outline.svg",
-                  FetchPixels.getPixelHeight(50),
-                  FetchPixels.getPixelHeight(50),
-                  FetchPixels.getPixelHeight(26),
-                  FetchPixels.getPixelHeight(26),
-                  () {}),
-              getHorSpace(FetchPixels.getPixelHeight(5)),
+              getSimpleImageButton("ellipsis_horizontal_outline.svg", FetchPixels.getPixelHeight(50),
+                  FetchPixels.getPixelHeight(40), FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => PostDetailBottomSheet(controller.post, controller.myPost)).then((menu) {
+                  if (menu != null) {
+                    print(menu);
+                    // controller.postType = selectedPostType;
+                  }
+                });
+              }, containerPadding: EdgeInsets.only(right: FetchPixels.getPixelHeight(15))),
+              getHorSpace(FetchPixels.getPixelHeight(0)),
             ])
           ],
         ));
