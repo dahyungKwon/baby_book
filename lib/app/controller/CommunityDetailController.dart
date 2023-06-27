@@ -115,4 +115,14 @@ class CommunityDetailController extends GetxController {
       post.likeCount = post.likeCount + 1;
     }
   }
+
+  Future<bool> removePost() async {
+    try {
+      await postRepository.delete(postId: postId);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

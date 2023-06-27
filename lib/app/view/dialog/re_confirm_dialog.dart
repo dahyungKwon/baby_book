@@ -1,24 +1,26 @@
-import 'package:baby_book/app/view/home/home_screen.dart';
-import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
-import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
-
-import '../../../base/color_data.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ReConfirmDialog extends StatefulWidget {
   String confirmMessage;
+  String confirmBtnTitle;
 
-  ReConfirmDialog(this.confirmMessage, {Key? key}) : super(key: key);
+  Function callBack;
+
+  ReConfirmDialog(this.confirmMessage, this.confirmBtnTitle, this.callBack, {Key? key}) : super(key: key);
 
   @override
-  State<ReConfirmDialog> createState() => _ReConfirmDialogState(confirmMessage);
+  State<ReConfirmDialog> createState() => _ReConfirmDialogState(confirmMessage, confirmBtnTitle, callBack);
 }
 
 class _ReConfirmDialogState extends State<ReConfirmDialog> {
   String confirmMessage;
+  String confirmBtnTitle;
+  Function callBack;
 
-  _ReConfirmDialogState(this.confirmMessage);
+  _ReConfirmDialogState(this.confirmMessage, this.confirmBtnTitle, this.callBack);
 
   Future<bool> _onWillPop() async {
     return false;
@@ -30,36 +32,28 @@ class _ReConfirmDialogState extends State<ReConfirmDialog> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(20))),
-        backgroundColor: backGroundColor,
-        content: Builder(
-          builder: (context) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                getVerSpace(FetchPixels.getPixelHeight(10)),
-                getMultilineCustomFont(confirmMessage, 16, Colors.black,
-                    fontWeight: FontWeight.w400, txtHeight: 1.3, textAlign: TextAlign.center),
-                getVerSpace(FetchPixels.getPixelHeight(30)),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  getButton(context, const Color(0xffd2d2d2), "취소", Colors.black, () {
-                    Constant.backToPrev(context);
-                  }, 15,
-                      weight: FontWeight.w400,
-                      buttonHeight: FetchPixels.getPixelHeight(40),
-                      borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
-                  getButton(context, const Color(0xffd2d2d2), "확인", Colors.black, () {
-                    Constant.backToPrev(context);
-                  }, 15,
-                      weight: FontWeight.w400,
-                      buttonHeight: FetchPixels.getPixelHeight(40),
-                      borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
-                ])
-              ],
-            );
-          },
+        // title: const Text('dialog title'),
+        content: Text(
+          confirmMessage,
+          style: const TextStyle(fontSize: 15),
         ),
+        contentPadding: EdgeInsets.only(
+            top: FetchPixels.getPixelHeight(20),
+            left: FetchPixels.getPixelHeight(20),
+            bottom: FetchPixels.getPixelHeight(10)),
+        actions: [
+          TextButton(
+              style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+              onPressed: Get.back,
+              child: const Text('취소', style: TextStyle(color: Colors.black, fontSize: 14))),
+          TextButton(
+            style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+            onPressed: () {
+              callBack();
+            },
+            child: Text(confirmBtnTitle, style: const TextStyle(color: Colors.black, fontSize: 14)),
+          ),
+        ],
       ),
     );
   }

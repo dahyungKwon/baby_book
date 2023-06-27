@@ -1283,7 +1283,7 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
       }
     },
     child: Container(
-        // color: Colors.green,
+        color: Colors.white,
         padding: containerPadding,
         alignment: Alignment.center,
         width: containerWidth,

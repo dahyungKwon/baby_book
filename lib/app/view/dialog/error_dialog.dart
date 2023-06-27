@@ -3,6 +3,7 @@ import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 
@@ -42,12 +43,12 @@ class _ErrorDialogState extends State<ErrorDialog> {
                 getMultilineCustomFont(errorMessage ?? "잠시 후 다시 시도해주세요.", 16, Colors.black,
                     fontWeight: FontWeight.w400, txtHeight: 1.3, textAlign: TextAlign.center),
                 getVerSpace(FetchPixels.getPixelHeight(30)),
-                getButton(context, const Color(0xffd2d2d2), "확인", Colors.black, () {
-                  Constant.backToPrev(context);
-                }, 15,
-                    weight: FontWeight.w400,
-                    buttonHeight: FetchPixels.getPixelHeight(40),
-                    borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
+                TextButton(
+                    style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text("확인", style: TextStyle(color: Colors.black, fontSize: 14))),
               ],
             );
           },

@@ -3,6 +3,8 @@ import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_feedback_repository.dart';
 import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
+import 'package:baby_book/app/view/community/post_type.dart';
+import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -13,9 +15,12 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/CommunityDetailController.dart';
+import '../../controller/CommunityListController.dart';
+import '../../controller/TabCommunityController.dart';
 import '../../models/model_comment_response.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
+import '../dialog/error_dialog.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
   CommunityDetailScreen({super.key}) {
@@ -68,27 +73,44 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               Get.back();
             }),
             Row(children: [
-              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(40), FetchPixels.getPixelHeight(50),
+              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
                 Get.toNamed(Routes.notificationPath);
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
               getSimpleImageButton(
                   controller.bookmark ? "bookmark_checked.svg" : "bookmark_unchecked.svg",
-                  FetchPixels.getPixelHeight(40),
+                  FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(26),
                   FetchPixels.getPixelHeight(26), () {
                 controller.clickBookmark();
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
-              getSimpleImageButton("ellipsis_horizontal_outline.svg", FetchPixels.getPixelHeight(50),
-                  FetchPixels.getPixelHeight(40), FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+              getSimpleImageButton("ellipsis_horizontal_outline.svg", FetchPixels.getPixelHeight(60),
+                  FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
                     builder: (_) => PostDetailBottomSheet(controller.post, controller.myPost)).then((menu) {
                   if (menu != null) {
+                    switch (menu) {
+                      case "공유하기":
+                        {
+                          print("공유하기.......");
+                          break;
+                        }
+                      case "수정하기":
+                        {
+                          print("수정하기.......");
+                          break;
+                        }
+                      case "삭제하기":
+                        {
+                          clickedRemovePost();
+                          break;
+                        }
+                    }
                     print(menu);
                     // controller.postType = selectedPostType;
                   }
@@ -98,6 +120,20 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             ])
           ],
         ));
+  }
+
+  clickedRemovePost() async {
+    bool result = await Get.dialog(ReConfirmDialog("게시글을 삭제 하시겠습니까?", "삭제", () async {
+      controller.removePost().then((result) => Get.back(result: result));
+    }));
+
+    if (result) {
+      await Get.find<CommunityListController>().getAllForPullToRefresh(PostType.all);
+      await Get.find<TabCommunityController>().changePosition(PostType.all);
+      Get.back();
+    } else {
+      Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
+    }
   }
 
   Widget buildBody(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {

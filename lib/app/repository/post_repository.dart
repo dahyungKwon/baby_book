@@ -86,4 +86,43 @@ class PostRepository {
 
     return ModelPost.fromJson(response.data['body']);
   }
+
+  put({required String postId, required ModelPostRequest modelPostRequest}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.put(
+      '/posts/$postId',
+      data: modelPostRequest.toJson(),
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+  }
+
+  delete({required String postId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.delete(
+      '/posts/$postId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+  }
 }
