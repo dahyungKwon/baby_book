@@ -276,7 +276,7 @@ GestureDetector buildPostListItem(
                             mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              getSvgImage("heart.svg",
+                              getSvgImage(modelPost.liked ? "heart_selected.svg" : "heart.svg",
                                   height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
                               getHorSpace(FetchPixels.getPixelWidth(6)),
                               getCustomFont(numberFormat.format(modelPost.likeCount), 14, Colors.black54, 1,

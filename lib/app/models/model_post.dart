@@ -24,9 +24,9 @@ class ModelPost {
   String? postTag3;
   List<String> postTagList = [];
 
-  bool? liked = false;
-  bool? disliked = false;
-  bool? bookmark = false;
+  bool liked = false;
+  bool disliked = false;
+  bool bookmark = false;
 
   String nickName;
   String? createdAtToString;
@@ -51,9 +51,9 @@ class ModelPost {
       this.postTag1,
       this.postTag2,
       this.postTag3,
-      this.liked,
-      this.disliked,
-      this.bookmark,
+      this.liked = false,
+      this.disliked = false,
+      this.bookmark = false,
       required this.nickName,
       this.createdAtToString,
       this.timeDiffForUi,

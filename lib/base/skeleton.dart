@@ -56,6 +56,78 @@ class ListSkeleton extends StatelessWidget {
   }
 }
 
+class PostDetailSkeleton extends StatelessWidget {
+  const PostDetailSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(child: Column(children: [row(), row()]));
+  }
+
+  Widget row() {
+    return Container(
+        margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
+        padding:
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(20)),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(0.0, 1.0)),
+            ],
+            borderRadius: BorderRadius.zero),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 30),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+            Skeleton(),
+            SizedBox(height: 8),
+          ],
+        ));
+  }
+}
+
 class CircleSkeleton extends StatelessWidget {
   const CircleSkeleton({Key? key, this.size = 24}) : super(key: key);
 

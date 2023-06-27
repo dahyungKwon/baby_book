@@ -1,14 +1,13 @@
-import 'package:baby_book/app/models/model_comment.dart';
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
+import 'package:baby_book/app/repository/post_feedback_repository.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -21,7 +20,10 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   CommunityDetailScreen({super.key}) {
     Get.delete<CommunityDetailController>();
     Get.put(CommunityDetailController(
-        postRepository: PostRepository(), commentRepository: CommentRepository(), postId: Get.parameters['postId']!));
+        postRepository: PostRepository(),
+        commentRepository: CommentRepository(),
+        postFeedbackRepository: PostFeedbackRepository(),
+        postId: Get.parameters['postId']!));
   }
 
   @override
@@ -39,16 +41,22 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             resizeToAvoidBottomInset: true,
             backgroundColor: Colors.white,
             body: SafeArea(
-                child: Obx(() => Container(
-                    child: controller.loading
-                        ? const ListSkeleton()
-                        : Column(children: [
-                            buildTop(context),
-                            buildBody(context, controller.post, controller.commentList)
-                          ]))))));
+                child: Obx(() => RefreshIndicator(
+                    color: Colors.black87,
+                    backgroundColor: Colors.white,
+                    onRefresh: () async {
+                      controller.init();
+                    },
+                    child: Container(
+                        child: controller.loading
+                            ? const PostDetailSkeleton()
+                            : Column(children: [
+                                buildTop(context, controller.post),
+                                buildBody(context, controller.post, controller.commentList)
+                              ])))))));
   }
 
-  Widget buildTop(BuildContext context) {
+  Widget buildTop(BuildContext context, ModelPost post) {
     return Container(
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 20),
         child: Row(
@@ -65,12 +73,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
               getSimpleImageButton(
-                  "bookmark_unchecked.svg",
+                  controller.bookmark ? "bookmark_checked.svg" : "bookmark_unchecked.svg",
                   FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(26),
-                  FetchPixels.getPixelHeight(26),
-                  () {}),
+                  FetchPixels.getPixelHeight(26), () {
+                controller.clickBookmark();
+              }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
               getSimpleImageButton(
                   "ellipsis_horizontal_outline.svg",
@@ -136,25 +145,32 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly, //Center Row contents horizontally,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                GestureDetector(
+                    onTap: () {
+                      controller.clickLiked();
+                    },
+                    child: Container(
+                        height: FetchPixels.getPixelHeight(50),
+                        child: Row(children: [
+                          getSvgImage(controller.liked ? "heart_selected.svg" : "heart.svg",
+                              height: FetchPixels.getPixelHeight(25), width: FetchPixels.getPixelHeight(25)),
+                          getHorSpace(FetchPixels.getPixelWidth(2)),
+                          getCustomFont(numberFormat.format(modelPost.likeCount), 16, Colors.black87, 1,
+                              fontWeight: FontWeight.w400),
+                          getHorSpace(FetchPixels.getPixelHeight(30))
+                        ]))),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    getSvgImage("heart.svg",
-                        height: FetchPixels.getPixelHeight(25), width: FetchPixels.getPixelHeight(25)),
-                    getHorSpace(FetchPixels.getPixelWidth(6)),
-                    getCustomFont(numberFormat.format(modelPost.likeCount), 16, Colors.black87, 1,
-                        fontWeight: FontWeight.w400),
-                    getHorSpace(FetchPixels.getPixelHeight(30))
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    getSvgImage("chatbox_ellipses_outline.svg",
-                        height: FetchPixels.getPixelHeight(25), width: FetchPixels.getPixelHeight(25)),
-                    getHorSpace(FetchPixels.getPixelWidth(6)),
+                    getSimpleImageButton(
+                        "chatbox_ellipses_outline.svg",
+                        FetchPixels.getPixelHeight(40),
+                        FetchPixels.getPixelHeight(50),
+                        FetchPixels.getPixelHeight(25),
+                        FetchPixels.getPixelHeight(25),
+                        () {}),
+                    getHorSpace(FetchPixels.getPixelWidth(2)),
                     getCustomFont(numberFormat.format(modelPost.commentCount), 16, Colors.black87, 1,
                         fontWeight: FontWeight.w400),
                     getHorSpace(FetchPixels.getPixelHeight(30))
@@ -164,9 +180,14 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                   mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    getSvgImage("eye_outline.svg",
-                        height: FetchPixels.getPixelHeight(25), width: FetchPixels.getPixelHeight(25)),
-                    getHorSpace(FetchPixels.getPixelWidth(6)),
+                    getSimpleImageButton(
+                        "eye_outline.svg",
+                        FetchPixels.getPixelHeight(40),
+                        FetchPixels.getPixelHeight(50),
+                        FetchPixels.getPixelHeight(25),
+                        FetchPixels.getPixelHeight(25),
+                        () {}),
+                    getHorSpace(FetchPixels.getPixelWidth(2)),
                     getCustomFont(numberFormat.format(modelPost.viewCount), 16, Colors.black87, 1,
                         fontWeight: FontWeight.w400),
                     getHorSpace(FetchPixels.getPixelHeight(30))
@@ -330,11 +351,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       getVerSpace(FetchPixels.getPixelHeight(10)),
       Row(children: [
-        getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w600),
+        getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),
         getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
       ]),
       getVerSpace(FetchPixels.getPixelHeight(7)),
-      getCustomFont(comment.comment.body ?? "", 14, Colors.black, 20, fontWeight: FontWeight.w400, txtHeight: 1.5),
+      getCustomFont(comment.comment.body ?? "", 15, Colors.black, 20, fontWeight: FontWeight.w400, txtHeight: 1.5),
       getVerSpace(FetchPixels.getPixelHeight(5)),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(children: [
@@ -350,12 +371,10 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             print("답글쓰기 버튼 클릭");
           })
         ]),
-        comment.myComment
-            ? getSimpleImageButton("ellipsis_horizontal_outline_comment.svg", FetchPixels.getPixelHeight(50),
-                FetchPixels.getPixelHeight(30), FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(15), () {
-                print("댓글 내 상세 기능 버튼 클릭");
-              })
-            : Container()
+        getSimpleImageButton("ellipsis_horizontal_outline_comment.svg", FetchPixels.getPixelHeight(50),
+            FetchPixels.getPixelHeight(30), FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(15), () {
+          print("댓글 내 상세 기능 버튼 클릭");
+        })
       ]),
       getVerSpace(FetchPixels.getPixelHeight(10))
     ]);
