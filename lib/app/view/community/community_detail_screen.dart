@@ -12,12 +12,14 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/CommunityDetailController.dart';
 import '../../controller/CommunityListController.dart';
 import '../../controller/TabCommunityController.dart';
 import '../../models/model_comment_response.dart';
+import '../../models/model_kakao_link_template.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
@@ -99,6 +101,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                       case "공유하기":
                         {
                           print("공유하기.......");
+                          share();
                           break;
                         }
                       case "수정하기":
@@ -121,6 +124,34 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             ])
           ],
         ));
+  }
+
+  share() async {
+    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+
+    if (isKakaoTalkSharingAvailable) {
+      print('카카오톡으로 공유 가능');
+      try {
+        Uri uri = await ShareClient.instance.shareDefault(
+            template: ModelKakaoLinkTemplate.getTextTemplate(
+                "[아기곰 책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
+        await ShareClient.instance.launchKakaoTalk(uri);
+        print('카카오톡 공유 완료');
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+    } else {
+      print('카카오톡 미설치: 웹 공유 기능 사용 권장');
+      try {
+        Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
+            template: ModelKakaoLinkTemplate.getTextTemplate(
+                "[아기곰책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
+        await launchBrowserTab(shareUrl, popupOpen: true);
+      } catch (error) {
+        print('카카오톡 공유 실패 $error');
+      }
+      // 지원안할려고함 카톡 설치해야 공유가능하다고
+    }
   }
 
   clickedRemovePost() async {
