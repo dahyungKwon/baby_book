@@ -32,7 +32,7 @@ class ModelPost {
   String? createdAtToString;
   String? timeDiffForUi;
 
-  List<ModelPostFile> postFileList;
+  List<ModelPostFile> postFileList = [];
 
   ModelPost(
       {required this.postId,
@@ -72,6 +72,33 @@ class ModelPost {
         nickName: "");
   }
 
+  Map<String, dynamic> toJson() => {
+        'postId': postId,
+        'postType': postType,
+        'memberId': memberId,
+        'title': title,
+        'contents': contents,
+        'externalLink': externalLink,
+        'likeCount': likeCount,
+        'dislikeCount': dislikeCount,
+        'viewCount': viewCount,
+        'commentCount': commentCount,
+        'bookmarkCount': bookmarkCount,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
+        'postTag1': postTag1,
+        'postTag2': postTag2,
+        'postTag3': postTag3,
+        'postTagList': postTagList,
+        'liked': liked,
+        'disliked': disliked,
+        'bookmark': bookmark,
+        'nickName': nickName,
+        'createdAtToString': createdAtToString,
+        'timeDiffForUi': timeDiffForUi,
+        'postFileList': postFileList,
+      };
+
   // JSON형태에서부터 데이터를 받아온다.
   ModelPost.fromJson(Map<String, dynamic> json)
       : postId = json['postId'],
@@ -91,14 +118,15 @@ class ModelPost {
         postTag2 = json['postTag2'],
         postTag3 = json['postTag3'],
         postTagList = initPostTagList(json['postTag1'], json['postTag2'], json['postTag3']),
-        liked = json['liked'],
-        disliked = json['disliked'],
-        bookmark = json['bookmark'],
+        liked = json['liked'] ?? false,
+        disliked = json['disliked'] ?? false,
+        bookmark = json['bookmark'] ?? false,
         nickName = json['nickName'] ?? "",
         createdAtToString = json['createdAtToString'] ?? "",
         timeDiffForUi = json['timeDiffForUi'] ?? "",
-        postFileList =
-            List<ModelPostFile>.from(json['postFileList'].map((item) => ModelPostFile.fromJson(item))).toList();
+        postFileList = json['postFileList'] == null
+            ? []
+            : List<ModelPostFile>.from(json['postFileList'].map((item) => ModelPostFile.fromJson(item))).toList();
 
   copyWith({required ModelPost selectedPost}) {
     postId = selectedPost.postId;

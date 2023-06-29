@@ -279,7 +279,8 @@ GestureDetector buildPostListItem(
                               getSvgImage(modelPost.liked ? "heart_selected.svg" : "heart.svg",
                                   height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
                               getHorSpace(FetchPixels.getPixelWidth(6)),
-                              getCustomFont(numberFormat.format(modelPost.likeCount), 14, Colors.black54, 1,
+                              getCustomFont(numberFormat.format(modelPost.likeCount), 14,
+                                  modelPost.liked ? const Color(0xFFF65E5E) : Colors.black54, 1,
                                   fontWeight: FontWeight.w400),
                               getHorSpace(FetchPixels.getPixelHeight(30))
                             ],

@@ -56,8 +56,8 @@ class ListSkeleton extends StatelessWidget {
   }
 }
 
-class PostDetailSkeleton extends StatelessWidget {
-  const PostDetailSkeleton({super.key});
+class FullSizeSkeleton extends StatelessWidget {
+  const FullSizeSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {

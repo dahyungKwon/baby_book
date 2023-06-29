@@ -1,11 +1,13 @@
 import 'package:baby_book/app/controller/TabCommunityController.dart';
 import 'package:baby_book/app/exception/exception_invalid_param.dart';
 import 'package:baby_book/app/models/model_post.dart';
+import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/models/model_post_request.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,11 +19,19 @@ import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
 import '../view/dialog/error_dialog.dart';
 import '../view/dialog/reset_dialog.dart';
+import 'CommunityDetailController.dart';
 import 'CommunityListController.dart';
 
 class CommunityAddController extends GetxController {
   final PostRepository postRepository;
   final PostImageRepository postImageRepository;
+
+  //loading
+  final _loading = false.obs;
+
+  get loading => _loading.value;
+
+  set loading(value) => _loading.value = value;
 
   ///right color
   final _canRegister = false.obs;
@@ -63,11 +73,28 @@ class CommunityAddController extends GetxController {
 
   set selectedImageList(value) => _selectedImageList.value = value;
 
+  ///이미지 - 파일 모델로 변경
+  List<ModelPostFile> _modifyPostFileList = [];
+  List<XFile> _networkImageList = [];
+  String? modifyPostId;
+
+  ///modify mode 체크
+  final _modifyMode = false.obs;
+
+  get modifyMode => _modifyMode.value;
+
+  set modifyMode(value) => _modifyMode.value = value;
+
   CommunityAddController({required this.postRepository, required this.postImageRepository}) {
     assert(postRepository != null);
 
     titleController.addListener(_titleListener);
     contentsController.addListener(_contentsListener);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
   }
 
   void _titleListener() {
@@ -105,9 +132,9 @@ class CommunityAddController extends GetxController {
     bool result = await Get.dialog(
       AlertDialog(
         // title: const Text('dialog title'),
-        content: const Text(
-          '등록 하시겠습니까?',
-          style: TextStyle(fontSize: 15),
+        content: Text(
+          modifyMode ? '수정 하시겠습니까?' : '등록 하시겠습니까?',
+          style: const TextStyle(fontSize: 15),
         ),
         contentPadding: EdgeInsets.only(
             top: FetchPixels.getPixelHeight(20),
@@ -128,8 +155,12 @@ class CommunityAddController extends GetxController {
     );
 
     if (result) {
-      await Get.find<CommunityListController>().getAllForPullToRefresh(postType);
-      await Get.find<TabCommunityController>().changePosition(postType);
+      if (modifyMode) {
+        await Get.find<CommunityDetailController>().init();
+      } else {
+        await Get.find<CommunityListController>().getAllForPullToRefresh(postType);
+        await Get.find<TabCommunityController>().changePosition(postType);
+      }
       Get.back();
       //   Get.snackbar('', '등록 되었습니다.',
       //       colorText: Colors.white,
@@ -142,20 +173,43 @@ class CommunityAddController extends GetxController {
   void requestAdd() async {
     var memberId = await PrefData.getMemberId();
     try {
-      ModelPost post = await postRepository.add(
-          modelPostRequest: ModelPostRequest(
-              postType: postType,
-              memberId: memberId!,
-              title: titleController.text,
-              contents: contentsController.text,
-              postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
-              postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
-              postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
-              externalLink: selectedLinkList.length > 0 ? selectedLinkList[0] : null));
+      ModelPostRequest request = ModelPostRequest(
+          postType: postType,
+          memberId: memberId!,
+          title: titleController.text,
+          contents: contentsController.text,
+          postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
+          postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
+          postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
+          externalLink: selectedLinkList.length > 0 ? selectedLinkList[0] : null);
 
-      bool result = await postImageRepository.addImage(postId: post.postId, selectedImageList: selectedImageList);
+      String selectedPostId = "";
+      if (modifyMode) {
+        await postRepository.put(postId: modifyPostId!, modelPostRequest: request);
+        selectedPostId = modifyPostId!;
+      } else {
+        ModelPost post = await postRepository.add(modelPostRequest: request);
+        selectedPostId = post.postId;
+      }
 
-      Get.back(result: result);
+      List<XFile> finalImageList = [];
+      if (modifyMode) {
+        List<String> removedFileIdList = findRemovedFileList();
+        for (int i = 0; i < removedFileIdList.length; i++) {
+          await postImageRepository.removeImage(postId: selectedPostId, fileId: removedFileIdList[i]);
+        }
+
+        finalImageList = findFinalImageList();
+      } else {
+        finalImageList = selectedImageList;
+      }
+
+      if (finalImageList != null && finalImageList.isNotEmpty) {
+        bool result = await postImageRepository.addImage(postId: selectedPostId, selectedImageList: finalImageList);
+        Get.back(result: result);
+      } else {
+        Get.back(result: true);
+      }
     } on InvalidMemberException catch (e) {
       print(e);
       Get.toNamed(Routes.loginPath);
@@ -163,6 +217,53 @@ class CommunityAddController extends GetxController {
       print(e);
       Get.toNamed(Routes.loginPath);
     }
+  }
+
+  ///[수정모드]에서 이미 존재하는 이미지가 있을경우엔 제외 시키기 위함
+  List<XFile> findFinalImageList() {
+    List<XFile> finalImageList = [];
+    for (int i = 0; i < selectedImageList.length; i++) {
+      XFile selectedImage = selectedImageList[i];
+      bool isExist = false;
+
+      for (int j = 0; j < _networkImageList.length; j++) {
+        XFile networkImage = _networkImageList[j];
+        if (selectedImage.name == networkImage.name) {
+          isExist = true;
+          break;
+        }
+      }
+
+      if (!isExist) {
+        finalImageList.add(selectedImage);
+      }
+    }
+
+    return finalImageList;
+  }
+
+  ///[수정모드]에서 삭제된 이미지를 제거하기 위함
+  List<String> findRemovedFileList() {
+    List<String> removedImageList = [];
+    for (int i = 0; i < _networkImageList.length; i++) {
+      XFile networkImage = _networkImageList[i];
+      bool isExist = false;
+
+      for (int j = 0; j < selectedImageList.length; j++) {
+        XFile selectedImage = selectedImageList[j];
+        if (selectedImage.name == networkImage.name) {
+          isExist = true;
+          break;
+        }
+      }
+
+      if (!isExist) {
+        //제거 해야 할 이미지의 fileId를 저장
+        removedImageList.add(_modifyPostFileList[i].postFileId);
+      }
+    }
+
+    return removedImageList;
   }
 
   Future<void> pickImage() async {
@@ -191,8 +292,44 @@ class CommunityAddController extends GetxController {
     _selectedLinkList.refresh();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
+  ///[수정모드]] 진입
+  initModifyMode(String postId) async {
+    loading = true;
+
+    modifyMode = true;
+    modifyPostId = postId;
+
+    ModelPost post = await postRepository.get(postId: postId);
+    postType = post.postType;
+    titleController.text = post.title;
+    contentsController.text = post.contents;
+
+    if (post.externalLink != null) {
+      selectedLinkList.clear();
+      selectedLinkList.add(post.externalLink);
+    }
+    if (post.postTagList.isNotEmpty) {
+      selectedTagList.clear();
+      selectedTagList.addAll(post.postTagList);
+    }
+
+    if (post.postFileList.isNotEmpty) {
+      _modifyPostFileList = post.postFileList;
+      selectedImageList.clear();
+      _networkImageList.clear();
+      for (int i = 0; i < post.postFileList.length; i++) {
+        XFile originImage = await getImageXFileByUrl(post.postFileList[i].postFileUrl);
+        selectedImageList.add(originImage);
+        _networkImageList.add(originImage);
+      }
+    }
+
+    loading = false;
+  }
+
+  Future<XFile> getImageXFileByUrl(String url) async {
+    var file = await DefaultCacheManager().getSingleFile(url);
+    XFile result = XFile(file.path);
+    return result;
   }
 }

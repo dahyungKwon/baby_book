@@ -45,7 +45,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         },
         child: Scaffold(
             resizeToAvoidBottomInset: true,
-            backgroundColor: Colors.white,
+            // backgroundColor: backGroundColor,
             body: SafeArea(
                 child: Obx(() => RefreshIndicator(
                     color: Colors.black87,
@@ -55,7 +55,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                     },
                     child: Container(
                         child: controller.loading
-                            ? const PostDetailSkeleton()
+                            ? const FullSizeSkeleton()
                             : Column(children: [
                                 buildTop(context, controller.post),
                                 buildBody(context, controller.post, controller.commentList)
@@ -64,7 +64,8 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
 
   Widget buildTop(BuildContext context, ModelPost post) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(5, 10, 0, 20),
+        margin: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -73,11 +74,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               Get.back();
             }),
             Row(children: [
-              getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                  FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-                Get.toNamed(Routes.notificationPath);
-              }),
-              getHorSpace(FetchPixels.getPixelHeight(5)),
+              // getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+              //     FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+              //   Get.toNamed(Routes.notificationPath);
+              // }),
+              // getHorSpace(FetchPixels.getPixelHeight(5)),
               getSimpleImageButton(
                   controller.bookmark ? "bookmark_checked.svg" : "bookmark_unchecked.svg",
                   FetchPixels.getPixelHeight(50),
@@ -102,7 +103,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                         }
                       case "수정하기":
                         {
-                          print("수정하기.......");
+                          Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
                           break;
                         }
                       case "삭제하기":
@@ -140,13 +141,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     return Expanded(
       flex: 1,
       child: ListView(
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
         primary: true,
         children: [
           post(context, modelPost),
           Container(height: FetchPixels.getPixelHeight(25), color: backGroundColor),
-          commentList.isEmpty ? Container(height: 100.h, color: backGroundColor) : buildComment(context, commentList)
+          commentList.isEmpty ? Container(height: 3.h, color: backGroundColor) : buildComment(context, commentList)
         ],
       ),
     );
@@ -157,7 +158,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         // height: 50.h,
         // margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(15)),
         padding:
-            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(20), horizontal: FetchPixels.getPixelWidth(20)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
         child: Column(
@@ -193,11 +194,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                     },
                     child: Container(
                         height: FetchPixels.getPixelHeight(50),
+                        color: Colors.white,
                         child: Row(children: [
                           getSvgImage(controller.liked ? "heart_selected.svg" : "heart.svg",
                               height: FetchPixels.getPixelHeight(25), width: FetchPixels.getPixelHeight(25)),
                           getHorSpace(FetchPixels.getPixelWidth(2)),
-                          getCustomFont(numberFormat.format(modelPost.likeCount), 16, Colors.black87, 1,
+                          getCustomFont(numberFormat.format(modelPost.likeCount), 16,
+                              controller.liked ? const Color(0xFFF65E5E) : Colors.black87, 1,
                               fontWeight: FontWeight.w400),
                           getHorSpace(FetchPixels.getPixelHeight(30))
                         ]))),
@@ -237,7 +240,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 ),
               ],
             ),
-            getVerSpace(FetchPixels.getPixelHeight(30)),
+            getVerSpace(FetchPixels.getPixelHeight(10)),
           ],
         ));
   }
