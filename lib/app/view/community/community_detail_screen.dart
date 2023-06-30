@@ -5,6 +5,7 @@ import 'package:baby_book/app/repository/post_feedback_repository.dart';
 import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
+import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -25,6 +26,8 @@ import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
+  late bool sharedMode;
+
   CommunityDetailScreen({super.key}) {
     Get.delete<CommunityDetailController>();
     Get.put(CommunityDetailController(
@@ -32,6 +35,8 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         commentRepository: CommentRepository(),
         postFeedbackRepository: PostFeedbackRepository(),
         postId: Get.parameters['postId']!));
+    print("AppSchemeImpl CommunityDetailScreen sharedType : ${Get.parameters['sharedType']}");
+    sharedMode = Get.parameters['sharedType'] != null;
   }
 
   @override
@@ -42,7 +47,12 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
-          Get.back();
+          if (sharedMode) {
+            print("AppSchemeImpl sharedMode :$sharedMode get off");
+            Get.off(() => HomeScreen(2));
+          } else {
+            Get.back();
+          }
           return false;
         },
         child: Scaffold(

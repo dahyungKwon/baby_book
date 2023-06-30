@@ -26,7 +26,7 @@ class TabHomeController extends GetxController {
   set ageGroupId(value) => _ageGroupId.value = value;
 
   getAll() {
-    bookListRepository.getBookList(categoryList: 'ALL').then((data) {
+    bookListRepository.getBookList(categoryList: 'LIFE').then((data) {
       bookList = data;
     }, onError: (e) => e is InvalidMemberException ? Get.toNamed(Routes.loginPath) : e).catchError(
         (onError) => {print(onError + "error"), Get.toNamed(Routes.loginPath)});

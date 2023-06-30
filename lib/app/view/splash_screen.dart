@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../base/kakao_login_util.dart';
 import '../routes/app_pages.dart';
+import 'package:appscheme/appscheme.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,13 +19,41 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 1), () async {
-      if (await isLogin()) {
-        print("로그인 완료");
-        Get.toNamed(Routes.homescreenPath);
-      } else {
-        Get.toNamed(Routes.loginPath);
+    //app scheme
+    AppSchemeImpl appScheme = AppSchemeImpl.getInstance()!!;
+    appScheme.getInitScheme().then((value) {
+      if (value != null) {
+        print("AppSchemeImpl Init  ${value.dataString}");
+        String? sharedType = value.query!["sharedType"];
+        String? postId = value.query!["postId"];
+        print("AppSchemeImpl sharedType : $sharedType");
+        print("AppSchemeImpl postId : $postId");
+        if (sharedType != null) {
+          switch (sharedType) {
+            case "BOOK":
+              {
+                /// 책공유 시 활용
+                break;
+              }
+            case "COMMUNITY":
+              {
+                Get.toNamed(Routes.communityDetailPath, parameters: {'sharedType': sharedType, 'postId': postId!});
+                break;
+              }
+          }
+
+          return;
+        }
       }
+
+      Timer(const Duration(seconds: 1), () async {
+        if (await isLogin()) {
+          print("로그인 완료");
+          Get.toNamed(Routes.homescreenPath);
+        } else {
+          Get.toNamed(Routes.loginPath);
+        }
+      });
     });
 
     FetchPixels(context);
