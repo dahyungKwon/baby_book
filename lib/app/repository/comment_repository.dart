@@ -39,7 +39,7 @@ class CommentRepository {
         .toList();
   }
 
-  Future<bool> post({
+  Future<ModelCommentResponse> post({
     String commentType = "COMMUNITY",
     required String commentTargetId,
     required String body,
@@ -63,7 +63,7 @@ class CommentRepository {
       }
     }
 
-    return true;
+    return ModelCommentResponse.fromJson(response.data['body']);
   }
 
   Future<bool> modify({

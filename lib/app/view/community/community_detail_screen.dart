@@ -2,6 +2,7 @@ import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_feedback_repository.dart';
+import 'package:baby_book/app/view/community/comment_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
@@ -24,6 +25,7 @@ import '../../models/model_kakao_link_template.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
   late bool sharedMode;
@@ -55,11 +57,16 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           }
           return false;
         },
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
+        child: Obx(() => Scaffold(
+            resizeToAvoidBottomInset: false,
             // backgroundColor: backGroundColor,
+            bottomNavigationBar: controller.loading
+                ? Container()
+                : Padding(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: buildBottom(context)),
             body: SafeArea(
-                child: Obx(() => RefreshIndicator(
+                child: RefreshIndicator(
                     color: Colors.black87,
                     backgroundColor: Colors.white,
                     onRefresh: () async {
@@ -82,7 +89,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
               Get.back();
             }),
             Row(children: [
@@ -95,13 +102,19 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                   controller.bookmark ? "bookmark_checked.svg" : "bookmark_unchecked.svg",
                   FetchPixels.getPixelHeight(50),
                   FetchPixels.getPixelHeight(50),
+                  Colors.white,
                   FetchPixels.getPixelHeight(26),
                   FetchPixels.getPixelHeight(26), () {
                 controller.clickBookmark();
               }),
               getHorSpace(FetchPixels.getPixelHeight(5)),
-              getSimpleImageButton("ellipsis_horizontal_outline.svg", FetchPixels.getPixelHeight(60),
-                  FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+              getSimpleImageButton(
+                  "ellipsis_horizontal_outline.svg",
+                  FetchPixels.getPixelHeight(60),
+                  FetchPixels.getPixelHeight(50),
+                  Colors.white,
+                  FetchPixels.getPixelHeight(26),
+                  FetchPixels.getPixelHeight(26), () {
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -178,20 +191,35 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     }
   }
 
+  clickedRemoveComment(ModelCommentResponse comment) async {
+    bool result = await Get.dialog(ReConfirmDialog("댓글을 삭제 하시겠습니까?", "삭제", () async {
+      controller.removeComment(comment.comment.commentId).then((result) => Get.back(result: result));
+    }));
+
+    if (result) {
+      controller.getComment();
+    } else {
+      Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
+    }
+  }
+
   Widget buildBody(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {
     return Expanded(
-      flex: 1,
+        child: Scrollbar(
+      controller: controller.scrollController,
       child: ListView(
+        controller: controller.scrollController,
+        scrollDirection: Axis.vertical,
         physics: const AlwaysScrollableScrollPhysics(),
         shrinkWrap: true,
-        primary: true,
+        // primary: true,
         children: [
           post(context, modelPost),
           Container(height: FetchPixels.getPixelHeight(25), color: backGroundColor),
           commentList.isEmpty ? Container(height: 3.h, color: backGroundColor) : buildComment(context, commentList)
         ],
       ),
-    );
+    ));
   }
 
   Widget post(BuildContext context, ModelPost modelPost) {
@@ -253,6 +281,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                         "chatbox_ellipses_outline.svg",
                         FetchPixels.getPixelHeight(40),
                         FetchPixels.getPixelHeight(50),
+                        Colors.white,
                         FetchPixels.getPixelHeight(25),
                         FetchPixels.getPixelHeight(25),
                         () {}),
@@ -270,6 +299,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                         "eye_outline.svg",
                         FetchPixels.getPixelHeight(40),
                         FetchPixels.getPixelHeight(50),
+                        Colors.white,
                         FetchPixels.getPixelHeight(25),
                         FetchPixels.getPixelHeight(25),
                         () {}),
@@ -403,21 +433,21 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 direction: Axis.vertical,
                 // 정렬 방향
                 alignment: WrapAlignment.start,
-                children: [mainComment(comment), replyComment(comment)]))
+                children: [mainComment(context, comment), replyComment(context, comment)]))
             .toList());
   }
 
-  Container mainComment(ModelCommentResponse comment) {
+  Container mainComment(BuildContext context, ModelCommentResponse comment) {
     return Container(
         width: 100.w,
         padding:
             EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
-        child: innerComment(comment));
+        child: innerComment(context, comment, Colors.white));
   }
 
-  Container replyComment(ModelCommentResponse parentComment) {
+  Container replyComment(BuildContext context, ModelCommentResponse parentComment) {
     return Container(
         color: parentComment.childComments.isEmpty ? backGroundColor : Color(0xfff4f4f4),
         child: Column(
@@ -429,11 +459,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                     decoration: const BoxDecoration(
                         color: Color(0xfff4f4f4),
                         border: Border(bottom: BorderSide(color: Color(0xffe5e4e4), width: 0.8))),
-                    child: innerComment(comment)))
+                    child: innerComment(context, comment, const Color(0xfff4f4f4))))
                 .toList()));
   }
 
-  Column innerComment(ModelCommentResponse comment) {
+  Column innerComment(BuildContext context, ModelCommentResponse comment, Color commentMenuBtnColor) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       getVerSpace(FetchPixels.getPixelHeight(10)),
       Row(children: [
@@ -441,7 +471,8 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
       ]),
       getVerSpace(FetchPixels.getPixelHeight(7)),
-      getCustomFont(comment.comment.body ?? "", 15, Colors.black, 20, fontWeight: FontWeight.w400, txtHeight: 1.5),
+      getCustomFont(comment.comment.body ?? "", 15, comment.deleted ? Colors.black45 : Colors.black, 20,
+          fontWeight: FontWeight.w400, txtHeight: 1.5),
       getVerSpace(FetchPixels.getPixelHeight(5)),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(children: [
@@ -452,17 +483,69 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               1,
               fontWeight: FontWeight.w400),
           getHorSpace(FetchPixels.getPixelHeight(10)),
-          getSimpleTextButton("답글 쓰기", 12, Colors.black54, FontWeight.w400, FetchPixels.getPixelWidth(75),
+          getSimpleTextButton("답글 쓰기", 12, Colors.black54, Colors.white, FontWeight.w400, FetchPixels.getPixelWidth(75),
               FetchPixels.getPixelHeight(25), () {
             print("답글쓰기 버튼 클릭");
           })
         ]),
-        getSimpleImageButton("ellipsis_horizontal_outline_comment.svg", FetchPixels.getPixelHeight(50),
-            FetchPixels.getPixelHeight(30), FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(15), () {
-          print("댓글 내 상세 기능 버튼 클릭");
-        })
+        getSimpleImageButton(
+          "ellipsis_horizontal_outline_comment.svg",
+          FetchPixels.getPixelHeight(50),
+          FetchPixels.getPixelHeight(30),
+          commentMenuBtnColor,
+          FetchPixels.getPixelHeight(15),
+          FetchPixels.getPixelHeight(15),
+          () {
+            showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
+                .then((menu) {
+              if (menu != null) {
+                switch (menu) {
+                  case "수정하기":
+                    {
+                      controller.commentModify(comment);
+                      // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+                      break;
+                    }
+                  case "삭제하기":
+                    {
+                      clickedRemoveComment(comment);
+                      break;
+                    }
+                }
+                print(menu);
+                // controller.postType = selectedPostType;
+              }
+            });
+          },
+        )
       ]),
       getVerSpace(FetchPixels.getPixelHeight(10))
     ]);
+  }
+
+  Container buildBottom(BuildContext context) {
+    double size = FetchPixels.getPixelHeight(50);
+    double iconSize = FetchPixels.getPixelHeight(26);
+
+    return Container(
+        height: FetchPixels.getPixelHeight(55),
+        // color: Colors.white,
+        decoration: const BoxDecoration(
+            color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Expanded(
+              child: getDefaultTextFiledWithLabel2(context, "댓글을 남겨주세요.", Colors.black45.withOpacity(0.3),
+                  controller.commentController, Colors.grey, 16, FontWeight.w400,
+                  function: () {},
+                  isEnable: false,
+                  withprefix: false,
+                  minLines: true,
+                  height: FetchPixels.getPixelHeight(50),
+                  alignmentGeometry: Alignment.center)),
+          getSimpleTextButton("등록", 16, Colors.redAccent, Colors.white, FontWeight.w400, FetchPixels.getPixelHeight(80),
+              FetchPixels.getPixelHeight(50), () async {
+            controller.addComment();
+          })
+        ]));
   }
 }

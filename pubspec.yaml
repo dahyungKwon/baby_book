@@ -59,6 +59,7 @@ dependencies:
   image_picker: ^0.8.9
   flutter_cache_manager: ^3.3.0
   appscheme: ^1.0.8
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

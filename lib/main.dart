@@ -1,6 +1,7 @@
 import 'package:baby_book/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:get/get.dart';
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
 
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
+        builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
         initialRoute: Routes.homepath,
         getPages: AppPages.pages,

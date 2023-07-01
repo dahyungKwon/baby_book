@@ -1274,8 +1274,8 @@ Widget getDivider(Color color, double height, double thickness) {
   );
 }
 
-Widget getSimpleImageButton(String svgImageName, double containerWidth, double containerHeight, double imageWidth,
-    double imageHeight, Function? function,
+Widget getSimpleImageButton(String svgImageName, double containerWidth, double containerHeight, Color containerColor,
+    double imageWidth, double imageHeight, Function? function,
     {EdgeInsets? containerPadding}) {
   return GestureDetector(
     onTap: () {
@@ -1284,7 +1284,7 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
       }
     },
     child: Container(
-        color: Colors.white,
+        color: containerColor,
         padding: containerPadding,
         alignment: Alignment.center,
         width: containerWidth,
@@ -1293,8 +1293,8 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
   );
 }
 
-Widget getSimpleTextButton(String text, double textSize, Color textColor, FontWeight fontWeight, double width,
-    double height, Function? function) {
+Widget getSimpleTextButton(String text, double textSize, Color textColor, Color containerColor, FontWeight fontWeight,
+    double width, double height, Function? function) {
   return GestureDetector(
     onTap: () {
       if (function != null) {
@@ -1302,6 +1302,7 @@ Widget getSimpleTextButton(String text, double textSize, Color textColor, FontWe
       }
     },
     child: Container(
+        color: containerColor,
         alignment: Alignment.center,
         width: width,
         height: height,

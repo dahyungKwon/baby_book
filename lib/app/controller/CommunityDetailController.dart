@@ -1,16 +1,24 @@
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
+import '../exception/exception_invalid_member.dart';
 import '../models/model_comment_response.dart';
 import '../models/model_post.dart';
 import '../repository/post_feedback_repository.dart';
+import '../routes/app_pages.dart';
+import '../view/dialog/error_dialog.dart';
 
 class CommunityDetailController extends GetxController {
   final PostRepository postRepository;
   final CommentRepository commentRepository;
   final PostFeedbackRepository postFeedbackRepository;
+
+  TextEditingController commentController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   String postId;
   bool myPost = false;
@@ -68,17 +76,11 @@ class CommunityDetailController extends GetxController {
 
   init() async {
     loading = true;
+    commentController.text = "";
 
-    ModelPost selectedPost = await postRepository.get(postId: postId);
-    post.copyWith(selectedPost: selectedPost);
-    bookmark = post.bookmark; //북마크 별도 관리
-    liked = post.liked; //좋아요 별도 관리
-    _post.refresh();
+    getPost();
 
-    commentList.clear();
-    List<ModelCommentResponse> commentResponseList = await commentRepository.get(commentTargetId: postId);
-    commentList.addAll(commentResponseList);
-    _commentList.refresh();
+    getComment();
 
     var memberId = await PrefData.getMemberId();
     if (memberId == post.memberId) {
@@ -116,9 +118,71 @@ class CommunityDetailController extends GetxController {
     }
   }
 
+  Future<bool> getPost() async {
+    ModelPost selectedPost = await postRepository.get(postId: postId);
+    post.copyWith(selectedPost: selectedPost);
+    bookmark = post.bookmark; //북마크 별도 관리
+    liked = post.liked; //좋아요 별도 관리
+    _post.refresh();
+
+    return true;
+  }
+
   Future<bool> removePost() async {
     try {
       await postRepository.delete(postId: postId);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> getComment() async {
+    commentList.clear();
+    List<ModelCommentResponse> commentResponseList = await commentRepository.get(commentTargetId: postId);
+    commentList.addAll(commentResponseList);
+    _commentList.refresh();
+
+    return true;
+  }
+
+  Future<bool> addComment() async {
+    try {
+      EasyLoading.show(maskType: EasyLoadingMaskType.black);
+      ModelCommentResponse response =
+          await commentRepository.post(commentTargetId: postId, body: commentController.text);
+      if (response != null) {
+        commentList.add(response);
+        _commentList.refresh();
+        commentController.text = "";
+        EasyLoading.dismiss();
+        Future.delayed(const Duration(milliseconds: 200), () {
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 700), curve: Curves.ease);
+        });
+
+        return true;
+      } else {
+        EasyLoading.dismiss();
+        Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
+      }
+    } on InvalidMemberException catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      Get.toNamed(Routes.loginPath);
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss();
+      Get.toNamed(Routes.loginPath);
+    }
+
+    return false;
+  }
+
+  Future<bool> removeComment(String commentId) async {
+    try {
+      await commentRepository.delete(commentId: commentId);
       return true;
     } catch (e) {
       print(e);
