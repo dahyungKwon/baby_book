@@ -410,7 +410,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                     Radius.circular(15.0),
                   ),
                 ),
-                // margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -482,12 +482,12 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               1,
               fontWeight: FontWeight.w400),
           getHorSpace(FetchPixels.getPixelHeight(10)),
-          getSimpleTextButton("답글 쓰기", 12, Colors.black54, Colors.white, FontWeight.w400, FetchPixels.getPixelWidth(75),
-              FetchPixels.getPixelHeight(25), () {
+          getSimpleTextButton("답글 쓰기", 12, Colors.black54, commentMenuBtnColor, FontWeight.w400,
+              FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
             print("답글쓰기 버튼 클릭");
           })
         ]),
-        comment.deleted
+        comment.deleted || !comment.myComment
             ? Container()
             : getSimpleImageButton(
                 "ellipsis_horizontal_outline_comment.svg",
