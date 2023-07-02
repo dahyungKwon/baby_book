@@ -6,21 +6,24 @@ import 'package:get/get_core/src/get_main.dart';
 class ReConfirmDialog extends StatefulWidget {
   String confirmMessage;
   String confirmBtnTitle;
-
+  String cancelBtnTitle;
   Function callBack;
 
-  ReConfirmDialog(this.confirmMessage, this.confirmBtnTitle, this.callBack, {Key? key}) : super(key: key);
+  ReConfirmDialog(this.confirmMessage, this.confirmBtnTitle, this.cancelBtnTitle, this.callBack, {Key? key})
+      : super(key: key);
 
   @override
-  State<ReConfirmDialog> createState() => _ReConfirmDialogState(confirmMessage, confirmBtnTitle, callBack);
+  State<ReConfirmDialog> createState() =>
+      _ReConfirmDialogState(confirmMessage, confirmBtnTitle, cancelBtnTitle, callBack);
 }
 
 class _ReConfirmDialogState extends State<ReConfirmDialog> {
   String confirmMessage;
   String confirmBtnTitle;
+  String cancelBtnTitle;
   Function callBack;
 
-  _ReConfirmDialogState(this.confirmMessage, this.confirmBtnTitle, this.callBack);
+  _ReConfirmDialogState(this.confirmMessage, this.confirmBtnTitle, this.cancelBtnTitle, this.callBack);
 
   Future<bool> _onWillPop() async {
     return false;
@@ -45,7 +48,7 @@ class _ReConfirmDialogState extends State<ReConfirmDialog> {
           TextButton(
               style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
               onPressed: Get.back,
-              child: const Text('취소', style: TextStyle(color: Colors.black, fontSize: 14))),
+              child: Text(cancelBtnTitle, style: const TextStyle(color: Colors.black, fontSize: 14))),
           TextButton(
             style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
             onPressed: () {

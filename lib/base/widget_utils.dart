@@ -607,32 +607,26 @@ Widget getDefaultTextFiledWithLabel(
 }
 
 ///custom
-Widget getDefaultTextFiledWithLabel2(
-  BuildContext context,
-  String hint,
-  Color hintColor,
-  TextEditingController textEditingController,
-  Color fontColor,
-  double fontSize,
-  FontWeight fontWeight, {
-  bool withprefix = false,
-  bool withSufix = false,
-  bool minLines = false,
-  EdgeInsetsGeometry margin = EdgeInsets.zero,
-  bool isPass = false,
-  bool isEnable = true,
-  double? height,
-  double? imageHeight,
-  double? imageWidth,
-  String? image,
-  String? suffiximage,
-  required Function function,
-  Function? imagefunction,
-  AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
-  bool enableEditing = true,
-  Function? onEnter,
-}) {
-  FocusNode myFocusNode = FocusNode();
+Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hintColor,
+    TextEditingController textEditingController, Color fontColor, double fontSize, FontWeight fontWeight,
+    {bool withprefix = false,
+    bool withSufix = false,
+    bool minLines = false,
+    EdgeInsetsGeometry margin = EdgeInsets.zero,
+    bool isPass = false,
+    bool isEnable = true,
+    double? height,
+    double? imageHeight,
+    double? imageWidth,
+    String? image,
+    String? suffiximage,
+    required Function function,
+    Function? imagefunction,
+    AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
+    bool enableEditing = true,
+    Function? onEnter,
+    FocusNode? myFocusNode}) {
+  myFocusNode ??= FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {
       final mqData = MediaQuery.of(context);
@@ -642,7 +636,7 @@ Widget getDefaultTextFiledWithLabel2(
           absorbing: isEnable,
           child: GestureDetector(
             onTap: () {
-              myFocusNode.requestFocus();
+              myFocusNode!.requestFocus();
               function();
             },
             child: Container(
@@ -654,11 +648,11 @@ Widget getDefaultTextFiledWithLabel2(
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       setState(() {
-                        myFocusNode.canRequestFocus = true;
+                        myFocusNode!.canRequestFocus = true;
                       });
                     } else {
                       setState(() {
-                        myFocusNode.canRequestFocus = false;
+                        myFocusNode!.canRequestFocus = false;
                       });
                     }
                   },

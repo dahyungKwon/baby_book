@@ -61,7 +61,7 @@ class FullSizeSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(child: Column(children: [row(), row()]));
+    return SingleChildScrollView(scrollDirection: Axis.vertical, child: Column(children: [row(), row()]));
   }
 
   Widget row() {

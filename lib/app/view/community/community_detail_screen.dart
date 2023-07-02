@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
+import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/CommunityDetailController.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
   late bool sharedMode;
+  FocusNode commentFocusNode = FocusNode();
 
   CommunityDetailScreen({super.key}) {
     Get.delete<CommunityDetailController>();
@@ -49,7 +51,15 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
-          if (sharedMode) {
+          if (controller.modifyCommentMode) {
+            await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
+              controller.exitModifyCommentMode();
+              Get.back();
+              Future.delayed(const Duration(milliseconds: 200), () {
+                commentKeyboardDown(context);
+              });
+            }));
+          } else if (sharedMode) {
             print("AppSchemeImpl sharedMode :$sharedMode get off");
             Get.off(() => HomeScreen(2));
           } else {
@@ -61,24 +71,25 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             resizeToAvoidBottomInset: false,
             // backgroundColor: backGroundColor,
             bottomNavigationBar: controller.loading
-                ? Container()
+                ? Container(
+                    height: 10,
+                  )
                 : Padding(
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: buildBottom(context)),
             body: SafeArea(
-                child: RefreshIndicator(
-                    color: Colors.black87,
-                    backgroundColor: Colors.white,
-                    onRefresh: () async {
-                      controller.init();
-                    },
-                    child: Container(
-                        child: controller.loading
-                            ? const FullSizeSkeleton()
-                            : Column(children: [
-                                buildTop(context, controller.post),
-                                buildBody(context, controller.post, controller.commentList)
-                              ])))))));
+                child: controller.loading
+                    ? const FullSizeSkeleton()
+                    : RefreshIndicator(
+                        color: Colors.black87,
+                        backgroundColor: Colors.white,
+                        onRefresh: () async {
+                          controller.init();
+                        },
+                        child: Column(children: [
+                          buildTop(context, controller.post),
+                          buildBody(context, controller.post, controller.commentList)
+                        ]))))));
   }
 
   Widget buildTop(BuildContext context, ModelPost post) {
@@ -178,7 +189,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   }
 
   clickedRemovePost() async {
-    bool result = await Get.dialog(ReConfirmDialog("게시글을 삭제 하시겠습니까?", "삭제", () async {
+    bool result = await Get.dialog(ReConfirmDialog("게시글을 삭제 하시겠습니까?", "삭제", "취소", () async {
       controller.removePost().then((result) => Get.back(result: result));
     }));
 
@@ -186,18 +197,6 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
       await Get.find<CommunityListController>().getAllForPullToRefresh(PostType.all);
       await Get.find<TabCommunityController>().changePosition(PostType.all);
       Get.back();
-    } else {
-      Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
-    }
-  }
-
-  clickedRemoveComment(ModelCommentResponse comment) async {
-    bool result = await Get.dialog(ReConfirmDialog("댓글을 삭제 하시겠습니까?", "삭제", () async {
-      controller.removeComment(comment.comment.commentId).then((result) => Get.back(result: result));
-    }));
-
-    if (result) {
-      controller.getComment();
     } else {
       Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
     }
@@ -488,36 +487,38 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             print("답글쓰기 버튼 클릭");
           })
         ]),
-        getSimpleImageButton(
-          "ellipsis_horizontal_outline_comment.svg",
-          FetchPixels.getPixelHeight(50),
-          FetchPixels.getPixelHeight(30),
-          commentMenuBtnColor,
-          FetchPixels.getPixelHeight(15),
-          FetchPixels.getPixelHeight(15),
-          () {
-            showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
-                .then((menu) {
-              if (menu != null) {
-                switch (menu) {
-                  case "수정하기":
-                    {
-                      controller.commentModify(comment);
-                      // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
-                      break;
+        comment.deleted
+            ? Container()
+            : getSimpleImageButton(
+                "ellipsis_horizontal_outline_comment.svg",
+                FetchPixels.getPixelHeight(50),
+                FetchPixels.getPixelHeight(30),
+                commentMenuBtnColor,
+                FetchPixels.getPixelHeight(15),
+                FetchPixels.getPixelHeight(15),
+                () {
+                  showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
+                      .then((menu) {
+                    if (menu != null) {
+                      switch (menu) {
+                        case "수정하기":
+                          {
+                            clickedModifyComment(context, comment);
+                            // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+                            break;
+                          }
+                        case "삭제하기":
+                          {
+                            clickedRemoveComment(comment);
+                            break;
+                          }
+                      }
+                      print(menu);
+                      // controller.postType = selectedPostType;
                     }
-                  case "삭제하기":
-                    {
-                      clickedRemoveComment(comment);
-                      break;
-                    }
-                }
-                print(menu);
-                // controller.postType = selectedPostType;
-              }
-            });
-          },
-        )
+                  });
+                },
+              )
       ]),
       getVerSpace(FetchPixels.getPixelHeight(10))
     ]);
@@ -534,18 +535,70 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Expanded(
-              child: getDefaultTextFiledWithLabel2(context, "댓글을 남겨주세요.", Colors.black45.withOpacity(0.3),
-                  controller.commentController, Colors.grey, 16, FontWeight.w400,
-                  function: () {},
-                  isEnable: false,
-                  withprefix: false,
-                  minLines: true,
-                  height: FetchPixels.getPixelHeight(50),
-                  alignmentGeometry: Alignment.center)),
-          getSimpleTextButton("등록", 16, Colors.redAccent, Colors.white, FontWeight.w400, FetchPixels.getPixelHeight(80),
+              child: getDefaultTextFiledWithLabel2(
+            context,
+            controller.modifyCommentMode ? "댓글을 수정 해주세요." : "댓글을 남겨주세요.",
+            Colors.black45.withOpacity(0.3),
+            controller.commentController,
+            Colors.grey,
+            16,
+            FontWeight.w400,
+            function: () {},
+            isEnable: false,
+            withprefix: false,
+            minLines: true,
+            height: FetchPixels.getPixelHeight(50),
+            alignmentGeometry: Alignment.center,
+            myFocusNode: commentFocusNode,
+          )),
+          getSimpleTextButton(
+              controller.modifyCommentMode ? "수정" : "등록",
+              16,
+              controller.canRegisterComment ? Colors.redAccent : Colors.grey.shade400,
+              Colors.white,
+              FontWeight.w400,
+              FetchPixels.getPixelHeight(80),
               FetchPixels.getPixelHeight(50), () async {
-            controller.addComment();
+            if (controller.modifyCommentMode) {
+              controller.modifyComment().then((value) => commentKeyboardDown(context));
+            } else {
+              controller.addComment().then((value) => commentKeyboardDown(context));
+            }
           })
         ]));
+  }
+
+  clickedModifyComment(BuildContext context, ModelCommentResponse comment) async {
+    if (comment.deleted) {
+      Get.dialog(ErrorDialog("삭제된 댓글은 수정할 수 없습니다."));
+      return;
+    }
+    // controller.commentModify(comment);
+    controller.executeModifyCommentMode(comment).then((value) => commentKeyboardUp(context));
+  }
+
+  clickedRemoveComment(ModelCommentResponse comment) async {
+    if (comment.deleted) {
+      Get.dialog(ErrorDialog("이미 삭제된 댓글입니다."));
+      return;
+    }
+
+    bool result = await Get.dialog(ReConfirmDialog("댓글을 삭제 하시겠습니까?", "삭제", "취소", () async {
+      controller.removeComment(comment.comment.commentId).then((result) => Get.back(result: result));
+    }));
+
+    if (result) {
+      controller.getComment();
+    } else {
+      Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
+    }
+  }
+
+  commentKeyboardUp(BuildContext context) {
+    FocusScope.of(context)?.requestFocus(commentFocusNode);
+  }
+
+  commentKeyboardDown(BuildContext context) {
+    FocusScope.of(context).unfocus();
   }
 }
