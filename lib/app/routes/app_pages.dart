@@ -1,3 +1,4 @@
+import 'package:baby_book/app/view/community/comment_detail_screen.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
@@ -45,6 +46,7 @@ class AppPages {
     GetPage(name: Routes.communityListPath, page: () => HomeScreen(2)),
     GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen()),
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen()),
+    GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀

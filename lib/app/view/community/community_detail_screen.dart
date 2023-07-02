@@ -484,7 +484,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           getHorSpace(FetchPixels.getPixelHeight(10)),
           getSimpleTextButton("답글 쓰기", 12, Colors.black54, commentMenuBtnColor, FontWeight.w400,
               FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
-            print("답글쓰기 버튼 클릭");
+            comment.comment.commentParentId != null
+                ? Get.toNamed(
+                    "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentParentId}")
+                : Get.toNamed(
+                    "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentId}");
           })
         ]),
         comment.deleted || !comment.myComment

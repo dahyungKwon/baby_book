@@ -1,10 +1,8 @@
 import 'package:baby_book/app/controller/TabCommunityController.dart';
-import 'package:baby_book/app/exception/exception_invalid_param.dart';
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/models/model_post_request.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
-import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -18,7 +16,6 @@ import '../repository/post_image_repository.dart';
 import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
 import '../view/dialog/error_dialog.dart';
-import '../view/dialog/reset_dialog.dart';
 import 'CommunityDetailController.dart';
 import 'CommunityListController.dart';
 

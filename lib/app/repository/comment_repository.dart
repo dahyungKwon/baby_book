@@ -39,6 +39,33 @@ class CommentRepository {
         .toList();
   }
 
+  Future<List<ModelCommentResponse>> getCommentDetail({
+    required String commentId,
+  }) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/comments/$commentId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return response.data['body']
+        .map<ModelCommentResponse>(
+          (item) => ModelCommentResponse.fromJson(item),
+        )
+        .toList();
+  }
+
   Future<ModelCommentResponse> post({
     String commentType = "COMMUNITY",
     required String commentTargetId,

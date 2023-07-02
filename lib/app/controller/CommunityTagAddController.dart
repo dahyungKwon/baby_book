@@ -1,22 +1,7 @@
-import 'package:baby_book/app/controller/TabCommunityController.dart';
-import 'package:baby_book/app/exception/exception_invalid_param.dart';
-import 'package:baby_book/app/models/model_post.dart';
-import 'package:baby_book/app/models/model_post_request.dart';
-import 'package:baby_book/app/repository/post_repository.dart';
-import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
-import '../../base/pref_data.dart';
-import '../../base/resizer/fetch_pixels.dart';
-import '../exception/exception_invalid_member.dart';
-import '../routes/app_pages.dart';
-import '../view/community/post_type.dart';
 import '../view/dialog/error_dialog.dart';
-import '../view/dialog/reset_dialog.dart';
-import 'CommunityAddController.dart';
-import 'CommunityListController.dart';
 
 class CommunityTagAddController extends GetxController {
   ///선택된 태그 리스트
