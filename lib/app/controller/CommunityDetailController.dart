@@ -105,9 +105,9 @@ class CommunityDetailController extends GetxController {
     loading = true;
     commentController.text = "";
 
-    getPost();
+    await getPost();
 
-    getComment();
+    await getComment();
 
     var memberId = await PrefData.getMemberId();
     if (memberId == post.memberId) {

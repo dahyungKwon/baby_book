@@ -73,9 +73,7 @@ class CommentDetailController extends GetxController {
     loading = true;
     commentController.text = "";
 
-    getComment();
-
-    var memberId = await PrefData.getMemberId();
+    await getComment();
 
     Future.delayed(const Duration(milliseconds: 200), () {
       loading = false;
