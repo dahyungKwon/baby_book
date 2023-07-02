@@ -43,7 +43,7 @@ class AppPages {
     GetPage(name: Routes.loginPath, page: () => LoginScreen()),
     GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0)),
     // GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), binding: HomeBinding()),
-    GetPage(name: Routes.communityListPath, page: () => HomeScreen(2)),
+    GetPage(name: Routes.communityListPath, page: () => HomeScreen(1)),
     GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen()),
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen()),
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),

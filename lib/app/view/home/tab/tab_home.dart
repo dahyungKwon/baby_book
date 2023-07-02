@@ -5,12 +5,13 @@ import 'package:baby_book/app/models/model_popular_service.dart';
 import 'package:baby_book/app/repository/book_list_repository.dart';
 
 import 'package:baby_book/app/view/home/age_agoup_bottom_sheet.dart';
-import 'package:baby_book/base/book_list_utils.dart';
+import 'package:baby_book/app/view/home/book/book_list.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';
 import '../../../routes/app_pages.dart';
 
@@ -34,7 +35,7 @@ class TabHome extends GetView<TabHomeController> {
 
     return Obx(() => Column(
           children: [
-            getVerSpace(FetchPixels.getPixelHeight(21)),
+            getVerSpace(FetchPixels.getPixelHeight(10)),
             getPaddingWidget(
               EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
               Row(
@@ -70,25 +71,43 @@ class TabHome extends GetView<TabHomeController> {
                   ),
                   Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.searchPath);
-                        },
-                        child: getSvgImage(
-                          "search.svg",
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.notificationPath);
-                        },
-                        child: getSvgImage(
-                          "notification.svg",
-                        ),
-                      ),
+                      // getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                      //     Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                      //   Get.toNamed(Routes.searchPath);
+                      // }),
+                      // getHorSpace(FetchPixels.getPixelWidth(10)),
+                      // getSimpleImageButton(
+                      //     "notification.svg",
+                      //     FetchPixels.getPixelHeight(50),
+                      //     FetchPixels.getPixelHeight(50),
+                      //     Colors.white,
+                      //     FetchPixels.getPixelHeight(26),
+                      //     FetchPixels.getPixelHeight(26), () {
+                      //   Get.toNamed(Routes.notificationPath);
+                      // }),
+                      // getSimpleImageButton("book.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                      //     Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                      //   Get.toNamed(Routes.notificationPath);
+                      // }),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.toNamed(Routes.searchPath);
+                      //   },
+                      //   child: getSvgImage(
+                      //     "search.svg",
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   width: 8.0,
+                      // ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.toNamed(Routes.notificationPath);
+                      //   },
+                      //   child: getSvgImage(
+                      //     "notification.svg",
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

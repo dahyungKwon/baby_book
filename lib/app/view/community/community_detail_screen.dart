@@ -94,7 +94,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
 
   Widget buildTop(BuildContext context, ModelPost post) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
         color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,7 +135,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                       case "공유하기":
                         {
                           print("공유하기.......");
-                          share();
+                          _share();
                           break;
                         }
                       case "수정하기":
@@ -145,7 +145,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                         }
                       case "삭제하기":
                         {
-                          clickedRemovePost();
+                          _clickedRemovePost();
                           break;
                         }
                     }
@@ -160,7 +160,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         ));
   }
 
-  share() async {
+  _share() async {
     bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
 
     if (isKakaoTalkSharingAvailable) {
@@ -188,7 +188,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     }
   }
 
-  clickedRemovePost() async {
+  _clickedRemovePost() async {
     bool result = await Get.dialog(ReConfirmDialog("게시글을 삭제 하시겠습니까?", "삭제", "취소", () async {
       controller.removePost().then((result) => Get.back(result: result));
     }));
@@ -205,20 +205,24 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   Widget buildBody(BuildContext context, ModelPost modelPost, List<ModelCommentResponse> commentList) {
     return Expanded(
         child: Scrollbar(
-      controller: controller.scrollController,
-      child: ListView(
-        controller: controller.scrollController,
-        scrollDirection: Axis.vertical,
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        // primary: true,
-        children: [
-          post(context, modelPost),
-          Container(height: FetchPixels.getPixelHeight(25), color: backGroundColor),
-          commentList.isEmpty ? Container(height: 3.h, color: backGroundColor) : buildComment(context, commentList)
-        ],
-      ),
-    ));
+            controller: controller.scrollController,
+            child: Container(
+              color: Color(0xFFF5F6F8),
+              child: ListView(
+                controller: controller.scrollController,
+                scrollDirection: Axis.vertical,
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                // primary: true,
+                children: [
+                  post(context, modelPost),
+                  Container(height: FetchPixels.getPixelHeight(25), color: Color(0xFFF5F6F8)),
+                  commentList.isEmpty
+                      ? Container(height: 3.h, color: Color(0xFFF5F6F8))
+                      : buildComment(context, commentList)
+                ],
+              ),
+            )));
   }
 
   Widget post(BuildContext context, ModelPost modelPost) {
@@ -554,6 +558,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             height: FetchPixels.getPixelHeight(50),
             alignmentGeometry: Alignment.center,
             myFocusNode: commentFocusNode,
+            boxColor: backGroundColor,
           )),
           getSimpleTextButton(
               controller.modifyCommentMode ? "수정" : "등록",

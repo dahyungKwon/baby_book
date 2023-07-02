@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-Color backGroundColor = "#F9FAFC".toColor();
+// Color backGroundColor = "#F9FAFC".toColor();
+Color backGroundColor = "#FFFFFF".toColor();
 Color blueColor = "#23408F".toColor();
 Color intro1Color = "#FFC8CF".toColor();
 Color intro2Color = "#E5ECFF".toColor();

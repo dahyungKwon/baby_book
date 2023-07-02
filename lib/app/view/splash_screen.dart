@@ -12,11 +12,6 @@ import 'package:appscheme/appscheme.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
-  void backClick() {
-    // Constant.backToPrev(context);
-    Get.back();
-  }
-
   @override
   Widget build(BuildContext context) {
     //app scheme
@@ -62,12 +57,13 @@ class SplashScreen extends StatelessWidget {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           body: Container(
+              color: Colors.white,
               child: Center(
                   child: getAssetImage("sp2.png", FetchPixels.getPixelWidth(double.infinity),
                       FetchPixels.getPixelHeight(double.infinity)))),
         ),
         onWillPop: () async {
-          backClick();
+          Get.back();
           return false;
         });
   }

@@ -72,7 +72,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
 
   Widget buildTop(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
         color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +169,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
           // })
         ]),
         comment.deleted || !comment.myComment
-            ? Container()
+            ? Container(width: FetchPixels.getPixelHeight(50), height: FetchPixels.getPixelHeight(30))
             : getSimpleImageButton(
                 "ellipsis_horizontal_outline_comment.svg",
                 FetchPixels.getPixelHeight(50),
@@ -194,8 +194,6 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
                             break;
                           }
                       }
-                      print(menu);
-                      // controller.postType = selectedPostType;
                     }
                   });
                 },
@@ -231,6 +229,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
             height: FetchPixels.getPixelHeight(50),
             alignmentGeometry: Alignment.center,
             myFocusNode: commentFocusNode,
+            boxColor: backGroundColor,
           )),
           getSimpleTextButton(
               controller.modifyCommentMode ? "수정" : "등록",

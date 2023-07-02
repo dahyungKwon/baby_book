@@ -607,25 +607,33 @@ Widget getDefaultTextFiledWithLabel(
 }
 
 ///custom
-Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hintColor,
-    TextEditingController textEditingController, Color fontColor, double fontSize, FontWeight fontWeight,
-    {bool withprefix = false,
-    bool withSufix = false,
-    bool minLines = false,
-    EdgeInsetsGeometry margin = EdgeInsets.zero,
-    bool isPass = false,
-    bool isEnable = true,
-    double? height,
-    double? imageHeight,
-    double? imageWidth,
-    String? image,
-    String? suffiximage,
-    required Function function,
-    Function? imagefunction,
-    AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
-    bool enableEditing = true,
-    Function? onEnter,
-    FocusNode? myFocusNode}) {
+Widget getDefaultTextFiledWithLabel2(
+  BuildContext context,
+  String hint,
+  Color hintColor,
+  TextEditingController textEditingController,
+  Color fontColor,
+  double fontSize,
+  FontWeight fontWeight, {
+  bool withprefix = false,
+  bool withSufix = false,
+  bool minLines = false,
+  EdgeInsetsGeometry margin = EdgeInsets.zero,
+  bool isPass = false,
+  bool isEnable = true,
+  double? height,
+  double? imageHeight,
+  double? imageWidth,
+  String? image,
+  String? suffiximage,
+  required Function function,
+  Function? imagefunction,
+  AlignmentGeometry alignmentGeometry = Alignment.centerLeft,
+  bool enableEditing = true,
+  Function? onEnter,
+  FocusNode? myFocusNode,
+  required Color boxColor,
+}) {
   myFocusNode ??= FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {
@@ -643,7 +651,7 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
               height: height,
               // margin: margin,
               alignment: alignmentGeometry,
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: BoxDecoration(color: boxColor),
               child: Focus(
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
