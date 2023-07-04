@@ -30,12 +30,8 @@ class DataFile {
         "Some nurses travel to multiple homes per day and provide short visits to multiple patients.",
         "intro2.png",
         intro2Color),
-    ModelIntro(
-        3,
-        "Using Smart Gadgets ",
-        "Homecare is also known as domiciliary care, social care or in-home care.",
-        "intro3.png",
-        intro3Color),
+    ModelIntro(3, "Using Smart Gadgets ", "Homecare is also known as domiciliary care, social care or in-home care.",
+        "intro3.png", intro3Color),
   ];
 
   static List<ModelCountry> countryList = [
@@ -49,25 +45,11 @@ class DataFile {
     ModelCountry("image_austia.jpg", "Austria (AT)", "+372"),
   ];
 
-  static List<ModelCategory> categoryList = [
-    ModelCategory("자연관찰"),
-    ModelCategory("자연동화"),
-    ModelCategory("수학동화"),
-    ModelCategory("과학동화"),
-    ModelCategory("창작동화"),
-    ModelCategory("전래동화"),
-    ModelCategory("명작동화"),
-    ModelCategory("위인전기"),
-    ModelCategory("역사영역"),
-    ModelCategory("육아서"),
-  ];
-
   static List<ModelSalon> salonProductList = [
     ModelSalon("hair1.png", "Haircut", "Men’s Haircut", "4.5", 10.00, 0),
     ModelSalon("shaving.png", "Shaving", "Men’s Beard Shave", "4.4", 8.00, 0),
     ModelSalon("facecare.png", "Face Care", "Men’s Face Care", "4.4", 12.00, 0),
-    ModelSalon(
-        "haircolor.png", "Hair Color", "Men’s Hair Color", "4.4", 8.00, 0),
+    ModelSalon("haircolor.png", "Hair Color", "Men’s Hair Color", "4.4", 8.00, 0),
   ];
 
   static List<ModelColor> hairColorList = [
@@ -113,34 +95,24 @@ class DataFile {
   //    this.bgColor,
   //    this.textColor);
   static List<ModelBooking> bookingList = [
-    ModelBooking("grgr2.png",
-                  "그래그래",
-                  "그레이트북스",
-                  "4.3",
-                  367000,
-                  "By Mendy Wilson",
-                  "reading",
-                  0xFFEEFCF0,
-                  success),
-    ModelBooking("booking2.png", "Painting", "22 April, 2022, 08:00 am", "4.2",
-        50.00, "By Jenny Winget", "ready", 0xFFF0F8FF, completed),
-    ModelBooking("booking3.png", "Cleaning", "20 April, 2022, 06:00 pm", "4.3",
-        18.00, "By Jacob Jones", "out", 0xFFFFF3F3, error),
-    ModelBooking("booking4.png", "Repairing", "20 April, 2022, 06:00 pm", "4.3",
-        18.00, "By Jacob Jones", "", 0xFFF0F8FF, completed),
+    ModelBooking("grgr2.png", "그래그래", "그레이트북스", "4.3", 367000, "By Mendy Wilson", "reading", 0xFFEEFCF0, success),
+    ModelBooking("booking2.png", "Painting", "22 April, 2022, 08:00 am", "4.2", 50.00, "By Jenny Winget", "ready",
+        0xFFF0F8FF, completed),
+    ModelBooking("booking3.png", "Cleaning", "20 April, 2022, 06:00 pm", "4.3", 18.00, "By Jacob Jones", "out",
+        0xFFFFF3F3, error),
+    ModelBooking("booking4.png", "Repairing", "20 April, 2022, 06:00 pm", "4.3", 18.00, "By Jacob Jones", "",
+        0xFFF0F8FF, completed),
   ];
   static List<ModelBooking> scheduleList = [
-    ModelBooking("booking1.png", "Cleaning", "23 April, 2022, 11:00 am", "4.3",
-        20.00, "By Mendy Wilson", "Active", 0xFFEEFCF0, success),
-    ModelBooking("booking2.png", "Painting", "22 April, 2022, 08:00 am", "4.2",
-        50.00, "By Jenny Winget", "Completed", 0xFFF0F8FF, completed),
+    ModelBooking("booking1.png", "Cleaning", "23 April, 2022, 11:00 am", "4.3", 20.00, "By Mendy Wilson", "Active",
+        0xFFEEFCF0, success),
+    ModelBooking("booking2.png", "Painting", "22 April, 2022, 08:00 am", "4.2", 50.00, "By Jenny Winget", "Completed",
+        0xFFF0F8FF, completed),
   ];
 
   static List<ModelAddress> addressList = [
-    ModelAddress("Alena Gomez",
-        "3891 Ranchview Dr. Richardson, California 62639", "(907) 555-0101"),
-    ModelAddress("Alena Gomez", "4140 Parker Rd. Allentown, New Mexico 31134",
-        "(907) 555-0101"),
+    ModelAddress("Alena Gomez", "3891 Ranchview Dr. Richardson, California 62639", "(907) 555-0101"),
+    ModelAddress("Alena Gomez", "4140 Parker Rd. Allentown, New Mexico 31134", "(907) 555-0101"),
   ];
 
   static List<ModelNotification> notificationList = [
@@ -186,16 +158,6 @@ class DataFile {
     ModelPopularService("barber.png", "Salon For Men", "Barber"),
     ModelPopularService("wallpaper.png", "Wall Painting", "Painter"),
     ModelPopularService("barber.png", "Salon For Men", "Barber"),
-  ];
-
-  static List<ModelAgeGroup> ageGroupList = [
-    ModelAgeGroup(0, 0, 18),
-    ModelAgeGroup(1, 18, 36),
-    ModelAgeGroup(2, 36, 48),
-    ModelAgeGroup(3, 48, 60),
-    ModelAgeGroup(4, 60, 72),
-    ModelAgeGroup(5, 72, 240),
-    ModelAgeGroup(6, 240, 1200),
   ];
 
   static List<ModelBookState> bookStateList = [

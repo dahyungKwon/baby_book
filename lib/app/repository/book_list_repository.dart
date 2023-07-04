@@ -1,4 +1,6 @@
+import 'package:baby_book/app/models/model_age_group.dart';
 import 'package:baby_book/app/models/model_book.dart';
+import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:dio/dio.dart';
 
 import '../../base/pref_data.dart';
@@ -12,7 +14,8 @@ class BookListRepository {
   ));
 
   Future<List<ModelBook>> getBookList({
-    required String categoryList,
+    required ModelAgeGroup ageGroup, //일단 1개만 받도록
+    required CategoryType categoryType, //일단 1개만 받도록
   }) async {
     var accessToken = await PrefData.getAccessToken();
 
@@ -21,7 +24,9 @@ class BookListRepository {
       queryParameters: {
         'pageSize': 15,
         'pageNumber': '1',
-        'categoryList': categoryList, //'MATH,LIFE'
+        'categoryList': categoryType.code, //리스트형태인데 예시 ['MATH,LIFE'], 일단 하나만 보내게 해둠
+        'startMonth': ageGroup.minAge,
+        'endMonth': ageGroup.maxAge,
       },
       options: Options(
         headers: {"at": accessToken},

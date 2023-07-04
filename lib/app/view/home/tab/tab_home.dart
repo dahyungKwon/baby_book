@@ -1,23 +1,27 @@
 import 'package:baby_book/app/data/data_file.dart';
+import 'package:baby_book/app/models/model_age_group.dart';
 import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/models/model_category.dart';
 import 'package:baby_book/app/models/model_popular_service.dart';
 import 'package:baby_book/app/repository/book_list_repository.dart';
 
-import 'package:baby_book/app/view/home/age_agoup_bottom_sheet.dart';
+import 'package:baby_book/app/view/home/book/age_group_bottom_sheet.dart';
 import 'package:baby_book/app/view/home/book/book_list.dart';
+import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
+import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';
 import '../../../routes/app_pages.dart';
 
 class TabHome extends GetView<TabHomeController> {
   TextEditingController searchController = TextEditingController();
-  static List<ModelCategory> categoryLists = DataFile.categoryList;
+  List<CategoryType> categoryLists = CategoryType.findListViewList();
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
   ValueNotifier selectedPage = ValueNotifier(0);
   final _pageController = PageController();
@@ -27,7 +31,7 @@ class TabHome extends GetView<TabHomeController> {
   @override
   Widget build(BuildContext context) {
     Get.put(TabHomeController(0, bookListRepository: BookListRepository()));
-    controller.getAll();
+    controller.getBookList();
 
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
       horizontal: FetchPixels.getDefaultHorSpace(context),
@@ -37,45 +41,43 @@ class TabHome extends GetView<TabHomeController> {
           children: [
             getVerSpace(FetchPixels.getPixelHeight(10)),
             getPaddingWidget(
-              EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+              EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(10)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // getSvgImage(
-                  //   "menu.svg",
-                  // ),
-                  Row(
-                    children: [
-                      getHorSpace(FetchPixels.getPixelWidth(4)),
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (_) => AgeGroupBottomSheet(ageGroupId: controller.ageGroupId!))
-                              .then((selectedId) {
-                            if (selectedId != null) {
-                              controller.ageGroupId = selectedId;
-                            }
-                          });
-                        },
-                        child: getCustomFont(
-                          "${DataFile.ageGroupList[controller.ageGroupId!].minAge} ~ ${DataFile.ageGroupList[controller.ageGroupId!].maxAge}개월 ν",
-                          18,
+                  SizedBox(
+                      width: FetchPixels.getPixelWidth(165),
+                      height: FetchPixels.getPixelHeight(50),
+                      child: getDefaultTextFiledWithLabel2(
+                          context,
+                          ModelAgeGroup.ageGroupList[controller.selectedAgeGroupId!].title,
                           Colors.black,
-                          1,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
+                          controller.ageGroupTextEditingController,
+                          Colors.black87,
+                          FetchPixels.getPixelHeight(18),
+                          boxColor: backGroundColor,
+                          FontWeight.w700, function: () {
+                        showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (_) => AgeGroupBottomSheet(
+                                    selectedAgeGroup: ModelAgeGroup.ageGroupList[controller.selectedAgeGroupId!]))
+                            .then((selectedAgeGroup) {
+                          if (selectedAgeGroup != null) {
+                            controller.selectedAgeGroupId = selectedAgeGroup.groupId;
+                            controller.getBookList();
+                          }
+                        });
+                      },
+                          isEnable: false,
+                          withprefix: false,
+                          minLines: true,
+                          height: FetchPixels.getPixelHeight(50),
+                          withSufix: true,
+                          suffiximage: "down_arrow.svg",
+                          enableEditing: false)),
+                  const Row(
                     children: [
-                      // getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                      //     Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-                      //   Get.toNamed(Routes.searchPath);
-                      // }),
-                      // getHorSpace(FetchPixels.getPixelWidth(10)),
                       // getSimpleImageButton(
                       //     "notification.svg",
                       //     FetchPixels.getPixelHeight(50),
@@ -83,91 +85,72 @@ class TabHome extends GetView<TabHomeController> {
                       //     Colors.white,
                       //     FetchPixels.getPixelHeight(26),
                       //     FetchPixels.getPixelHeight(26), () {
-                      //   Get.toNamed(Routes.notificationPath);
+                      //   Get.toNamed(Routes.searchPath);
                       // }),
-                      // getSimpleImageButton("book.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                      // getHorSpace(FetchPixels.getPixelWidth(10)),
+                      // getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                       //     Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-                      //   Get.toNamed(Routes.notificationPath);
+                      //   Get.toNamed(Routes.searchPath);
                       // }),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Get.toNamed(Routes.searchPath);
-                      //   },
-                      //   child: getSvgImage(
-                      //     "search.svg",
-                      //   ),
-                      // ),
-                      // const SizedBox(
-                      //   width: 8.0,
-                      // ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Get.toNamed(Routes.notificationPath);
-                      //   },
-                      //   child: getSvgImage(
-                      //     "notification.svg",
-                      //   ),
-                      // ),
                     ],
                   ),
                 ],
               ),
             ),
-            // getVerSpace(FetchPixels.getPixelHeight(10)),
-            // getPaddingWidget(
-            //     EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-            //     getSearchWidget(context, searchController, () {
-            //       Constant.sendToNext(context, Routes.searchRoute);
-            //     }, (value) {})),
-            getVerSpace(FetchPixels.getPixelHeight(20)),
-            Expanded(
-              child: ListView(
-                primary: true,
+            getVerSpace(FetchPixels.getPixelHeight(10)),
+            SizedBox(
+              height: FetchPixels.getPixelHeight(40),
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15)),
+                scrollDirection: Axis.horizontal,
+                itemCount: categoryLists.length,
+                primary: false,
                 shrinkWrap: true,
-                children: [
-                  SizedBox(
-                    height: FetchPixels.getPixelHeight(40),
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      primary: false,
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        ModelCategory modelCategory = categoryLists[index];
-                        return GestureDetector(
-                          onTap: () {
-                            PrefData.setDefIndex(1);
-                            Get.toNamed(Routes.detailPath);
-                          },
-                          child: Container(
-                            width: FetchPixels.getPixelWidth(91),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFFE0E0E0),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15.0),
-                                    ),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                                  child: Text(modelCategory.name ?? ""),
-                                )
-                              ],
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) => Obx(() {
+                  CategoryType categoryType = categoryLists[index];
+                  return GestureDetector(
+                    onTap: () async {
+                      controller.selectedCategoryIdx = index;
+                      controller.selectedCategoryType = categoryType;
+                      controller.getBookList();
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            color: index == controller.selectedCategoryIdx ? const Color(0xFF464646) : Colors.white,
+                            border: Border.all(
+                              width: 1,
+                              color: Colors.black12,
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(15.0),
                             ),
                           ),
-                        );
-                      },
+                          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                          child: Text(
+                            categoryType.desc ?? "",
+                            style: TextStyle(
+                              color: index == controller.selectedCategoryIdx ? Colors.white : Colors.black,
+                              fontWeight: index == controller.selectedCategoryIdx ? FontWeight.w600 : FontWeight.w400,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                  controller.bookList.length < 1
-                      ? getPaddingWidget(edgeInsets, nullListView(context))
-                      : allBookingList(controller.bookList)
-                ],
+                  );
+                }),
               ),
-            )
+            ),
+            getVerSpace(FetchPixels.getPixelHeight(10)),
+            controller.loading
+                ? const Expanded(child: ListSkeleton())
+                : controller.bookList.length < 1
+                    ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
+                    : allBookingList(controller.bookList)
           ],
         ));
   }
@@ -190,16 +173,27 @@ class TabHome extends GetView<TabHomeController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("조건에 해당하는 책이 없습니다!", 20, Colors.black, 1, fontWeight: FontWeight.w900),
-        getVerSpace(FetchPixels.getPixelHeight(25)),
-        getButton(context, backGroundColor, "책 등록 요청하기", blueColor, () {}, 18,
+        // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
+        // getVerSpace(FetchPixels.getPixelHeight(40)),
+        getCustomFont("해당 조건의 책이 존재 하지 않습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+        getVerSpace(FetchPixels.getPixelHeight(10)),
+        getCustomFont(
+          "여러분의 소중한 경험을 공유해주세요.",
+          16,
+          Colors.black,
+          1,
+          fontWeight: FontWeight.w400,
+        ),
+        getVerSpace(FetchPixels.getPixelHeight(30)),
+        getButton(context, backGroundColor, "책 추천 하러가기", Colors.black87, () {
+          // Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
+        }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
-            insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(106)),
+            insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(100)),
             borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
             isBorder: true,
-            borderColor: blueColor,
+            borderColor: Colors.grey,
             borderWidth: 1.5)
       ],
     );

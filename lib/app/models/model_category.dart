@@ -1,5 +1,6 @@
-class ModelCategory{
-  String? name;
+class ModelCategory {
+  String code;
+  String name;
 
-  ModelCategory(this.name);
+  ModelCategory(this.code, this.name);
 }

@@ -18,7 +18,7 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  static List<ModelCategory> categoryLists = DataFile.categoryList;
+  // static List<ModelCategory> categoryLists = DataFile.categoryList;
 
   var noOfGrid = 3;
 
@@ -61,42 +61,42 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   categoryView() {
     return Container(
-      child: GridView.builder(
-        itemCount: categoryLists.length,
-        padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: noOfGrid,
-            crossAxisSpacing: FetchPixels.getPixelWidth(19),
-            mainAxisSpacing: FetchPixels.getPixelHeight(20),
-            mainAxisExtent: FetchPixels.getPixelHeight(121)),
-        itemBuilder: (BuildContext context, int index) {
-          ModelCategory modelCategory = categoryLists[index];
-          return GestureDetector(
-            onTap: () {
-              Get.toNamed(Routes.detailPath);
-            },
-            child: Container(
-              padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(24), bottom: FetchPixels.getPixelHeight(16)),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
-                  ],
-                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // getSvgImage(modelCategory.image ?? "",
-                  //     width: FetchPixels.getPixelHeight(44),
-                  //     height: FetchPixels.getPixelHeight(44)),
-                  // getVerSpace(FetchPixels.getPixelHeight(15)),
-                  getCustomFont(modelCategory.name ?? '', 14, Colors.black, 1, fontWeight: FontWeight.w400)
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+        // child: GridView.builder(
+        //   itemCount: categoryLists.length,
+        //   padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+        //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //       crossAxisCount: noOfGrid,
+        //       crossAxisSpacing: FetchPixels.getPixelWidth(19),
+        //       mainAxisSpacing: FetchPixels.getPixelHeight(20),
+        //       mainAxisExtent: FetchPixels.getPixelHeight(121)),
+        //   itemBuilder: (BuildContext context, int index) {
+        //     ModelCategory modelCategory = categoryLists[index];
+        //     return GestureDetector(
+        //       onTap: () {
+        //         Get.toNamed(Routes.detailPath);
+        //       },
+        //       child: Container(
+        //         padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(24), bottom: FetchPixels.getPixelHeight(16)),
+        //         decoration: BoxDecoration(
+        //             color: Colors.white,
+        //             boxShadow: const [
+        //               BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
+        //             ],
+        //             borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+        //         child: Column(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             // getSvgImage(modelCategory.image ?? "",
+        //             //     width: FetchPixels.getPixelHeight(44),
+        //             //     height: FetchPixels.getPixelHeight(44)),
+        //             // getVerSpace(FetchPixels.getPixelHeight(15)),
+        //             getCustomFont(modelCategory.name ?? '', 14, Colors.black, 1, fontWeight: FontWeight.w400)
+        //           ],
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
+        );
   }
 }
