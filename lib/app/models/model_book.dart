@@ -1,4 +1,4 @@
-class ModelBook{
+class ModelBook {
   int? id;
   String? name;
   String? content;
@@ -35,7 +35,7 @@ class ModelBook{
   });
 
   // JSON형태에서부터 데이터를 받아온다.
-  ModelBook.fromJson(Map<dynamic, dynamic> json)
+  ModelBook.fromJson(Map<String, dynamic> json)
       : id = json['bookSet']['bookSetId'],
         name = json['bookSet']['bookSetName'],
         content = json['bookSet']['content'],

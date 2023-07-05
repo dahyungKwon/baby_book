@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../models/model_age_group.dart';
+import '../models/model_book_response.dart';
 import '../repository/book_list_repository.dart';
 
 class TabHomeController extends GetxController {
@@ -23,7 +24,7 @@ class TabHomeController extends GetxController {
 
   set loading(value) => _loading.value = value;
 
-  final _bookLists = <ModelBook>[].obs;
+  final _bookLists = <ModelBookResponse>[].obs;
 
   get bookList => _bookLists.value;
 

@@ -12,6 +12,8 @@ enum CategoryType {
   fairy("FAIRY", "전래/명작", Color(0xFF2E8B57)),
   greateman("GREATEMAN", "위인", Color(0xFF1E90FF)),
   social("SOCIAL", "사회/경제/문화", Color(0xFF081A2C)),
+  history("HISTORY", "역사/신화", Color(0xFF1662AF)),
+  classic("CLASSIC", "고전/문학", Color(0xFF880033)),
   english("ENGLISH", "영어", Color(0xFFFA8072)),
   art("ART", "예술", Color(0xFFC53D65)),
   etc("ETC", "기타", Colors.black),

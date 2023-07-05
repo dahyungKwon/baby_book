@@ -1,5 +1,5 @@
 import 'package:baby_book/app/models/model_age_group.dart';
-import 'package:baby_book/app/models/model_book.dart';
+import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:dio/dio.dart';
 
@@ -13,7 +13,7 @@ class BookListRepository {
     receiveTimeout: 3000,
   ));
 
-  Future<List<ModelBook>> getBookList({
+  Future<List<ModelBookResponse>> getBookList({
     required ModelAgeGroup ageGroup, //일단 1개만 받도록
     required CategoryType categoryType, //일단 1개만 받도록
   }) async {
@@ -42,8 +42,8 @@ class BookListRepository {
     }
 
     return response.data['body']
-        .map<ModelBook>(
-          (item) => ModelBook.fromJson(item),
+        .map<ModelBookResponse>(
+          (item) => ModelBookResponse.fromJson(item),
         )
         .toList();
   }

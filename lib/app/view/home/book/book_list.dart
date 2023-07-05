@@ -16,17 +16,12 @@ GestureDetector buildBookListItem(ModelBook modelBook, BuildContext context, int
     },
     child: Container(
       height: FetchPixels.getPixelHeight(100),
-      margin: EdgeInsets.only(
-        bottom: FetchPixels.getPixelHeight(5),
-        left: FetchPixels.getPixelHeight(5),
-        right: FetchPixels.getPixelHeight(5),
-        // right: FetchPixels.getDefaultHorSpace(context)
-      ),
+      margin: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(5), horizontal: FetchPixels.getPixelWidth(15)),
       padding: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(2), horizontal: FetchPixels.getPixelWidth(15)),
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: const [
-            BoxShadow(color: Colors.black26, blurRadius: 3, offset: Offset(0.0, 2.0)),
+            BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(1.0, 1.0)),
           ],
           borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(5))),
       child: Column(

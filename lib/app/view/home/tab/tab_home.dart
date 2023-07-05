@@ -17,6 +17,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';
+import '../../../models/model_book_response.dart';
 import '../../../routes/app_pages.dart';
 
 class TabHome extends GetView<TabHomeController> {
@@ -155,18 +156,19 @@ class TabHome extends GetView<TabHomeController> {
         ));
   }
 
-  ListView allBookingList(List<ModelBook> bookList) {
-    return ListView.builder(
+  Expanded allBookingList(List<ModelBookResponse> bookList) {
+    return Expanded(
+        child: ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: bookList.length,
       itemBuilder: (context, index) {
-        ModelBook modelBook = bookList[index];
+        ModelBook modelBook = bookList[index].modelBook;
         return buildBookListItem(modelBook, context, index, () {
           Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBook});
         });
       },
-    );
+    ));
   }
 
   Column nullListView(BuildContext context) {
