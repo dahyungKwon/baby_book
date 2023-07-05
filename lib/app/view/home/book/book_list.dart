@@ -1,3 +1,4 @@
+import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,62 +10,73 @@ import '../../../../base/color_data.dart';
 
 var f = NumberFormat('###,###,###,###');
 
-GestureDetector buildBookListItem(ModelBook modelBook, BuildContext context, int index, Function function) {
+GestureDetector buildBookListItem(
+    ModelBookResponse modelBookResponse, BuildContext context, int index, Function function) {
   return GestureDetector(
     onTap: () {
       function();
     },
     child: Container(
       height: FetchPixels.getPixelHeight(100),
-      margin: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(5), horizontal: FetchPixels.getPixelWidth(15)),
-      padding: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(2), horizontal: FetchPixels.getPixelWidth(15)),
-      decoration: BoxDecoration(
+      margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
+      padding:
+          EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(20)),
+      decoration: const BoxDecoration(
           color: Colors.white,
-          boxShadow: const [
-            BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(1.0, 1.0)),
+          boxShadow: [
+            BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(0.0, 1.0)),
           ],
-          borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(5))),
+          borderRadius: BorderRadius.zero),
       child: Column(
         children: [
           Expanded(
             child: Row(
               children: [
+                getCustomFont((index + 1).toString(), 18, Colors.black, 1, fontWeight: FontWeight.w500),
+                getHorSpace(FetchPixels.getPixelWidth(20)),
                 Container(
-                  height: FetchPixels.getPixelHeight(70),
-                  width: FetchPixels.getPixelHeight(70),
-                  decoration: BoxDecoration(
-                    image: getDecorationAssetImage(context, modelBook.logo ?? "grgr2.png", fit: BoxFit.cover),
-                  ),
-                ),
-                getHorSpace(FetchPixels.getPixelWidth(16)),
+                    // width: FetchPixels.getPixelHeight(80),
+                    // height: FetchPixels.getPixelHeight(80),
+                    child: FadeInImage(
+                  fit: BoxFit.fitHeight,
+                  width: FetchPixels.getPixelHeight(80),
+                  height: FetchPixels.getPixelHeight(80),
+                  image: NetworkImage(
+                      "https://babybook-file-bucket.s3.ap-northeast-2.amazonaws.com/img_book_${modelBookResponse.modelBook.id}.png"),
+                  placeholder: const AssetImage("assets/images/book_placeholder.png"),
+                )),
+                getHorSpace(FetchPixels.getPixelWidth(20)),
                 Expanded(
                   flex: 1,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         flex: 1,
                         child: getHorSpace(0),
                       ),
-                      getCustomFont(modelBook.name ?? "", 13, Colors.black, 1, fontWeight: FontWeight.w900),
-                      getVerSpace(FetchPixels.getPixelHeight(2)),
+                      // getCustomFont(modelBookResponse.getCategoryType().desc ?? "", 12,
+                      //     modelBookResponse.getCategoryType().color, 1,
+                      //     fontWeight: FontWeight.w400),
+                      // getVerSpace(FetchPixels.getPixelHeight(10)),
+                      getCustomFont(modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
+                          fontWeight: FontWeight.w500),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
                       getCustomFont(
-                        modelBook.publisherName ?? "그레이트북스",
-                        12,
+                        modelBookResponse.modelPublisher.publisherName,
+                        14,
                         textColor,
                         1,
                         fontWeight: FontWeight.w400,
                       ),
-                      getVerSpace(FetchPixels.getPixelHeight(5)),
-                      Row(
-                        children: [
-                          getSvgImage("star.svg",
-                              height: FetchPixels.getPixelHeight(12), width: FetchPixels.getPixelHeight(12)),
-                          getHorSpace(FetchPixels.getPixelWidth(6)),
-                          getCustomFont(modelBook.reviewScore ?? "", 12, Colors.black, 1, fontWeight: FontWeight.w400),
-                        ],
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      getCustomFont(
+                        "${f.format(modelBookResponse.modelBook.amount ?? 0)} 원",
+                        14,
+                        Colors.black87,
+                        1,
+                        fontWeight: FontWeight.w600,
                       ),
                       Expanded(
                         flex: 1,
@@ -73,76 +85,9 @@ GestureDetector buildBookListItem(ModelBook modelBook, BuildContext context, int
                     ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     funDelete();
-                    //   },
-                    //   child: getSvgImage("trash.svg",
-                    //       width: FetchPixels.getPixelHeight(20),
-                    //       height: FetchPixels.getPixelHeight(20)),
-                    // ),
-                    getPaddingWidget(
-                        EdgeInsets.only(bottom: FetchPixels.getPixelHeight(10)),
-                        getCustomFont(
-                          "${f.format(modelBook.amount ?? 0)} 원",
-                          12,
-                          Colors.grey,
-                          1,
-                          fontWeight: FontWeight.w900,
-                        )),
-                    // Row(
-                    //   children: [
-                    //     getSvgImage("star.svg",
-                    //         height: FetchPixels.getPixelHeight(16),
-                    //         width: FetchPixels.getPixelHeight(16)),
-                    //     getHorSpace(FetchPixels.getPixelWidth(6)),
-                    //     getCustomFont(
-                    //         modelBooking.rating ?? "", 14, Colors.black, 1,
-                    //         fontWeight: FontWeight.w400),
-                    //   ],
-                    // )
-                  ],
-                )
               ],
             ),
           ),
-          // getVerSpace(FetchPixels.getPixelHeight(16)),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     Row(
-          //       children: [
-          //         getAssetImage("dot.png", FetchPixels.getPixelHeight(8),
-          //             FetchPixels.getPixelHeight(8)),
-          //         getHorSpace(FetchPixels.getPixelWidth(8)),
-          //         getCustomFont(modelBooking.owner ?? "", 14, textColor, 1,
-          //             fontWeight: FontWeight.w400),
-          //       ],
-          //     ),
-          //     Wrap(
-          //       children: [
-          //         getButton(
-          //             context,
-          //             Color(modelBooking.bgColor!.toInt()),
-          //             modelBooking.tag ?? "",
-          //             modelBooking.textColor!,
-          //             () {},
-          //             16,
-          //             weight: FontWeight.w600,
-          //             borderRadius:
-          //                 BorderRadius.circular(FetchPixels.getPixelHeight(37)),
-          //             insetsGeometrypadding: EdgeInsets.symmetric(
-          //                 vertical: FetchPixels.getPixelHeight(6),
-          //                 horizontal: FetchPixels.getPixelWidth(12)))
-          //       ],
-          //     )
-          //   ],
-          // )
         ],
       ),
     ),

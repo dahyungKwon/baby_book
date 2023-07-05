@@ -163,9 +163,9 @@ class TabHome extends GetView<TabHomeController> {
       padding: EdgeInsets.zero,
       itemCount: bookList.length,
       itemBuilder: (context, index) {
-        ModelBook modelBook = bookList[index].modelBook;
-        return buildBookListItem(modelBook, context, index, () {
-          Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBook});
+        ModelBookResponse modelBookResponse = bookList[index];
+        return buildBookListItem(modelBookResponse, context, index, () {
+          Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBookResponse.modelBook});
         });
       },
     ));
