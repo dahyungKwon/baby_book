@@ -13,11 +13,13 @@ import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';
 import '../../../models/model_book_response.dart';
+import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
 
 class TabHome extends GetView<TabHomeController> {
@@ -26,14 +28,16 @@ class TabHome extends GetView<TabHomeController> {
   List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
   ValueNotifier selectedPage = ValueNotifier(0);
   final _pageController = PageController();
+  late RefreshController refreshController;
+  int pageNumber = 1;
 
-  TabHome({super.key});
+  TabHome({super.key}) {
+    Get.put(TabHomeController(0, bookListRepository: BookListRepository()));
+    refreshController = RefreshController(initialRefresh: false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(TabHomeController(0, bookListRepository: BookListRepository()));
-    controller.getBookList();
-
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
@@ -65,8 +69,11 @@ class TabHome extends GetView<TabHomeController> {
                                     selectedAgeGroup: ModelAgeGroup.ageGroupList[controller.selectedAgeGroupId!]))
                             .then((selectedAgeGroup) {
                           if (selectedAgeGroup != null) {
+                            ///age를 바꾸면 캐시 다 날리고, 선택된 카테고리로 재조회
+                            initPageNumber();
                             controller.selectedAgeGroupId = selectedAgeGroup.groupId;
-                            controller.getBookList();
+                            controller.initCache();
+                            controller.getAllForInit(controller.selectedCategoryType);
                           }
                         });
                       },
@@ -112,9 +119,11 @@ class TabHome extends GetView<TabHomeController> {
                   CategoryType categoryType = categoryLists[index];
                   return GestureDetector(
                     onTap: () async {
+                      ///책 타입 변경하면 새로 조회 (캐시 있으면 캐시 보여줌)
+                      initPageNumber();
                       controller.selectedCategoryIdx = index;
-                      controller.selectedCategoryType = categoryType;
-                      controller.getBookList();
+                      // controller.selectedCategoryType = categoryType;
+                      controller.getAllForInit(categoryType);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,15 +160,72 @@ class TabHome extends GetView<TabHomeController> {
                 ? const Expanded(child: ListSkeleton())
                 : controller.bookList.length < 1
                     ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
-                    : allBookingList(controller.bookList)
+                    : Expanded(child: draw())
           ],
         ));
   }
 
-  Expanded allBookingList(List<ModelBookResponse> bookList) {
-    return Expanded(
-        child: ListView.builder(
-      shrinkWrap: true,
+  SmartRefresher draw() {
+    return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const MaterialClassicHeader(
+          color: Colors.black,
+        ),
+        footer: const ClassicFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            loadingText: "Loading...",
+            idleText: "Loading...",
+            canLoadingText: "Loading..."),
+        controller: refreshController,
+        onRefresh: onRefresh,
+        onLoading: onLoading,
+        child: allBookingList(controller.bookList));
+  }
+
+  void onRefresh() async {
+    await controller.getAllForPullToRefresh();
+    initPageNumber(); //순서중요
+
+    await Future.delayed(Duration(milliseconds: 500));
+
+    refreshController.refreshCompleted();
+  }
+
+  void onLoading() async {
+    List<ModelBookResponse>? list = await controller.getAllForLoading(PagingRequest.create(pageNumber + 1));
+    if (list != null && list.isNotEmpty) {
+      plusPageNumber();
+    }
+
+    await Future.delayed(Duration(milliseconds: 500));
+    refreshController.loadComplete();
+  }
+
+  void initPageNumber() {
+    print("initPageNumber.... start...... ${controller.selectedCategoryType.code}");
+
+    ///캐시된게 있으면 맨 마지막 number를 넣어야함
+    if (controller.map.containsKey(controller.selectedCategoryType)) {
+      // 1 12345 -1 01234 /5 = 0 +1 => 1
+      // 2 678910 -1 56789 / 5 = 1 +1 => 2
+      pageNumber = (controller.map[controller.selectedCategoryType]!.length - 1) ~/ PagingRequest.defaultPageSize + 1;
+    } else {
+      pageNumber = 1;
+    }
+    print("initPageNumber.... end...pageNumber...$pageNumber...${controller.selectedCategoryType.code}");
+  }
+
+  void plusPageNumber() {
+    print("plusPageNumber.... start.....${controller.selectedCategoryType.code}");
+    pageNumber++;
+    print("plusPageNumber.... end...pageNumber...$pageNumber...${controller.selectedCategoryType.code}");
+  }
+
+  ListView allBookingList(List<ModelBookResponse> bookList) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      // shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: bookList.length,
       itemBuilder: (context, index) {
@@ -168,7 +234,7 @@ class TabHome extends GetView<TabHomeController> {
           Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBookResponse.modelBook});
         });
       },
-    ));
+    );
   }
 
   Column nullListView(BuildContext context) {
