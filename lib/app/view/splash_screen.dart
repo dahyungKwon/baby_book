@@ -20,18 +20,20 @@ class SplashScreen extends StatelessWidget {
       if (value != null) {
         print("AppSchemeImpl Init  ${value.dataString}");
         String? sharedType = value.query!["sharedType"];
-        String? postId = value.query!["postId"];
+
         print("AppSchemeImpl sharedType : $sharedType");
-        print("AppSchemeImpl postId : $postId");
         if (sharedType != null) {
           switch (sharedType) {
             case "BOOK":
               {
-                /// 책공유 시 활용
+                String? bookSetId = value.query!["bookSetId"];
+                print("AppSchemeImpl bookSetId : $bookSetId");
+                Get.toNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
                 break;
               }
             case "COMMUNITY":
               {
+                String? postId = value.query!["postId"];
                 Get.toNamed(Routes.communityDetailPath, parameters: {'sharedType': sharedType, 'postId': postId!});
                 break;
               }

@@ -7,11 +7,11 @@ import 'package:get/get.dart';
 
 import '../models/model_age_group.dart';
 import '../models/model_book_response.dart';
-import '../repository/book_list_repository.dart';
+import '../repository/book_repository.dart';
 import '../repository/paging_request.dart';
 
 class TabHomeController extends GetxController {
-  final BookListRepository bookListRepository;
+  final BookRepository bookListRepository;
 
   TabHomeController(int initAgeGroupId, {required this.bookListRepository}) {
     assert(bookListRepository != null);

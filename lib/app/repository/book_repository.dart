@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 
-class BookListRepository {
+class BookRepository {
   var dio = Dio(BaseOptions(
     baseUrl: 'http://ec2-15-165-18-218.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
@@ -47,5 +47,26 @@ class BookListRepository {
           (item) => ModelBookResponse.fromJson(item),
         )
         .toList();
+  }
+
+  Future<ModelBookResponse> get({required int bookSetId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/bookset/$bookSetId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return ModelBookResponse.fromJson(response.data['body']);
   }
 }

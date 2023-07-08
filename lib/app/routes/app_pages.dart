@@ -12,6 +12,7 @@ import '../view/card/card_screen.dart';
 import '../view/community/community_add_screen.dart';
 import '../view/community/community_detail_screen.dart';
 import '../view/home/address_screen.dart';
+import '../view/home/book/book_detail_screen.dart';
 import '../view/home/cart_screen.dart';
 import '../view/home/category_screen.dart';
 import '../view/home/date_time_screen.dart';
@@ -47,6 +48,7 @@ class AppPages {
     GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen()),
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen()),
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),
+    GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀

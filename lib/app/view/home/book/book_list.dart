@@ -41,9 +41,8 @@ GestureDetector buildBookListItem(
                   fit: BoxFit.fitHeight,
                   width: FetchPixels.getPixelHeight(80),
                   height: FetchPixels.getPixelHeight(80),
-                  image: NetworkImage(
-                      "https://babybook-file-bucket.s3.ap-northeast-2.amazonaws.com/img_book_${modelBookResponse.modelBook.id}.png"),
-                  placeholder: const AssetImage("assets/images/book_placeholder.png"),
+                  image: NetworkImage(modelBookResponse.getFirstImg()),
+                  placeholder: AssetImage(modelBookResponse.getPlaceHolderImg()),
                 )),
                 getHorSpace(FetchPixels.getPixelWidth(20)),
                 Expanded(

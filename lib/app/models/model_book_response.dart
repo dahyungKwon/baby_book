@@ -23,12 +23,16 @@ class ModelBookResponse {
       this.imgUrlList,
       required this.modelPublisher});
 
-  // response.data['body']
-  //     .map<ModelBookResponse>(
-  // (item) => ModelBookResponse.fromJson(item),
-  // )
-  //     .toList();
-  // List<ModelPostFile>.from(json['postFileList'].map((item) => ModelPostFile.fromJson(item))).toList();
+  static ModelBookResponse createForObsInit() {
+    return ModelBookResponse(
+        modelBook: ModelBook(),
+        categoryList: [],
+        styleList: [],
+        tagList: [],
+        imgUrlList: [],
+        modelPublisher: ModelPublisher(publisherId: 0, publisherLogoUrl: "", publisherName: "", publisherWebUrl: ""));
+  }
+
   // JSON형태에서부터 데이터를 받아온다.
   ModelBookResponse.fromJson(Map<String, dynamic> json)
       : modelBook = ModelBook.fromJson(json),
@@ -41,5 +45,17 @@ class ModelBookResponse {
 
   CategoryType getCategoryType() {
     return categoryList.isNotEmpty ? categoryList[0].bookSetCategoryType : CategoryType.none;
+  }
+
+  bool existFirstImg() {
+    return modelBook.id != null;
+  }
+
+  String getFirstImg() {
+    return "https://babybook-file-bucket.s3.ap-northeast-2.amazonaws.com/img_book_${modelBook.id}.png";
+  }
+
+  String getPlaceHolderImg() {
+    return "assets/images/book_placeholder.png";
   }
 }

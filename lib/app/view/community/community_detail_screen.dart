@@ -100,8 +100,21 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-              Get.back();
+                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+              if (controller.modifyCommentMode) {
+                await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
+                  controller.exitModifyCommentMode();
+                  Get.back();
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    commentKeyboardDown(context);
+                  });
+                }));
+              } else if (sharedMode) {
+                print("AppSchemeImpl sharedMode :$sharedMode get off");
+                Get.off(() => HomeScreen(2));
+              } else {
+                Get.back();
+              }
             }),
             Row(children: [
               // getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
@@ -167,7 +180,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
       print('카카오톡으로 공유 가능');
       try {
         Uri uri = await ShareClient.instance.shareDefault(
-            template: ModelKakaoLinkTemplate.getTextTemplate(
+            template: ModelKakaoLinkTemplate.getTextTemplateForPost(
                 "[아기곰 책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
         await ShareClient.instance.launchKakaoTalk(uri);
         print('카카오톡 공유 완료');
@@ -178,7 +191,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
       print('카카오톡 미설치: 웹 공유 기능 사용 권장');
       try {
         Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
-            template: ModelKakaoLinkTemplate.getTextTemplate(
+            template: ModelKakaoLinkTemplate.getTextTemplateForPost(
                 "[아기곰책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
         await launchBrowserTab(shareUrl, popupOpen: true);
       } catch (error) {

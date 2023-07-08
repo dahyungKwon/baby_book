@@ -3,7 +3,7 @@ import 'package:baby_book/app/models/model_age_group.dart';
 import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/models/model_category.dart';
 import 'package:baby_book/app/models/model_popular_service.dart';
-import 'package:baby_book/app/repository/book_list_repository.dart';
+import 'package:baby_book/app/repository/book_repository.dart';
 
 import 'package:baby_book/app/view/home/book/age_group_bottom_sheet.dart';
 import 'package:baby_book/app/view/home/book/book_list.dart';
@@ -32,7 +32,7 @@ class TabHome extends GetView<TabHomeController> {
   int pageNumber = 1;
 
   TabHome({super.key}) {
-    Get.put(TabHomeController(0, bookListRepository: BookListRepository()));
+    Get.put(TabHomeController(0, bookListRepository: BookRepository()));
     refreshController = RefreshController(initialRefresh: false);
   }
 
@@ -231,7 +231,7 @@ class TabHome extends GetView<TabHomeController> {
       itemBuilder: (context, index) {
         ModelBookResponse modelBookResponse = bookList[index];
         return buildBookListItem(modelBookResponse, context, index, () {
-          Get.toNamed(Routes.bookingPath, arguments: {'modelBook': modelBookResponse.modelBook});
+          Get.toNamed("${Routes.bookDetailPath}?bookSetId=${modelBookResponse.modelBook.id}");
         });
       },
     );
