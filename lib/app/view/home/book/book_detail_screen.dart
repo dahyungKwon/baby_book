@@ -1,11 +1,8 @@
-import 'dart:ffi';
-
 import 'package:baby_book/app/controller/BookDetailController.dart';
-import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -16,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../base/color_data.dart';
-import '../../../../base/constant.dart';
 import '../../../../base/skeleton.dart';
 import '../../../models/model_book_state.dart';
 import '../../../models/model_kakao_link_template.dart';
@@ -225,12 +221,20 @@ class BookDetailScreen extends GetView<BookDetailController> {
                     // height: FetchPixels.height / 5,
                     // width: FetchPixels.width * 1,
                     child: controller.book.existFirstImg()
-                        ? FadeInImage(
-                            fit: BoxFit.fill,
-                            width: FetchPixels.getPixelWidth(double.infinity),
+                        ? ExtendedImage.network(controller.book.getFirstImg(),
+                            width: FetchPixels.getPixelHeight(double.infinity),
                             height: FetchPixels.getPixelHeight(200),
-                            image: NetworkImage(controller.book.getFirstImg()),
-                            placeholder: AssetImage(controller.book.getPlaceHolderImg()))
+                            fit: BoxFit.fitHeight,
+                            cache: true, loadStateChanged: (ExtendedImageState state) {
+                            switch (state.extendedImageLoadState) {
+                              case LoadState.loading:
+                                return Image.asset(controller.book.getPlaceHolderImg(), fit: BoxFit.fill);
+                              case LoadState.completed:
+                                break;
+                              case LoadState.failed:
+                                return Image.asset(controller.book.getPlaceHolderImg(), fit: BoxFit.fill);
+                            }
+                          })
                         : Container()),
               ),
               getVerSpace(FetchPixels.getPixelHeight(30)),

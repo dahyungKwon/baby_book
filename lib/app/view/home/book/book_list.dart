@@ -1,11 +1,11 @@
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/model_book.dart';
 import '../../../../base/color_data.dart';
 
 var f = NumberFormat('###,###,###,###');
@@ -32,18 +32,29 @@ GestureDetector buildBookListItem(
           Expanded(
             child: Row(
               children: [
-                getCustomFont((index + 1).toString(), 18, Colors.black, 1, fontWeight: FontWeight.w500),
+                SizedBox(
+                    width: FetchPixels.getPixelWidth(35),
+                    child: Center(
+                        child:
+                            getCustomFont((index + 1).toString(), 18, Colors.black, 1, fontWeight: FontWeight.w500))),
                 getHorSpace(FetchPixels.getPixelWidth(20)),
-                Container(
-                    // width: FetchPixels.getPixelHeight(80),
-                    // height: FetchPixels.getPixelHeight(80),
-                    child: FadeInImage(
-                  fit: BoxFit.fitHeight,
+                ExtendedImage.network(
+                  modelBookResponse.getFirstImg(),
                   width: FetchPixels.getPixelHeight(80),
                   height: FetchPixels.getPixelHeight(80),
-                  image: NetworkImage(modelBookResponse.getFirstImg()),
-                  placeholder: AssetImage(modelBookResponse.getPlaceHolderImg()),
-                )),
+                  fit: BoxFit.fitHeight,
+                  cache: true,
+                  loadStateChanged: (ExtendedImageState state) {
+                    switch (state.extendedImageLoadState) {
+                      case LoadState.loading:
+                        return Image.asset(modelBookResponse.getPlaceHolderImg(), fit: BoxFit.fill);
+                      case LoadState.completed:
+                        break;
+                      case LoadState.failed:
+                        return Image.asset(modelBookResponse.getPlaceHolderImg(), fit: BoxFit.fill);
+                    }
+                  },
+                ),
                 getHorSpace(FetchPixels.getPixelWidth(20)),
                 Expanded(
                   flex: 1,

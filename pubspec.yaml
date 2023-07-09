@@ -60,6 +60,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   appscheme: ^1.0.8
   flutter_easyloading: ^3.0.5
+  extended_image: ^8.0.2
 
 dev_dependencies:
   flutter_test:
