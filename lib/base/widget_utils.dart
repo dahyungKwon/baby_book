@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../app/models/model_booking.dart';
 import '../app/models/model_post.dart';
@@ -1309,5 +1310,46 @@ Widget getSimpleTextButton(String text, double textSize, Color textColor, Color 
         width: width,
         height: height,
         child: getCustomFont(text, textSize, textColor, 1, fontWeight: fontWeight)),
+  );
+}
+
+Widget renderDetailRow(String name, String value, {bool isLink = false}) {
+  return Column(
+    children: [
+      Row(
+        children: [
+          Container(
+            width: (FetchPixels.width - 36) * 0.3,
+            child: getCustomFont(name, 16, Colors.black54, 1, fontWeight: FontWeight.w600),
+          ),
+          if (!isLink)
+            Container(
+              width: (FetchPixels.width - 36) * 0.7,
+              child: getCustomFont(value, 16, Colors.black, 1, fontWeight: FontWeight.w600),
+            ),
+          if (isLink)
+            Expanded(
+              child: TextButton(
+                onPressed: () async {
+                  final url = Uri.parse(
+                    value,
+                  );
+                  if (await canLaunchUrl(url)) {
+                    launchUrl(url);
+                  } else {
+                    // ignore: avoid_print
+                    print("Can't launch $url");
+                  }
+                },
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  value,
+                ),
+              ),
+            ),
+        ],
+      ),
+      getVerSpace(FetchPixels.getPixelHeight(10)),
+    ],
   );
 }
