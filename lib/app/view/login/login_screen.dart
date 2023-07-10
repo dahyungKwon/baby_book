@@ -31,14 +31,18 @@ class LoginScreen extends StatelessWidget {
     isLogin().then((isLogin) async => {
           if (isLogin) //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
             {
-              MemberRepository.refreshAccessToken().then((response) => {
-                    if (response.accessToken != null && response.refreshToken != null)
-                      {
-                        PrefData.setAccessToken(response.accessToken!),
-                        PrefData.setRefreshToken(response.refreshToken!),
-                        Get.toNamed(Routes.homescreenPath)
-                      }
-                  })
+              MemberRepository.refreshAccessToken()
+                  .then((response) => {
+                        if (response.accessToken != null && response.refreshToken != null)
+                          {
+                            PrefData.setAccessToken(response.accessToken!),
+                            PrefData.setRefreshToken(response.refreshToken!),
+                            Get.toNamed(Routes.homescreenPath)
+                          }
+                      })
+                  .catchError((e) {
+                print("error :$e");
+              })
             }
         });
 
@@ -85,23 +89,19 @@ class LoginScreen extends StatelessWidget {
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               GestureDetector(
                   onTap: () async {
-                    //토큰 존재 체크 및 유효성 체크
-                    if (await isLogin()) {
-                      print("토큰 존재하고 유효함");
-                      Get.toNamed(Routes.homescreenPath);
+                    //어떤 상황에서든 로그인버튼 누르면 인증초기화 진행
+                    OAuthToken? token = await kakaoLogin();
+                    if (token == null) {
+                      print("시스템 에러");
                     } else {
-                      OAuthToken? token = await kakaoLogin();
-                      if (token == null) {
-                        print("시스템 에러");
-                      } else {
-                        print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
-                        ModelMember member = await MemberRepository.createMember(
-                            snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
-                        await PrefData.setAccessToken(member.accessToken!);
-                        await PrefData.setRefreshToken(member.refreshToken!);
-                        await PrefData.setMemberId(member.memberId!);
-                        Get.toNamed(Routes.homescreenPath);
-                      }
+                      print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
+                      ModelMember member =
+                          await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+                      await PrefData.setAccessToken(member.accessToken!);
+                      await PrefData.setRefreshToken(member.refreshToken!);
+                      await PrefData.setMemberId(member.memberId!);
+
+                      Get.toNamed(Routes.homescreenPath);
                     }
                   },
                   child: getAssetImage("kakao_login_large_wide.png", FetchPixels.getPixelWidth(double.infinity),
