@@ -1,3 +1,5 @@
+import '../view/login/gender_type.dart';
+
 class ModelMember {
   String? memberId;
   String? nickName;
@@ -9,6 +11,9 @@ class ModelMember {
   String? refreshToken;
   DateTime? createdAt;
   DateTime? updatedAt;
+  bool? allAgreed;
+  GenderType? gender;
+  String? selectedBabyId;
 
   ModelMember(
       {this.memberId,
@@ -20,7 +25,10 @@ class ModelMember {
       this.accessToken,
       this.refreshToken,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.allAgreed,
+      this.gender,
+      this.selectedBabyId});
 
   // JSON형태에서부터 데이터를 받아온다.
   ModelMember.fromJson(Map<String, dynamic> json)
@@ -33,5 +41,8 @@ class ModelMember {
         accessToken = json['accessToken'],
         refreshToken = json['refreshToken'],
         createdAt = DateTime.tryParse(json['createdAt']),
-        updatedAt = DateTime.tryParse(json['updatedAt']);
+        updatedAt = DateTime.tryParse(json['updatedAt']),
+        allAgreed = json['allAgreed'] ?? false,
+        gender = json['gender'] != null ? GenderType.findByCode(json['gender']) : GenderType.none,
+        selectedBabyId = json['selectedBabyId'];
 }

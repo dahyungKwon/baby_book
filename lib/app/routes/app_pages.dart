@@ -2,6 +2,7 @@ import 'package:baby_book/app/view/community/comment_detail_screen.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
+import 'package:baby_book/app/view/login/join_screen.dart';
 import 'package:get/get.dart';
 
 import '../binding/home_binding.dart';
@@ -49,6 +50,7 @@ class AppPages {
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen()),
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),
     GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen()),
+    GetPage(name: Routes.joinPath, page: () => JoinScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀

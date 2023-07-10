@@ -101,7 +101,11 @@ class LoginScreen extends StatelessWidget {
                       await PrefData.setRefreshToken(member.refreshToken!);
                       await PrefData.setMemberId(member.memberId!);
 
-                      Get.toNamed(Routes.homescreenPath);
+                      if (member.allAgreed == null || member.allAgreed == false) {
+                        Get.toNamed(Routes.joinPath);
+                      } else {
+                        Get.toNamed(Routes.homescreenPath);
+                      }
                     }
                   },
                   child: getAssetImage("kakao_login_large_wide.png", FetchPixels.getPixelWidth(double.infinity),

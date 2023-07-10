@@ -3,13 +3,11 @@ part of './app_pages.dart';
 abstract class Routes {
   static const homepath = "/";
   static const introPath = "/IntroScreen";
-  static const loginPath = "/LoginScreen";
   static const forgotPath = "/ForgotPassword";
   static const resetPath = "/ResetPassword";
   static const signUpPath = "/SignUpScreen";
   static const selectCountryPath = "/SelectCountry";
   static const verifyPath = "/VerifyScreen";
-  static const homescreenPath = "/HomeScreen";
   static const categoryPath = "/CategoryScreen";
   static const detailPath = "/DetailScreen";
   static const cartPath = "/CartScreen";
@@ -30,6 +28,10 @@ abstract class Routes {
   static const privacyPath = "/PrivacyScreen";
   static const securityPath = "/SecurityScreen";
   static const termOfServicePath = "/TermOfServiceScreen";
+
+  static const loginPath = "/LoginScreen";
+  static const joinPath = "/JoinScreen";
+  static const homescreenPath = "/HomeScreen";
 
   static const bookDetailPath = "/BookDetailScreen";
 
