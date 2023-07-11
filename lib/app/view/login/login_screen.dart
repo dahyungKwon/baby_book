@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
@@ -127,15 +126,7 @@ class LoginScreen extends StatelessWidget {
                   getHorSpace(FetchPixels.getPixelHeight(5)),
                   GestureDetector(
                     onTap: () async {
-                      final url = Uri.parse(
-                        "https://docs.google.com/document/d/1LgwL-NJbpAE5R5ErOJQx93Ifh147Oj33AnU_2HdByaE/edit?usp=sharing",
-                      );
-                      if (await canLaunchUrl(url)) {
-                        launchUrl(url);
-                      } else {
-                        // ignore: avoid_print
-                        print("Can't launch $url");
-                      }
+                      Get.toNamed(Routes.privacyPolicyPath);
                     },
                     child: getCustomFont("개인정보 취급방침 보기", 14, Colors.blueAccent, 1, fontWeight: FontWeight.w400),
                   )

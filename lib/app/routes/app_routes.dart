@@ -31,6 +31,7 @@ abstract class Routes {
 
   static const loginPath = "/LoginScreen";
   static const joinPath = "/JoinScreen";
+  static const privacyPolicyPath = "/PrivacyPolicyScreen";
   static const homescreenPath = "/HomeScreen";
 
   static const bookDetailPath = "/BookDetailScreen";
