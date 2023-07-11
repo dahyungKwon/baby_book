@@ -14,6 +14,7 @@ class PrefData {
   static String accessToken = "${prefName}accessToken";
   static String refreshToken = "${prefName}refreshToken";
   static String memberId = "${prefName}memberId";
+  static String agreed = "${prefName}agreed";
 
   static Future<SharedPreferences> getPrefInstance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -90,6 +91,11 @@ class PrefData {
     return preferences.getString(memberId);
   }
 
+  static Future<bool?> getAgreed() async {
+    SharedPreferences preferences = await getPrefInstance();
+    return preferences.getBool(agreed);
+  }
+
   static setAccessToken(String accessTokenParam) async {
     SharedPreferences preferences = await getPrefInstance();
     preferences.setString(accessToken, accessTokenParam);
@@ -103,5 +109,10 @@ class PrefData {
   static setMemberId(String memberIdParam) async {
     SharedPreferences preferences = await getPrefInstance();
     preferences.setString(memberId, memberIdParam);
+  }
+
+  static setAgreed(bool agreedParam) async {
+    SharedPreferences preferences = await getPrefInstance();
+    preferences.setBool(agreed, agreedParam);
   }
 }

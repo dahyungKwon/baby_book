@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../base/pref_data.dart';
+import '../exception/exception_invalid_member.dart';
 import '../models/model_member.dart';
 import '../models/model_refresh_accesstoken.dart';
 import '../view/login/gender_type.dart';
@@ -41,6 +42,14 @@ class MemberRepository {
       "selectedBabyId": selectedBabyId
     });
 
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
     return ModelMember.fromJson(response.data['body']);
   }
 
@@ -55,6 +64,14 @@ class MemberRepository {
         headers: {"at": accessToken},
       ),
     );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
 
     return ModelMember.fromJson(response.data['body']);
   }
@@ -72,6 +89,33 @@ class MemberRepository {
       ),
     );
 
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
     return ModelRefreshAccessToken.fromJson(response.data['body']);
+  }
+
+  static Future<bool> existNickName({
+    required String nickName,
+  }) async {
+    final response = await dio.get(
+      '/members/nicknames/$nickName',
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    //true면 존재, false면 존재하지 않음
+    return response.data['body'];
   }
 }

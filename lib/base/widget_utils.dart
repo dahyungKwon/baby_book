@@ -633,6 +633,7 @@ Widget getDefaultTextFiledWithLabel2(
   bool enableEditing = true,
   Function? onEnter,
   FocusNode? myFocusNode,
+  bool? autofocus,
   required Color boxColor,
 }) {
   myFocusNode ??= FocusNode();
@@ -686,7 +687,7 @@ Widget getDefaultTextFiledWithLabel2(
                             maxLines: (minLines) ? null : 1,
                             controller: textEditingController,
                             obscuringCharacter: "*",
-                            autofocus: false,
+                            autofocus: autofocus ?? false,
                             focusNode: myFocusNode,
                             obscureText: isPass,
                             showCursor: true,

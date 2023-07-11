@@ -12,6 +12,16 @@ Future<bool> isLogin() async {
   });
 }
 
+Future<bool> isAgreed() async {
+  return await PrefData.getAgreed().then((agreed) async {
+    if (agreed == null) {
+      return false;
+    }
+
+    return agreed;
+  });
+}
+
 Future<bool> validateKakaoToken() async {
   try {
     AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();

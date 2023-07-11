@@ -22,6 +22,7 @@ import '../view/login/forgot_password.dart';
 import '../view/login/login_screen.dart';
 import '../view/login/privacy_policy_screen.dart';
 import '../view/login/reset_password.dart';
+import '../view/login/service_policy_screen.dart';
 import '../view/notification_screen.dart';
 import '../view/profile/edit_profile_screen.dart';
 import '../view/profile/profile_screen.dart';
@@ -50,7 +51,8 @@ class AppPages {
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),
     GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen()),
     GetPage(name: Routes.joinPath, page: () => JoinScreen()),
-    GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen()), //현재 안씀
+    GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen()),
+    GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀

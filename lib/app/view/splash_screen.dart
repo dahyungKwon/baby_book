@@ -45,8 +45,11 @@ class SplashScreen extends StatelessWidget {
 
       Timer(const Duration(seconds: 1), () async {
         if (await isLogin()) {
-          print("로그인 완료");
-          Get.toNamed(Routes.homescreenPath);
+          if (await isAgreed()) {
+            Get.toNamed(Routes.homescreenPath);
+          } else {
+            Get.toNamed(Routes.joinPath);
+          }
         } else {
           Get.toNamed(Routes.loginPath);
         }
