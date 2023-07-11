@@ -26,21 +26,29 @@ class MemberRepository {
   static Future<ModelMember> putMember({
     required String memberId,
     required String? nickName,
-    required String? email,
-    required String? contents,
+    String? email,
+    String? contents,
     required bool? allAgreed,
     required GenderType? gender,
-    required String? selectedBabyId,
+    String? selectedBabyId,
   }) async {
-    final response = await dio.put('/members/$memberId', data: {
-      "memberId": memberId,
-      "nickName": nickName,
-      "email": email,
-      "contents": contents,
-      "allAgreed": allAgreed,
-      "gender": gender?.code,
-      "selectedBabyId": selectedBabyId
-    });
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.put(
+      '/members/$memberId',
+      data: {
+        "memberId": memberId,
+        "nickName": nickName,
+        "email": email,
+        "contents": contents,
+        "allAgreed": allAgreed,
+        "gender": gender?.code,
+        "selectedBabyId": selectedBabyId
+      },
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {

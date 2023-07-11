@@ -1,7 +1,10 @@
+import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/view/login/gender_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../../base/pref_data.dart';
+import '../routes/app_pages.dart';
 import '../view/dialog/error_dialog.dart';
 
 class JoinController extends GetxController {
@@ -150,5 +153,16 @@ class JoinController extends GetxController {
     } else {
       canJoin = false;
     }
+  }
+
+  confirm() async {
+    var memberId = await PrefData.getMemberId();
+
+    ModelMember member = await MemberRepository.putMember(
+        memberId: memberId!, nickName: checkedNickName, allAgreed: true, gender: gender);
+
+    await PrefData.setAgreed(true);
+
+    Get.toNamed(Routes.homescreenPath);
   }
 }

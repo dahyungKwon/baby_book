@@ -1,23 +1,12 @@
-import 'dart:ffi';
-
-import 'package:baby_book/app/controller/BookDetailController.dart';
-import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_book.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
-import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:intl/intl.dart';
-import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../base/color_data.dart';
-import '../../../../base/constant.dart';
 import '../../../../base/skeleton.dart';
 import '../../controller/JoinController.dart';
 import '../../routes/app_pages.dart';
@@ -62,7 +51,7 @@ class JoinScreen extends GetView<JoinController> {
 
   Widget buildToolbar(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
         color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +71,7 @@ class JoinScreen extends GetView<JoinController> {
             ]),
             getSimpleTextButton("완료", 18, controller.canJoin ? Colors.redAccent : Colors.grey.shade400, Colors.white,
                 FontWeight.w500, FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
-              controller.confirmNickName();
+              controller.confirm();
             }),
           ],
         ));
