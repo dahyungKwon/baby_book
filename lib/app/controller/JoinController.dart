@@ -1,18 +1,36 @@
 import 'package:baby_book/app/models/model_member.dart';
+import 'package:baby_book/app/repository/baby_repository.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/view/login/gender_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../base/pref_data.dart';
+import '../models/model_baby.dart';
 import '../routes/app_pages.dart';
 import '../view/dialog/error_dialog.dart';
+import '../view/login/baby_dialog.dart';
 
 class JoinController extends GetxController {
   final MemberRepository memberRepository;
+  final BabyRepository babyRepository;
   TextEditingController nickNameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
 
   String checkedNickName = "";
+
+  ///대표 아기 인덱스
+  final _representBabyIndex = 0.obs;
+
+  get representBabyIndex => _representBabyIndex.value;
+
+  set representBabyIndex(value) => _representBabyIndex.value = value;
+
+  ///선택된 아기 리스트
+  final _selectedBabyList = <ModelBaby>[].obs;
+
+  get selectedBabyList => _selectedBabyList.value;
+
+  set selectedBabyList(value) => _selectedBabyList.value = value;
 
   //loading
   final _loading = false.obs;
@@ -63,8 +81,9 @@ class JoinController extends GetxController {
 
   set privacyAgreed(value) => _privacyAgreed.value = value;
 
-  JoinController({required this.memberRepository}) {
+  JoinController({required this.memberRepository, required this.babyRepository}) {
     assert(memberRepository != null);
+    assert(babyRepository != null);
   }
 
   @override
@@ -86,7 +105,7 @@ class JoinController extends GetxController {
       return;
     }
 
-    if (nickNameController.text.isNotEmpty && nickNameController.text.isNotEmpty) {
+    if (nickNameController.text.isNotEmpty) {
       canCheckNickName = true;
     } else {
       canCheckNickName = false;
@@ -156,13 +175,82 @@ class JoinController extends GetxController {
   }
 
   confirm() async {
+    if (nickNameController.text == null || nickNameController.text.isEmpty) {
+      Get.dialog(ErrorDialog("닉네임을 입력해주세요."));
+      return;
+    }
+
+    if (checkedNickName == null || checkedNickName.isEmpty) {
+      Get.dialog(ErrorDialog("닉네임 중복체크를 해주세요."));
+      return;
+    }
+
+    if (gender == null || gender == GenderType.none) {
+      Get.dialog(ErrorDialog("성별을 선택해주세요."));
+      return;
+    }
+
+    if (selectedBabyList == null || selectedBabyList.isEmpty) {
+      Get.dialog(ErrorDialog("아기곰을 추가해주세요."));
+      return;
+    }
+
+    if (!serviceAgreed) {
+      Get.dialog(ErrorDialog("서비스 이용약관을 자세히 읽고 동의 해주세요."));
+      return;
+    }
+
+    if (!privacyAgreed) {
+      Get.dialog(ErrorDialog("개인정보 취급방침을 자세히 읽고 동의 해주세요."));
+      return;
+    }
+
     var memberId = await PrefData.getMemberId();
 
+    List<ModelBaby> registeredBabyList = [];
+    for (ModelBaby baby in selectedBabyList) {
+      registeredBabyList.add(await BabyRepository.createBaby(
+          memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!));
+    }
+
     ModelMember member = await MemberRepository.putMember(
-        memberId: memberId!, nickName: checkedNickName, allAgreed: true, gender: gender);
+        memberId: memberId!,
+        nickName: checkedNickName,
+        allAgreed: true,
+        gender: gender,
+        selectedBabyId: registeredBabyList[representBabyIndex].babyId!);
 
     await PrefData.setAgreed(true);
 
     Get.toNamed(Routes.homescreenPath);
+  }
+
+  openModifyBabyDialog(int index) {
+    Get.dialog(BabyDialog(index, selectedBabyList[index]));
+  }
+
+  addBaby(ModelBaby baby) {
+    selectedBabyList.add(baby);
+    selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
+    _selectedBabyList.refresh();
+  }
+
+  modifyBaby(int index, ModelBaby baby) {
+    selectedBabyList[index].name = baby.name;
+    selectedBabyList[index].gender = baby.gender;
+    selectedBabyList[index].birth = baby.birth;
+    selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
+    _selectedBabyList.refresh();
+  }
+
+  deleteBaby(int index) {
+    selectedBabyList.removeAt(index);
+    selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
+    _selectedBabyList.refresh();
+  }
+
+  changeRepresentBabyIndex(int index) {
+    representBabyIndex = index;
+    _selectedBabyList.refresh();
   }
 }

@@ -7,8 +7,12 @@ import 'gender_type.dart';
 
 class GenderTypeBottomSheet extends StatefulWidget {
   final GenderType genderType;
+  static const String genderBaby = "BABY";
+  static const String genderAdult = "ADULT";
+  final String genderPresentationType;
 
-  const GenderTypeBottomSheet({required this.genderType, Key? key}) : super(key: key);
+  const GenderTypeBottomSheet({required this.genderType, required this.genderPresentationType, Key? key})
+      : super(key: key);
 
   @override
   State<GenderTypeBottomSheet> createState() => _GenderTypeBottomSheetState();
@@ -16,11 +20,13 @@ class GenderTypeBottomSheet extends StatefulWidget {
 
 class _GenderTypeBottomSheetState extends State<GenderTypeBottomSheet> {
   GenderType? selectedGenderType;
+  String? genderPresentationType;
 
   @override
   void initState() {
     super.initState();
     selectedGenderType = widget.genderType;
+    genderPresentationType = widget.genderPresentationType;
   }
 
   @override
@@ -57,7 +63,8 @@ class _GenderTypeBottomSheetState extends State<GenderTypeBottomSheet> {
                           setState(() {
                             selectedGenderType = genderType;
                           });
-                        })
+                        },
+                        genderPresentationType: genderPresentationType!)
                   ],
                 ),
               ),
@@ -73,11 +80,13 @@ class _GenderTypeBottomSheetPicker extends StatelessWidget {
   final List<GenderType> genderTypeList;
   final GenderType selectedGenderType;
   final GenderTypeBottomSheetSetter genderTypeBottomSheetSetter;
+  final String genderPresentationType;
 
   const _GenderTypeBottomSheetPicker(
       {required this.genderTypeList,
       required this.selectedGenderType,
       required this.genderTypeBottomSheetSetter,
+      required this.genderPresentationType,
       Key? key})
       : super(key: key);
 
@@ -96,7 +105,7 @@ class _GenderTypeBottomSheetPicker extends StatelessWidget {
         ),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         contentPadding: EdgeInsets.zero,
-        title: Text(genderType.desc),
+        title: Text(genderPresentationType == GenderTypeBottomSheet.genderAdult ? genderType.adult : genderType.baby),
         value: genderType,
         activeColor: Colors.black,
         groupValue: selectedGenderType,
