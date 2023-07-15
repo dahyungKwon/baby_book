@@ -576,7 +576,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           getSimpleTextButton(
               controller.modifyCommentMode ? "수정" : "등록",
               16,
-              controller.canRegisterComment ? Colors.redAccent : Colors.grey.shade400,
+              controller.canRegisterComment ? secondMainColor : Colors.grey.shade400,
               Colors.white,
               FontWeight.w400,
               FetchPixels.getPixelHeight(80),

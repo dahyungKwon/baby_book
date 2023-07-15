@@ -158,7 +158,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               weight: FontWeight.w500,
               fontsize: 18,
               rightText: controller.modifyMode ? "수정" : "등록",
-              rightTextColor: controller.canRegister ? Colors.redAccent : Colors.grey.shade400,
+              rightTextColor: controller.canRegister ? secondMainColor : Colors.grey.shade400,
               rightFunction: () async {
                 controller.add();
               }),

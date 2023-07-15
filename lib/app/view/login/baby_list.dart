@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../base/color_data.dart';
+
 var f = NumberFormat('###,###,###,###');
 var order = ["첫째", "둘째", "셋째", "넷째"];
 
@@ -45,7 +47,7 @@ GestureDetector buildBabyListItem(
                       width: FetchPixels.getPixelWidth(35),
                       child: index == representBabyIndex
                           ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                              getCustomFont("대표", 14, Colors.redAccent, 1, fontWeight: FontWeight.w600),
+                              getCustomFont("대표", 14, secondMainColor, 1, fontWeight: FontWeight.w600),
                               getVerSpace(FetchPixels.getPixelWidth(5)),
                               getCustomFont(index < 4 ? order[index] : "${index + 1}", 14, Colors.black38, 1,
                                   fontWeight: FontWeight.w400)

@@ -73,7 +73,7 @@ class JoinScreen extends GetView<JoinController> {
                 fontWeight: FontWeight.w600,
               ),
             ]),
-            getSimpleTextButton("완료", 18, controller.canJoin ? Colors.redAccent : Colors.grey.shade400, Colors.white,
+            getSimpleTextButton("완료", 18, controller.canJoin ? secondMainColor : Colors.grey.shade400, Colors.white,
                 FontWeight.w500, FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
               controller.confirm();
             }),
@@ -122,7 +122,7 @@ class JoinScreen extends GetView<JoinController> {
                       : getSimpleTextButton(
                           "중복체크",
                           16,
-                          controller.canCheckNickName ? Colors.redAccent : Colors.grey.shade400,
+                          controller.canCheckNickName ? secondMainColor : Colors.grey.shade400,
                           Colors.white,
                           FontWeight.w500,
                           FetchPixels.getPixelWidth(100),

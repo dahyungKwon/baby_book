@@ -14,6 +14,7 @@ Color procced = "#E2EAFF".toColor();
 Color success = "#04B155".toColor();
 Color completed = "#0085FF".toColor();
 Color error = "#FF2323".toColor();
+Color secondMainColor = "#B4846E".toColor();
 
 extension ColorExtension on String {
   toColor() {
