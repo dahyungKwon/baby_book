@@ -56,7 +56,7 @@ GestureDetector buildBabyListItem(
                               child: getCustomFont(index < 4 ? order[index] : "${index + 1}", 14, Colors.black38, 1,
                                   fontWeight: FontWeight.w400))),
                   getHorSpace(FetchPixels.getPixelWidth(10)),
-                  getAssetImage(modelBaby.gender == GenderType.man ? "baby_bear.png" : "baby_bear_woman.png",
+                  getAssetImage(modelBaby.gender == GenderType.man ? "man_bear2.png" : "woman_bear2.png",
                       FetchPixels.getPixelWidth(40), FetchPixels.getPixelWidth(40)),
                   getHorSpace(FetchPixels.getPixelWidth(15)),
                   Expanded(

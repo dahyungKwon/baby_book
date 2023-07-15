@@ -86,6 +86,12 @@ class LoginScreen extends StatelessWidget {
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(25)),
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                  color: Colors.white,
+                  child: Center(
+                      child: getAssetImage("app_icon6.jpeg", FetchPixels.getPixelWidth(double.infinity),
+                          FetchPixels.getPixelHeight(200)))),
+              getVerSpace(FetchPixels.getPixelHeight(100)),
               GestureDetector(
                   onTap: () async {
                     //어떤 상황에서든 로그인버튼 누르면 인증초기화 진행

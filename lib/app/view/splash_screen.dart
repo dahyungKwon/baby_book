@@ -64,7 +64,7 @@ class SplashScreen extends StatelessWidget {
           body: Container(
               color: Colors.white,
               child: Center(
-                  child: getAssetImage("sp2.png", FetchPixels.getPixelWidth(double.infinity),
+                  child: getAssetImage("sp8.png", FetchPixels.getPixelWidth(double.infinity),
                       FetchPixels.getPixelHeight(double.infinity)))),
         ),
         onWillPop: () async {
