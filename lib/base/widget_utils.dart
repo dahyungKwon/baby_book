@@ -1298,7 +1298,8 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
 }
 
 Widget getSimpleTextButton(String text, double textSize, Color textColor, Color containerColor, FontWeight fontWeight,
-    double width, double height, Function? function) {
+    double width, double height, Function? function,
+    {BoxDecoration? boxDecoration}) {
   return GestureDetector(
     onTap: () {
       if (function != null) {
@@ -1306,10 +1307,11 @@ Widget getSimpleTextButton(String text, double textSize, Color textColor, Color 
       }
     },
     child: Container(
-        color: containerColor,
+        color: boxDecoration == null ? containerColor : null,
         alignment: Alignment.center,
         width: width,
         height: height,
+        decoration: boxDecoration,
         child: getCustomFont(text, textSize, textColor, 1, fontWeight: fontWeight)),
   );
 }

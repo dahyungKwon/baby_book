@@ -57,7 +57,7 @@ class TabProfile extends GetView<TabProfileController> {
     return ListView(
       children: [
         buildProfile(context),
-        getVerSpace(FetchPixels.getPixelHeight(46)),
+        getVerSpace(FetchPixels.getPixelHeight(20)),
         buildContents(context),
         getVerSpace(FetchPixels.getPixelHeight(20)),
         bookCaseButton(context),
@@ -74,7 +74,7 @@ class TabProfile extends GetView<TabProfileController> {
   }
 
   Widget buildProfile(BuildContext context) {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
         children: [
           profilePictureView(context),
@@ -84,25 +84,37 @@ class TabProfile extends GetView<TabProfileController> {
             children: [
               getCustomFont(controller.member.nickName ?? "", 18, Colors.black, 1, fontWeight: FontWeight.w500),
               getVerSpace(FetchPixels.getPixelHeight(10)),
-              // getCustomFont(controller.member.memberId ?? "", 12, Colors.black38, 1, fontWeight: FontWeight.w500),
-              // getVerSpace(FetchPixels.getPixelHeight(5)),
               getCustomFont(controller.member.gender!.adult ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w500),
-              // getVerSpace(FetchPixels.getPixelHeight(10)),
-              // getCustomFont(controller.member.contents ?? "소개글을 입력해주세요.", 12, Colors.black, 1,
-              //     fontWeight: FontWeight.w500),
               getVerSpace(FetchPixels.getPixelHeight(10)),
               buildBabyList(),
+              getVerSpace(FetchPixels.getPixelHeight(10)),
             ],
           )
         ],
-      )
+      ),
+      controller.myProfile
+          ? getSimpleTextButton("프로필 수정", 12, Colors.black54, Colors.black, FontWeight.w400,
+              FetchPixels.getPixelWidth(double.infinity), FetchPixels.getPixelHeight(30), () {
+              // comment.comment.commentParentId != null
+              //     ? Get.toNamed(
+              //     "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentParentId}")
+              //     : Get.toNamed(
+              //     "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentId}");
+            },
+              boxDecoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
+                  boxShadow: [
+                    const BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 0.0)),
+                  ]))
+          : Container()
     ]);
   }
 
   Widget buildBabyList() {
     return SizedBox(
         width: FetchPixels.getPixelWidth(200),
-        child: getCustomFont(controller.getBabyToString(), 12, Colors.black, 5, fontWeight: FontWeight.w600));
+        child: getCustomFont(controller.getBabyToString(), 12, Colors.black, 5, fontWeight: FontWeight.w500));
   }
 
   Widget buildContents(BuildContext context) {
@@ -209,8 +221,8 @@ class TabProfile extends GetView<TabProfileController> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          height: FetchPixels.getPixelHeight(80),
-          width: FetchPixels.getPixelHeight(80),
+          height: FetchPixels.getPixelHeight(90),
+          width: FetchPixels.getPixelHeight(90),
           decoration: BoxDecoration(
             image: getDecorationAssetImage(context, "profile_image.png"),
             color: Colors.white,
