@@ -13,6 +13,7 @@ import 'model_publisher.dart';
 class ModelMyBookRequest {
   int bookSetId;
   String memberId;
+  String babyId;
   HoldType holdType;
   int? inMonth = 0;
   int? outMonth = 0;
@@ -23,6 +24,7 @@ class ModelMyBookRequest {
   ModelMyBookRequest(
       {required this.bookSetId,
       required this.memberId,
+      required this.babyId,
       required this.holdType,
       this.inMonth,
       this.outMonth,
@@ -33,6 +35,7 @@ class ModelMyBookRequest {
   Map<String, dynamic> toJson() => {
         'bookSetId': bookSetId,
         'memberId': memberId,
+        'babyId': babyId,
         'holdType': holdType.code,
         'inMonth': inMonth,
         'outMonth': outMonth,
