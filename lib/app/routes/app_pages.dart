@@ -53,6 +53,7 @@ class AppPages {
     GetPage(name: Routes.joinPath, page: () => JoinScreen()),
     GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen()),
     GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen()),
+    GetPage(name: Routes.profilePath, page: () => ProfileScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀
@@ -68,7 +69,7 @@ class AppPages {
     GetPage(name: Routes.dateTimePath, page: () => DateTimeScreen()), //현재 안씀
     GetPage(name: Routes.paymentPath, page: () => PaymentScreen()), //현재 안씀
     GetPage(name: Routes.orderDetailPath, page: () => OrderDetail()), //현재 안씀
-    GetPage(name: Routes.profilePath, page: () => ProfileScreen()), //현재 안씀
+
     GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen()), //현재 안씀
     GetPage(name: Routes.myAddressPath, page: () => MyAddressScreen()), //현재 안씀
     GetPage(name: Routes.editAddressPath, page: () => EditAddressScreen()), //현재 안씀

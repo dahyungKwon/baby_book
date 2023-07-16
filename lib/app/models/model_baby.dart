@@ -36,4 +36,15 @@ class ModelBaby {
 
     return "${birth!.year}년 ${birth!.month}월생";
   }
+
+  getBabyMonth() {
+    //올해 나온아기 2023 7 - 2023 5 2개월
+    //작년에 나온아기 2023 7 - 2022 6
+    //작년에 나온아기 2023 7 - 2022 8
+    DateTime now = DateTime.now();
+    int gapYear = now.year - birth!.year;
+    int gapMonth = now.month - birth!.year;
+  }
+
+  getBabyAge() {}
 }

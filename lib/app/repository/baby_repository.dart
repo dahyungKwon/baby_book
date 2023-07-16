@@ -98,11 +98,12 @@ class BabyRepository {
     return ModelBaby.fromJson(response.data['body']);
   }
 
-  Future<List<ModelBaby>> getBabyList() async {
+  static Future<List<ModelBaby>> getBabyList({required String memberId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
       '/babys',
+      queryParameters: {"memberId": memberId},
       options: Options(
         headers: {"at": accessToken},
       ),

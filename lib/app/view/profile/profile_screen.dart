@@ -1,4 +1,3 @@
-
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,16 +5,12 @@ import 'package:get/get.dart';
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/widget_utils.dart';
+import '../../controller/ProfileController.dart';
 import '../../routes/app_pages.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends GetView<ProfileController> {
   const ProfileScreen({Key? key}) : super(key: key);
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
@@ -105,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget buildToolbarMenu(BuildContext context) {
     return gettoolbarMenu(context, "back.svg", () {
       Constant.backToPrev(context);
-    }, istext: true, title: "Profile", weight: FontWeight.w900, fontsize: 24, textColor: Colors.black);
+    }, istext: true, title: "프로필", weight: FontWeight.w900, fontsize: 24, textColor: Colors.black);
   }
 
   Align profilePicture(BuildContext context) {

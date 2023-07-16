@@ -25,8 +25,8 @@ class HomeScreen extends GetView<HomeScreenController> {
   List<Widget> tabList = [
     TabHome(),
     const TabBookCase(),
-    TabCommunity(),
-    const TabProfile(),
+    const TabCommunity(),
+    TabProfile(),
   ];
 
   HomeScreen(int tabIndex, {super.key}) {

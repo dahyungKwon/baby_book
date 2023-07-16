@@ -479,7 +479,7 @@ Widget getButtonWithIcon(
           Row(
             children: [
               getHorSpace(FetchPixels.getPixelWidth(18)),
-              (prefixIcon) ? getSvgImage(prefixImage!) : getHorSpace(0),
+              (prefixIcon) ? getSvgImage(prefixImage!, width: 24, height: 24) : getHorSpace(0),
               (prefixIcon) ? getHorSpace(FetchPixels.getPixelWidth(12)) : getHorSpace(0),
               getCustomFont(text, fontsize, textColor, 1,
                   textAlign: TextAlign.center, fontWeight: weight, fontFamily: fontFamily)
@@ -487,7 +487,7 @@ Widget getButtonWithIcon(
           ),
           Row(
             children: [
-              (sufixIcon) ? getSvgImage(suffixImage!) : getHorSpace(0),
+              (sufixIcon) ? getSvgImage(suffixImage!, width: 24, height: 24) : getHorSpace(0),
               (sufixIcon) ? getHorSpace(FetchPixels.getPixelWidth(18)) : getHorSpace(0),
             ],
           )

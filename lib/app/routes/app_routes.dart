@@ -15,7 +15,7 @@ abstract class Routes {
   static const dateTimePath = "/DateTimeScreen";
   static const paymentPath = "/PaymentScreen";
   static const orderDetailPath = "/OrderDetail";
-  static const profilePath = "/ProfileScreen";
+
   static const editProfilePath = "/EditProfileScreen";
   static const myAddressPath = "/MyAddressScreen";
   static const editAddressPath = "/EditAddressScreen";
@@ -34,6 +34,7 @@ abstract class Routes {
   static const servicePolicyPath = "/ServicePolicyScreen";
   static const privacyPolicyPath = "/PrivacyPolicyScreen";
   static const homescreenPath = "/HomeScreen";
+  static const profilePath = "/ProfileScreen";
 
   static const bookDetailPath = "/BookDetailScreen";
 
