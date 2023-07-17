@@ -461,7 +461,7 @@ class JoinController extends GetxController {
   /// babyId가 최초엔 없음, 서버갔다와야하는데, 그때까지 구분용
   createTempBabyId() {
     randomKey++;
-    return randomKey.toString();
+    return "temp${randomKey.toString()}";
   }
 
   addBaby(ModelBaby baby) {

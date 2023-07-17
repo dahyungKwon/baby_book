@@ -76,6 +76,8 @@ class EditProfileController extends GetxController {
 
   set gender(value) => _gender.value = value;
 
+  int randomKey = 0;
+
   EditProfileController({required this.memberRepository, required this.babyRepository}) {
     assert(memberRepository != null);
     assert(babyRepository != null);
@@ -203,11 +205,18 @@ class EditProfileController extends GetxController {
 
     var memberId = await PrefData.getMemberId();
 
+    //tempid가 아닌, 실제로 서버에서 받은 id를 선정해야합니다.
+    String? createdRepresentBabyId;
     List<ModelBaby> registeredBabyList = [];
     for (ModelBaby baby in selectedBabyList) {
-      if (baby.babyId == null) {
-        registeredBabyList.add(await BabyRepository.createBaby(
-            memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!));
+      if (baby.babyId!.startsWith("temp")) {
+        ModelBaby createdBaby = await BabyRepository.createBaby(
+            memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
+        registeredBabyList.add(createdBaby);
+
+        if (baby.babyId == representBabyId) {
+          createdRepresentBabyId = createdBaby.babyId!;
+        }
       } else {
         registeredBabyList.add(await BabyRepository.putBaby(
             babyId: baby.babyId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!));
@@ -225,7 +234,7 @@ class EditProfileController extends GetxController {
         nickName: checkedNickName,
         allAgreed: true,
         gender: gender,
-        selectedBabyId: representBabyId,
+        selectedBabyId: createdRepresentBabyId ?? representBabyId,
         contents: contentsController.text);
 
     await PrefData.setAgreed(true);
@@ -239,7 +248,20 @@ class EditProfileController extends GetxController {
     Get.dialog(BabyDialog(index, selectedBabyList[index], BabyDialogController.callerEditProfile));
   }
 
+  /// babyId가 최초엔 없음, 서버갔다와야하는데, 그때까지 구분용
+  createTempBabyId() {
+    randomKey++;
+    return "temp${randomKey.toString()}";
+  }
+
   addBaby(ModelBaby baby) {
+    baby.babyId = createTempBabyId();
+
+    ///최초아기는 대표아기로 선정
+    if (selectedBabyList.isEmpty) {
+      changeRepresentBaby(baby.babyId!);
+    }
+
     selectedBabyList.add(baby);
     selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
     _selectedBabyList.refresh();
