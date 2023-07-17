@@ -109,6 +109,7 @@ class LoginScreen extends StatelessWidget {
                       if (member.allAgreed == null || member.allAgreed == false) {
                         Get.toNamed(Routes.joinPath);
                       } else {
+                        await PrefData.setAgreed(true); //로그아웃하고 새로 들어왔을경우
                         Get.toNamed(Routes.homescreenPath);
                       }
                     }

@@ -96,9 +96,13 @@ class PrefData {
     return preferences.getBool(agreed);
   }
 
-  static setAccessToken(String accessTokenParam) async {
+  static setAccessToken(String? accessTokenParam) async {
     SharedPreferences preferences = await getPrefInstance();
-    preferences.setString(accessToken, accessTokenParam);
+    if (accessTokenParam == null) {
+      preferences.remove(accessToken);
+    } else {
+      preferences.setString(accessToken, accessTokenParam);
+    }
   }
 
   static setRefreshToken(String refreshTokenParam) async {

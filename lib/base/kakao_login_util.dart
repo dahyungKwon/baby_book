@@ -12,6 +12,13 @@ Future<bool> isLogin() async {
   });
 }
 
+Future<bool> logout() async {
+  await PrefData.setAccessToken(null);
+  await PrefData.setAgreed(false);
+
+  return true;
+}
+
 Future<bool> isAgreed() async {
   return await PrefData.getAgreed().then((agreed) async {
     if (agreed == null) {

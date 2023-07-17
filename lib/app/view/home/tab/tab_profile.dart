@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../base/color_data.dart';
+import '../../../../base/kakao_login_util.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabProfileController.dart';
 import '../../../repository/baby_repository.dart';
@@ -186,7 +187,7 @@ class TabProfile extends GetView<TabProfileController> {
   Widget logoutButton(BuildContext context) {
     return controller.myProfile
         ? getButton(context, secondMainColor, "로그아웃", Colors.white, () {
-            PrefData.setLogIn(false);
+            logout();
             Get.toNamed(Routes.loginPath);
             // Constant.closeApp();
           }, 18,
