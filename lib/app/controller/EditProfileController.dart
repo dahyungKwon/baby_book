@@ -196,6 +196,11 @@ class EditProfileController extends GetxController {
       return;
     }
 
+    if (representBabyId == null || representBabyId == "") {
+      Get.dialog(ErrorDialog("대표 아기곰을 선택해주세요."));
+      return;
+    }
+
     var memberId = await PrefData.getMemberId();
 
     List<ModelBaby> registeredBabyList = [];

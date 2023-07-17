@@ -374,8 +374,8 @@ class JoinScreen extends GetView<JoinController> {
           itemCount: babyList.length,
           itemBuilder: (context, index) {
             ModelBaby modelBaby = babyList[index];
-            return buildBabyListItem(modelBaby, context, index, controller.representBabyIndex,
-                controller.changeRepresentBabyIndex, controller.openModifyBabyDialog, controller.deleteBaby);
+            return buildBabyListItem(modelBaby, context, index, controller.representBabyId,
+                controller.changeRepresentBaby, controller.openModifyBabyDialog, controller.deleteBaby);
           },
         ));
   }

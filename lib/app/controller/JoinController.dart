@@ -25,12 +25,12 @@ class JoinController extends GetxController {
 
   String checkedNickName = "";
 
-  ///대표 아기 인덱스
-  final _representBabyIndex = 0.obs;
+  ///대표 아기 아이디
+  final _representBabyId = "".obs;
 
-  get representBabyIndex => _representBabyIndex.value;
+  get representBabyId => _representBabyId.value;
 
-  set representBabyIndex(value) => _representBabyIndex.value = value;
+  set representBabyId(value) => _representBabyId.value = value;
 
   ///선택된 아기 리스트
   final _selectedBabyList = <ModelBaby>[].obs;
@@ -150,6 +150,8 @@ class JoinController extends GetxController {
   get currentStep => _currentStep.value;
 
   set currentStep(value) => _currentStep.value = value;
+
+  int randomKey = 0;
 
   JoinController({required this.memberRepository, required this.babyRepository}) {
     assert(memberRepository != null);
@@ -324,6 +326,11 @@ class JoinController extends GetxController {
         return;
       }
 
+      if (representBabyId == null || representBabyId == "") {
+        Get.dialog(ErrorDialog("대표 아기곰을 선택해주세요."));
+        return;
+      }
+
       finishThirdStep = true;
       currentStep = 4; //4스텝으로 이동
       return;
@@ -405,6 +412,11 @@ class JoinController extends GetxController {
       return;
     }
 
+    if (representBabyId == null || representBabyId == "") {
+      Get.dialog(ErrorDialog("대표 아기곰을 선택해주세요."));
+      return;
+    }
+
     if (!serviceAgreed) {
       Get.dialog(ErrorDialog("서비스 이용약관을 자세히 읽고 동의 해주세요."));
       return;
@@ -417,10 +429,17 @@ class JoinController extends GetxController {
 
     var memberId = await PrefData.getMemberId();
 
+    //tempid가 아닌, 실제로 서버에서 받은 id를 선정해야합니다.
+    String createdRepresentBabyId = "";
     List<ModelBaby> registeredBabyList = [];
     for (ModelBaby baby in selectedBabyList) {
-      registeredBabyList.add(await BabyRepository.createBaby(
-          memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!));
+      ModelBaby createdBaby = await BabyRepository.createBaby(
+          memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
+      registeredBabyList.add(createdBaby);
+
+      if (baby.babyId == representBabyId) {
+        createdRepresentBabyId = createdBaby.babyId!;
+      }
     }
 
     ModelMember member = await MemberRepository.putMember(
@@ -428,7 +447,7 @@ class JoinController extends GetxController {
         nickName: checkedNickName,
         allAgreed: true,
         gender: gender,
-        selectedBabyId: registeredBabyList[representBabyIndex].babyId!);
+        selectedBabyId: createdRepresentBabyId);
 
     await PrefData.setAgreed(true);
 
@@ -439,7 +458,20 @@ class JoinController extends GetxController {
     Get.dialog(BabyDialog(index, selectedBabyList[index], BabyDialogController.callerJoin));
   }
 
+  /// babyId가 최초엔 없음, 서버갔다와야하는데, 그때까지 구분용
+  createTempBabyId() {
+    randomKey++;
+    return randomKey.toString();
+  }
+
   addBaby(ModelBaby baby) {
+    baby.babyId = createTempBabyId();
+
+    ///최초아기는 대표아기로 선정
+    if (selectedBabyList.isEmpty) {
+      changeRepresentBaby(baby.babyId!);
+    }
+
     selectedBabyList.add(baby);
     selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
     _selectedBabyList.refresh();
@@ -461,8 +493,18 @@ class JoinController extends GetxController {
 
   deleteBaby(int index) async {
     await Get.dialog(ReConfirmDialog("삭제 하시겠습니까?", "네", "아니오", () async {
+      ModelBaby baby = selectedBabyList[index];
+
       selectedBabyList.removeAt(index);
       selectedBabyList.sort((ModelBaby a, ModelBaby b) => a.birth!.compareTo(b.birth!));
+
+      ///삭제된 아기가 대표였으면 0번으로 변경
+      if (baby.babyId == representBabyId) {
+        if (selectedBabyList.isNotEmpty) {
+          changeRepresentBaby(selectedBabyList[0].babyId);
+        }
+      }
+
       _selectedBabyList.refresh();
 
       if (selectedBabyList.isNotEmpty) {
@@ -475,8 +517,8 @@ class JoinController extends GetxController {
     }));
   }
 
-  changeRepresentBabyIndex(int index) {
-    representBabyIndex = index;
+  changeRepresentBaby(String babyId) {
+    representBabyId = babyId;
     _selectedBabyList.refresh();
   }
 }
