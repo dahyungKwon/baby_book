@@ -15,22 +15,22 @@ GestureDetector buildBabyListItem(
   ModelBaby modelBaby,
   BuildContext context,
   int index,
-  int representBabyIndex,
-  Function changeRepresentBabyIndex,
+  String representBabyId,
+  Function changeRepresentBaby,
   Function openModifyBabyDialogFunction,
   Function deleteFunction,
 ) {
   return GestureDetector(
     onTap: () {
-      changeRepresentBabyIndex(index);
+      changeRepresentBaby(modelBaby.babyId);
     },
     child: Container(
-      height: FetchPixels.getPixelHeight(60),
+      height: FetchPixels.getPixelHeight(65),
       margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
       padding:
           EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(15)),
       decoration: BoxDecoration(
-          color: index == representBabyIndex ? Colors.grey.shade100 : Colors.white,
+          color: modelBaby.babyId == representBabyId ? Colors.grey.shade100 : Colors.white,
           boxShadow: [
             BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(0.0, 1.0)),
           ],
@@ -45,7 +45,7 @@ GestureDetector buildBabyListItem(
                     child: Row(children: [
                   SizedBox(
                       width: FetchPixels.getPixelWidth(35),
-                      child: index == representBabyIndex
+                      child: modelBaby.babyId == representBabyId
                           ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                               getCustomFont("대표", 14, secondMainColor, 1, fontWeight: FontWeight.w600),
                               getVerSpace(FetchPixels.getPixelWidth(5)),
@@ -98,7 +98,7 @@ GestureDetector buildBabyListItem(
                     "수정",
                     14,
                     Colors.black54,
-                    index == representBabyIndex ? Colors.grey.shade100 : Colors.white,
+                    modelBaby.babyId == representBabyId ? Colors.grey.shade100 : Colors.white,
                     FontWeight.w400,
                     FetchPixels.getPixelWidth(50),
                     FetchPixels.getPixelHeight(30), () {
@@ -108,7 +108,7 @@ GestureDetector buildBabyListItem(
                     "삭제",
                     14,
                     Colors.black54,
-                    index == representBabyIndex ? Colors.grey.shade100 : Colors.white,
+                    modelBaby.babyId == representBabyId ? Colors.grey.shade100 : Colors.white,
                     FontWeight.w400,
                     FetchPixels.getPixelWidth(50),
                     FetchPixels.getPixelHeight(30), () {

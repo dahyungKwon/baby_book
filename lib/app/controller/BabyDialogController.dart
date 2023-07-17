@@ -4,15 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../repository/baby_repository.dart';
 import '../view/dialog/error_dialog.dart';
+import 'EditProfileController.dart';
 import 'JoinController.dart';
 
 class BabyDialogController extends GetxController {
+  static const String callerEditProfile = "EDIT_PROFILE";
+  static const String callerJoin = "JOIN";
+
   final BabyRepository babyRepository;
   TextEditingController nameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController birthController = TextEditingController();
 
   ModelBaby? selectedModelBaby;
+
+  String callerType; //"JOIN", "EDIT_PROFILE
 
   //선택된 시간
   final _selectedBirthday = Rxn<DateTime>();
@@ -42,7 +48,7 @@ class BabyDialogController extends GetxController {
 
   set canAdd(value) => _canAdd.value = value;
 
-  BabyDialogController({required this.babyRepository}) {
+  BabyDialogController({required this.babyRepository, required this.callerType}) {
     assert(babyRepository != null);
   }
 
@@ -94,10 +100,20 @@ class BabyDialogController extends GetxController {
       Get.dialog(ErrorDialog("아기곰 생일을 선택해주세요."));
       return;
     }
+
+    ///여기 어떻게 하는게 베스트인지 확인 필요!!!
     if (modifyMode) {
-      Get.find<JoinController>().modifyBaby(modifyIndex!, getSelectedBaby());
+      if (callerType == callerJoin) {
+        Get.find<JoinController>().modifyBaby(modifyIndex!, getSelectedBaby());
+      } else if (callerType == callerEditProfile) {
+        Get.find<EditProfileController>().modifyBaby(modifyIndex!, getSelectedBaby());
+      }
     } else {
-      Get.find<JoinController>().addBaby(getSelectedBaby());
+      if (callerType == callerJoin) {
+        Get.find<JoinController>().addBaby(getSelectedBaby());
+      } else if (callerType == callerEditProfile) {
+        Get.find<EditProfileController>().addBaby(getSelectedBaby());
+      }
     }
     Get.back();
   }

@@ -9,6 +9,7 @@ import 'package:get/get_state_manager/src/simple/get_view.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../../base/skeleton.dart';
+import '../../controller/BabyDialogController.dart';
 import '../../controller/JoinController.dart';
 import '../../models/model_baby.dart';
 import '../../routes/app_pages.dart';
@@ -221,7 +222,7 @@ class JoinScreen extends GetView<JoinController> {
 
           GestureDetector(
             onTap: () {
-              Get.dialog(BabyDialog(null, null));
+              Get.dialog(BabyDialog(null, null, BabyDialogController.callerJoin));
             },
             child: getCustomFont(
               "추가하기",
@@ -233,7 +234,7 @@ class JoinScreen extends GetView<JoinController> {
           ),
           getSimpleImageButton("add_baby_bear.svg", FetchPixels.getPixelHeight(40), FetchPixels.getPixelHeight(40),
               Colors.white, FetchPixels.getPixelHeight(22), FetchPixels.getPixelHeight(22), () async {
-            Get.dialog(BabyDialog(null, null));
+            Get.dialog(BabyDialog(null, null, BabyDialogController.callerJoin));
           }),
           // getHorSpace(FetchPixels.getPixelWidth(12))
         ],

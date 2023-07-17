@@ -21,9 +21,21 @@ class TabProfileController extends GetxController {
   final BabyRepository babyRepository;
 
   String? targetMemberId;
-  late ModelMember member;
   bool myProfile = false;
-  late List<ModelBaby> babyList;
+
+  //member
+  final _member = ModelMember.createForObsInit().obs;
+
+  get member => _member.value;
+
+  set member(value) => _member.value = value;
+
+  //baby
+  final _babyList = <ModelBaby>[].obs;
+
+  get babyList => _babyList.value;
+
+  set babyList(value) => _babyList.value = value;
 
   //loading
   final _loading = false.obs;
@@ -55,6 +67,7 @@ class TabProfileController extends GetxController {
 
     babyList = await BabyRepository.getBabyList(memberId: targetMemberId!);
 
+    refresh();
     Future.delayed(const Duration(milliseconds: 200), () {
       loading = false;
     });
@@ -66,5 +79,16 @@ class TabProfileController extends GetxController {
       str += "#${babyList[i].getBirthdayToString()}  ";
     }
     return str;
+  }
+
+  updateProfile(ModelMember updateMember, List<ModelBaby> updateBabyList) {
+    member.nickName = updateMember.nickName;
+    member.gender = updateMember.gender;
+    member.contents = updateMember.contents;
+    member.selectedBabyId = updateMember.selectedBabyId;
+
+    babyList = updateBabyList;
+    _member.refresh();
+    _babyList.refresh();
   }
 }

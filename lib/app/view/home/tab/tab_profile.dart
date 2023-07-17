@@ -24,13 +24,13 @@ class TabProfile extends GetView<TabProfileController> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: backGroundColor,
-      body: Column(children: [
-        buildToolbarWidget(context),
-        Expanded(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-                child: buildProfileWidget(context)))
-      ]),
+      body: Obx(() => Column(children: [
+            buildToolbarWidget(context),
+            Expanded(
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+                    child: buildProfileWidget(context)))
+          ])),
     );
   }
 
@@ -87,19 +87,15 @@ class TabProfile extends GetView<TabProfileController> {
               getCustomFont(controller.member.gender!.adult ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w500),
               getVerSpace(FetchPixels.getPixelHeight(10)),
               buildBabyList(),
-              getVerSpace(FetchPixels.getPixelHeight(10)),
             ],
           )
         ],
       ),
+      getVerSpace(FetchPixels.getPixelHeight(10)),
       controller.myProfile
           ? getSimpleTextButton("프로필 수정", 12, Colors.black54, Colors.black, FontWeight.w400,
               FetchPixels.getPixelWidth(double.infinity), FetchPixels.getPixelHeight(30), () {
-              // comment.comment.commentParentId != null
-              //     ? Get.toNamed(
-              //     "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentParentId}")
-              //     : Get.toNamed(
-              //     "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentId}");
+              Get.toNamed(Routes.editProfilePath);
             },
               boxDecoration: BoxDecoration(
                   color: Colors.white,
@@ -132,7 +128,7 @@ class TabProfile extends GetView<TabProfileController> {
           controller.member.contents == null || controller.member.contents!.isEmpty
               ? "소개글이 없습니다."
               : controller.member.contents!,
-          12,
+          14,
           Colors.black87,
           5,
           fontWeight: FontWeight.w400),

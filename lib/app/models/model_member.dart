@@ -30,6 +30,10 @@ class ModelMember {
       this.gender,
       this.selectedBabyId});
 
+  static ModelMember createForObsInit() {
+    return ModelMember();
+  }
+
   // JSON형태에서부터 데이터를 받아온다.
   ModelMember.fromJson(Map<String, dynamic> json)
       : memberId = json['memberId'],

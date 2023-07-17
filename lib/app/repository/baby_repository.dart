@@ -56,7 +56,7 @@ class BabyRepository {
       data: {
         "babyId": babyId,
         "name": name,
-        "gender": gender,
+        "gender": gender!.code,
         "birth": birth != null ? DateFormat('yyyy-MM-dd').format(birth) : null,
       },
       options: Options(

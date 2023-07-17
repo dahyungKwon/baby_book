@@ -16,9 +16,9 @@ class BabyDialog extends GetView<BabyDialogController> {
   bool modifyMode = false;
   int? selectedBabyIndex;
 
-  BabyDialog(this.selectedBabyIndex, ModelBaby? selectedBaby, {Key? key}) : super(key: key) {
+  BabyDialog(this.selectedBabyIndex, ModelBaby? selectedBaby, String callerType, {Key? key}) : super(key: key) {
     Get.delete<BabyDialogController>();
-    Get.put(BabyDialogController(babyRepository: BabyRepository()));
+    Get.put(BabyDialogController(babyRepository: BabyRepository(), callerType: callerType));
 
     if (selectedBaby == null) {
       modifyMode = false;

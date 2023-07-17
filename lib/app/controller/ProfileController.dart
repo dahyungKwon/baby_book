@@ -15,6 +15,7 @@ import '../view/dialog/error_dialog.dart';
 import '../view/dialog/re_confirm_dialog.dart';
 import '../view/login/baby_dialog.dart';
 import '../view/login/gender_type_bottom_sheet.dart';
+import 'BabyDialogController.dart';
 
 class ProfileController extends GetxController {
   final MemberRepository memberRepository;
@@ -435,7 +436,8 @@ class ProfileController extends GetxController {
   }
 
   openModifyBabyDialog(int index) {
-    Get.dialog(BabyDialog(index, selectedBabyList[index]));
+    ///여기 안쓸뜻
+    Get.dialog(BabyDialog(index, selectedBabyList[index], BabyDialogController.callerJoin));
   }
 
   addBaby(ModelBaby baby) {

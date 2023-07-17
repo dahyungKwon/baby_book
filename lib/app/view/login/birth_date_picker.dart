@@ -18,9 +18,9 @@ class BirthDatePicker extends StatelessWidget {
       height: 180,
       child: CupertinoDatePicker(
         minimumYear: 1900,
-        maximumYear: DateTime.now().year,
+        maximumYear: 9999,
         initialDateTime: initDate,
-        maximumDate: DateTime.now(),
+        maximumDate: DateTime.now().add(const Duration(days: 100000)),
         onDateTimeChanged: onDateTimeChanged,
         mode: CupertinoDatePickerMode.date,
       ),
