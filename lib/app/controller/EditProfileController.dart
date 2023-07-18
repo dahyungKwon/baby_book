@@ -7,7 +7,6 @@ import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/view/login/gender_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../base/pref_data.dart';
 import '../models/model_baby.dart';
@@ -16,7 +15,7 @@ import '../view/dialog/error_dialog.dart';
 import '../view/dialog/re_confirm_dialog.dart';
 import '../view/login/baby_dialog.dart';
 import '../view/login/gender_type_bottom_sheet.dart';
-import 'TabProfileController.dart';
+import 'ProfileController.dart';
 
 class EditProfileController extends GetxController {
   final MemberRepository memberRepository;
@@ -239,7 +238,7 @@ class EditProfileController extends GetxController {
 
     await PrefData.setAgreed(true);
 
-    Get.find<TabProfileController>().updateProfile(member, selectedBabyList);
+    Get.find<ProfileController>().updateProfile(member, selectedBabyList);
 
     Get.toNamed(Routes.homescreenPath);
   }

@@ -29,19 +29,29 @@ import '../dialog/error_dialog.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
-  late bool sharedMode;
   FocusNode commentFocusNode = FocusNode();
+  late final String? postId;
+  late final String? uniqueTag;
+  late final bool sharedMode;
 
   CommunityDetailScreen({super.key}) {
-    Get.delete<CommunityDetailController>();
-    Get.put(CommunityDetailController(
-        postRepository: PostRepository(),
-        commentRepository: CommentRepository(),
-        postFeedbackRepository: PostFeedbackRepository(),
-        postId: Get.parameters['postId']!));
-    print("AppSchemeImpl CommunityDetailScreen sharedType : ${Get.parameters['sharedType']}");
+    // Get.delete<CommunityDetailController>();
+    postId = Get.parameters['postId']!;
+    uniqueTag = Get.parameters['tag']! + postId!;
     sharedMode = Get.parameters['sharedType'] != null;
+
+    Get.put(
+        CommunityDetailController(
+            postRepository: PostRepository(),
+            commentRepository: CommentRepository(),
+            postFeedbackRepository: PostFeedbackRepository(),
+            postId: postId!),
+        tag: uniqueTag);
+    print("AppSchemeImpl CommunityDetailScreen sharedType : ${Get.parameters['sharedType']}");
   }
+
+  @override
+  String? get tag => uniqueTag;
 
   @override
   Widget build(BuildContext context) {

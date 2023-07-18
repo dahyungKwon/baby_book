@@ -1,5 +1,6 @@
 import 'package:baby_book/app/view/community/comment_detail_screen.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
+import 'package:baby_book/app/view/home/tab/tab_profile.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
 import 'package:baby_book/app/view/login/join_screen.dart';
 import 'package:baby_book/app/view/profile/member_community_screen.dart';

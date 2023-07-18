@@ -85,12 +85,13 @@ class CommunityDetailController extends GetxController {
     assert(postFeedbackRepository != null);
 
     commentController.addListener(_titleListener);
+    init();
   }
 
   @override
   void onInit() async {
     super.onInit();
-    init();
+    // init();
   }
 
   void _titleListener() {
@@ -99,6 +100,11 @@ class CommunityDetailController extends GetxController {
     } else {
       canRegisterComment = false;
     }
+  }
+
+  rebuild(String postIdParam) {
+    postId = postIdParam;
+    init();
   }
 
   init() async {

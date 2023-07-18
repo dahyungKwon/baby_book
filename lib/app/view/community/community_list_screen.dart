@@ -102,7 +102,8 @@ class CommunityListScreen extends GetView<CommunityListController> {
           itemBuilder: (context, index) {
             ModelPost modelPost = controller.postList[index];
             return buildPostListItem(modelPost, context, index, () {
-              Get.toNamed("${Routes.communityDetailPath}?postId=${modelPost.postId}");
+              Get.toNamed("${Routes.communityDetailPath}",
+                  parameters: {'postId': modelPost.postId!, 'tag': 'community'});
             }, () {
               //delete function
             });

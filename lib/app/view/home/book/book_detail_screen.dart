@@ -21,20 +21,28 @@ import '../home_screen.dart';
 import 'book_detail_bottom_sheet.dart';
 
 class BookDetailScreen extends GetView<BookDetailController> {
+  late final int? bookSetId;
+  late final String? uniqueTag;
+
   late YoutubePlayerController youtubeController;
   bool? isDetailMenu;
   late bool sharedMode;
   var f = NumberFormat('###,###,###,###');
 
   BookDetailScreen({super.key}) {
-    Get.delete<BookDetailController>();
-    Get.put(BookDetailController(
-        bookRepository: BookRepository(),
-        myBookRepository: MyBookRepository(),
-        bookSetId: int.parse(Get.parameters['bookSetId']!)));
+    bookSetId = int.parse(Get.parameters['bookSetId']!);
+    uniqueTag = bookSetId.toString();
+
+    Get.put(
+        BookDetailController(
+            bookRepository: BookRepository(), myBookRepository: MyBookRepository(), bookSetId: bookSetId!),
+        tag: uniqueTag);
     initYoutubeController();
     sharedMode = Get.parameters['sharedType'] != null;
   }
+
+  @override
+  String? get tag => uniqueTag;
 
   initYoutubeController() {
     youtubeController = YoutubePlayerController(

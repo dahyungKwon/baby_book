@@ -34,7 +34,8 @@ class SplashScreen extends StatelessWidget {
             case "COMMUNITY":
               {
                 String? postId = value.query!["postId"];
-                Get.toNamed(Routes.communityDetailPath, parameters: {'sharedType': sharedType, 'postId': postId!});
+                Get.toNamed(Routes.communityDetailPath,
+                    parameters: {'sharedType': sharedType, 'postId': postId!, 'tag': 'share'});
                 break;
               }
           }

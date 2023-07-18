@@ -3,11 +3,14 @@ import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../app/models/model_booking.dart';
 import '../app/models/model_post.dart';
+import '../app/routes/app_pages.dart';
 import 'constant.dart';
 
 var numberFormat = NumberFormat('###,###,###,###');
@@ -254,9 +257,13 @@ GestureDetector buildPostListItem(
                         getCustomFont(modelPost.postType.desc ?? "", 11, modelPost.postType.color, 1,
                             fontWeight: FontWeight.w500),
                         // getVerSpace(FetchPixels.getPixelHeight(6)),
-                        getCustomFont(
-                            " · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 10, Colors.black45, 1,
-                            fontWeight: FontWeight.w500)
+                        GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.profilePath, parameters: {'memberId': modelPost.memberId});
+                            },
+                            child: getCustomFont(
+                                " · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 10, Colors.black45, 1,
+                                fontWeight: FontWeight.w500))
                       ]),
                       getVerSpace(FetchPixels.getPixelHeight(14)),
                       getCustomFont(modelPost.title ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),

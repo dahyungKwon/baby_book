@@ -13,18 +13,26 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../models/model_comment_response.dart';
+import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
 
 class CommentDetailScreen extends GetView<CommentDetailController> {
   FocusNode commentFocusNode = FocusNode();
+  late final String? postId;
+  late final String? commentId;
+  late final String? uniqueTag;
 
   CommentDetailScreen({super.key}) {
-    Get.delete<CommentDetailController>();
-    Get.put(CommentDetailController(
-        commentRepository: CommentRepository(),
-        postId: Get.parameters['postId']!,
-        commentId: Get.parameters['commentId']!));
+    postId = Get.parameters['postId']!;
+    commentId = Get.parameters['commentId']!;
+    uniqueTag = postId! + commentId!;
+    // Get.delete<CommentDetailController>();
+    Get.put(CommentDetailController(commentRepository: CommentRepository(), postId: postId!, commentId: commentId!),
+        tag: uniqueTag);
   }
+
+  @override
+  String? get tag => uniqueTag;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +51,11 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
               });
             }));
           } else {
-            await Get.find<CommunityDetailController>().getComment();
+            try {
+              await Get.find<CommunityDetailController>().getComment();
+            } catch (e) {
+              print(e);
+            }
             Get.back();
           }
           return false;
@@ -88,19 +100,23 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
 
   Widget buildBody(BuildContext context, List<ModelCommentResponse> commentList) {
     return Expanded(
-        child: Scrollbar(
-      controller: controller.scrollController,
-      child: ListView(
-        controller: controller.scrollController,
-        scrollDirection: Axis.vertical,
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
-        // primary: true,
-        children: [
-          commentList.isEmpty ? Container(height: 3.h, color: backGroundColor) : buildComment(context, commentList)
-        ],
-      ),
-    ));
+        child: Container(
+            color: Color(0xffe3e2e2),
+            child: Scrollbar(
+              controller: controller.scrollController,
+              child: ListView(
+                controller: controller.scrollController,
+                scrollDirection: Axis.vertical,
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                // primary: true,
+                children: [
+                  commentList.isEmpty
+                      ? Container(height: 3.h, color: backGroundColor)
+                      : buildComment(context, commentList)
+                ],
+              ),
+            )));
   }
 
   Wrap buildComment(BuildContext context, List<ModelCommentResponse> commentList) {
@@ -147,7 +163,12 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       getVerSpace(FetchPixels.getPixelHeight(10)),
       Row(children: [
-        getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),
+        GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+            },
+            child: getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1,
+                fontWeight: FontWeight.w500)),
         getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
       ]),
       getVerSpace(FetchPixels.getPixelHeight(7)),

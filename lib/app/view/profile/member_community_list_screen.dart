@@ -16,14 +16,22 @@ import '../../routes/app_pages.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
+  late final String? memberId;
+  late final String? uniqueTag;
+
   late MemberPostType memberPostType;
   late RefreshController refreshController;
   int pageNumber = 1;
 
-  MemberCommunityListScreen(String memberId, this.memberPostType, {super.key}) {
-    Get.put(MemberCommunityListController(postRepository: PostRepository(), memberId: memberId));
+  MemberCommunityListScreen(this.memberId, this.memberPostType, {super.key}) {
+    uniqueTag = memberId;
+
+    Get.put(MemberCommunityListController(postRepository: PostRepository(), memberId: memberId!), tag: uniqueTag);
     refreshController = RefreshController(initialRefresh: false);
   }
+
+  @override
+  String? get tag => uniqueTag;
 
   void initPageNumber() {
     print("initPageNumber.... start...... ${memberPostType.code}");
@@ -104,7 +112,7 @@ class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
           itemBuilder: (context, index) {
             ModelPost modelPost = controller.postList[index];
             return buildPostListItem(modelPost, context, index, () {
-              Get.toNamed("${Routes.communityDetailPath}?postId=${modelPost.postId}");
+              Get.toNamed("${Routes.communityDetailPath}", parameters: {'postId': modelPost.postId!, 'tag': 'profile'});
             }, () {
               //delete function
             });
