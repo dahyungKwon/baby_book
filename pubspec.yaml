@@ -61,6 +61,7 @@ dependencies:
   appscheme: ^1.0.8
   flutter_easyloading: ^3.0.5
   extended_image: ^8.0.2
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

@@ -14,6 +14,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../../base/skeleton.dart';
+import '../../../../base/uuid_util.dart';
 import '../../../models/model_book_state.dart';
 import '../../../models/model_kakao_link_template.dart';
 import '../../../repository/book_repository.dart';
@@ -31,7 +32,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
 
   BookDetailScreen({super.key}) {
     bookSetId = int.parse(Get.parameters['bookSetId']!);
-    uniqueTag = bookSetId.toString();
+    uniqueTag = getUuid();
 
     Get.put(
         BookDetailController(

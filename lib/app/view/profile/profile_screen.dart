@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../base/color_data.dart';
+import '../../../base/uuid_util.dart';
 import '../../controller/ProfileController.dart';
 import '../../repository/baby_repository.dart';
 import '../../repository/member_repository.dart';
@@ -14,7 +15,7 @@ class ProfileScreen extends GetView<ProfileController> {
 
   ProfileScreen({super.key}) {
     memberId = Get.parameters["memberId"];
-    uniqueTag = memberId;
+    uniqueTag = getUuid();
 
     Get.put(
         ProfileController(

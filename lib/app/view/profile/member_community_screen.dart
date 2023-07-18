@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../base/skeleton.dart';
+import '../../../base/uuid_util.dart';
 import '../../controller/MemberCommunityController.dart';
 import '../../repository/post_repository.dart';
 
@@ -14,7 +15,7 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
 
   MemberCommunityScreen({super.key}) {
     memberId = Get.parameters["memberId"];
-    uniqueTag = memberId;
+    uniqueTag = getUuid();
 
     Get.put(MemberCommunityController(postRepository: PostRepository(), memberId: memberId!), tag: uniqueTag);
   }

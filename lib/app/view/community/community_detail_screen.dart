@@ -18,6 +18,7 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../base/uuid_util.dart';
 import '../../controller/CommunityDetailController.dart';
 import '../../controller/CommunityListController.dart';
 import '../../controller/TabCommunityController.dart';
@@ -37,7 +38,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   CommunityDetailScreen({super.key}) {
     // Get.delete<CommunityDetailController>();
     postId = Get.parameters['postId']!;
-    uniqueTag = Get.parameters['tag']! + postId!;
+    uniqueTag = getUuid();
     sharedMode = Get.parameters['sharedType'] != null;
 
     Get.put(
@@ -264,8 +265,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               getCustomFont(modelPost.postType.desc ?? "", 14, modelPost.postType.color, 1,
                   fontWeight: FontWeight.w500),
               // getVerSpace(FetchPixels.getPixelHeight(6)),
-              getCustomFont(" · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 13, Colors.black45, 1,
-                  fontWeight: FontWeight.w500)
+              GestureDetector(
+                  onTap: () {
+                    Get.toNamed(Routes.profilePath, parameters: {'memberId': modelPost.memberId});
+                  },
+                  child: getCustomFont(
+                      " · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 13, Colors.black45, 1,
+                      fontWeight: FontWeight.w500))
             ]),
             getVerSpace(FetchPixels.getPixelHeight(20)),
             getCustomFont(modelPost.title ?? "", 24, Colors.black, 3, fontWeight: FontWeight.w600),
@@ -492,10 +498,14 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   Column innerComment(BuildContext context, ModelCommentResponse comment, Color commentMenuBtnColor) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       getVerSpace(FetchPixels.getPixelHeight(10)),
-      Row(children: [
-        getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),
-        getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
-      ]),
+      GestureDetector(
+          onTap: () {
+            Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+          },
+          child: Row(children: [
+            getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),
+            getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
+          ])),
       getVerSpace(FetchPixels.getPixelHeight(7)),
       getCustomFont(comment.comment.body ?? "", 15, comment.deleted ? Colors.black45 : Colors.black, 20,
           fontWeight: FontWeight.w400, txtHeight: 1.5),

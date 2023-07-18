@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../base/uuid_util.dart';
 import '../../models/model_comment_response.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
@@ -25,7 +26,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
   CommentDetailScreen({super.key}) {
     postId = Get.parameters['postId']!;
     commentId = Get.parameters['commentId']!;
-    uniqueTag = postId! + commentId!;
+    uniqueTag = getUuid();
     // Get.delete<CommentDetailController>();
     Get.put(CommentDetailController(commentRepository: CommentRepository(), postId: postId!, commentId: commentId!),
         tag: uniqueTag);

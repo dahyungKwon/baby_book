@@ -8,11 +8,13 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../base/uuid_util.dart';
 import '../../controller/MemberCommunityListController.dart';
 import '../../repository/post_repository.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_pages.dart';
+import 'package:uuid/uuid.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
@@ -24,7 +26,7 @@ class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
   int pageNumber = 1;
 
   MemberCommunityListScreen(this.memberId, this.memberPostType, {super.key}) {
-    uniqueTag = memberId;
+    uniqueTag = getUuid();
 
     Get.put(MemberCommunityListController(postRepository: PostRepository(), memberId: memberId!), tag: uniqueTag);
     refreshController = RefreshController(initialRefresh: false);
