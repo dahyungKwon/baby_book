@@ -9,14 +9,13 @@ import '../../../repository/member_repository.dart';
 import '../../profile/profile_layout.dart';
 
 class TabProfile extends GetView<ProfileController> {
-  const TabProfile({super.key});
+  TabProfile({super.key}) {
+    Get.put(ProfileController(
+        memberRepository: MemberRepository(), babyRepository: BabyRepository(), targetMemberId: null));
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.delete<ProfileController>();
-    Get.put(ProfileController(
-        memberRepository: MemberRepository(), babyRepository: BabyRepository(), targetMemberId: null));
-
     FetchPixels(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
