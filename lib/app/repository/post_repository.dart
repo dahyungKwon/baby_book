@@ -6,6 +6,7 @@ import '../exception/exception_invalid_member.dart';
 import '../models/model_post.dart';
 import '../models/model_post_request.dart';
 import '../view/community/post_type.dart';
+import '../view/profile/member_post_type.dart';
 
 class PostRepository {
   var dio = Dio(BaseOptions(
@@ -124,5 +125,36 @@ class PostRepository {
         throw Exception(response.data['body']['errorCode']);
       }
     }
+  }
+
+  Future<List<ModelPost>> getPostListByMemberPostType(
+      {required String memberId, required MemberPostType memberPostType, required PagingRequest pagingRequest}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/members/$memberId/posts',
+      queryParameters: {
+        'pageSize': pagingRequest.pageSize,
+        'pageNumber': pagingRequest.pageNumber,
+        'memberPostTypeRequest': memberPostType.code,
+      },
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return response.data['body']['postPagingList']
+        .map<ModelPost>(
+          (item) => ModelPost.fromJson(item),
+        )
+        .toList();
   }
 }

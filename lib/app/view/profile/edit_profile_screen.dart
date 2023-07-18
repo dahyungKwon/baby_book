@@ -90,7 +90,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
               getVerSpace(15),
               buildNickname(context),
               getVerSpace(30),
-              buildGener(context),
+              buildGender(context),
               getVerSpace(30),
               buildContents(context),
               getVerSpace(30),
@@ -156,7 +156,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
     ]);
   }
 
-  Widget buildGener(BuildContext context) {
+  Widget buildGender(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
           padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelHeight(16)),

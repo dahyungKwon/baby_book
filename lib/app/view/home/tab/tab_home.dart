@@ -249,7 +249,7 @@ class TabHome extends GetView<TabHomeController> {
         getCustomFont(
           "여러분의 소중한 경험을 공유해주세요.",
           16,
-          Colors.black,
+          Colors.black45,
           1,
           fontWeight: FontWeight.w400,
         ),

@@ -35,6 +35,7 @@ abstract class Routes {
   static const homescreenPath = "/HomeScreen";
   static const profilePath = "/ProfileScreen";
   static const editProfilePath = "/EditProfileScreen";
+  static const memberCommunityPath = "/MemberCommunityScreen";
 
   static const bookDetailPath = "/BookDetailScreen";
 

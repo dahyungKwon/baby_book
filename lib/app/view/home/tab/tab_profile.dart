@@ -153,8 +153,9 @@ class TabProfile extends GetView<TabProfileController> {
   }
 
   Widget communityWritingButton(BuildContext context) {
-    return getButtonWithIcon(context, Colors.white, "북마크 / 작성글 / 작성댓글", Colors.black, () {
-      Get.toNamed(Routes.cardPath);
+    return getButtonWithIcon(
+        context, Colors.white, controller.myProfile ? "북마크 / 작성글 / 작성댓글" : "작성글 / 작성댓글", Colors.black, () {
+      Get.toNamed(Routes.memberCommunityPath, parameters: {'memberId': controller.member.memberId});
     }, 16,
         weight: FontWeight.w400,
         buttonHeight: FetchPixels.getPixelHeight(60),

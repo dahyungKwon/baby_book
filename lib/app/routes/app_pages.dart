@@ -2,6 +2,7 @@ import 'package:baby_book/app/view/community/comment_detail_screen.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
 import 'package:baby_book/app/view/login/join_screen.dart';
+import 'package:baby_book/app/view/profile/member_community_screen.dart';
 import 'package:get/get.dart';
 
 import '../view/address/edit_address_screen.dart';
@@ -55,6 +56,7 @@ class AppPages {
     GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen()),
     GetPage(name: Routes.profilePath, page: () => ProfileScreen()),
     GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen()),
+    GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen()),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀
