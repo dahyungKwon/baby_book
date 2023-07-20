@@ -14,6 +14,7 @@ import '../view/community/community_add_screen.dart';
 import '../view/community/community_detail_screen.dart';
 import '../view/home/address_screen.dart';
 import '../view/home/book/book_detail_screen.dart';
+import '../view/home/bookcase/book_case_screen.dart';
 import '../view/home/cart_screen.dart';
 import '../view/home/category_screen.dart';
 import '../view/home/date_time_screen.dart';
@@ -43,21 +44,24 @@ part './app_routes.dart';
 
 class AppPages {
   static final pages = [
-    GetPage(name: Routes.homepath, page: () => SplashScreen()),
-    GetPage(name: Routes.loginPath, page: () => LoginScreen()),
-    GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0)),
-    // GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), binding: HomeBinding()),
-    GetPage(name: Routes.communityListPath, page: () => HomeScreen(1)),
-    GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen()),
-    GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen()),
-    GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen()),
-    GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen()),
-    GetPage(name: Routes.joinPath, page: () => JoinScreen()),
-    GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen()),
-    GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen()),
-    GetPage(name: Routes.profilePath, page: () => ProfileScreen()),
-    GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen()),
-    GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen()),
+    GetPage(name: Routes.homepath, page: () => SplashScreen(), transition: Transition.noTransition),
+    GetPage(name: Routes.loginPath, page: () => LoginScreen(), transition: Transition.noTransition),
+    GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), transition: Transition.noTransition),
+    GetPage(name: Routes.tabBookCasePath, page: () => HomeScreen(1), transition: Transition.noTransition),
+    GetPage(name: Routes.communityListPath, page: () => HomeScreen(2), transition: Transition.noTransition),
+    GetPage(name: Routes.tabProfilePath, page: () => HomeScreen(3), transition: Transition.noTransition),
+
+    GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.bookCasePath, page: () => BookCaseScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.joinPath, page: () => JoinScreen(), transition: Transition.noTransition),
+    GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.profilePath, page: () => ProfileScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen(), transition: Transition.cupertino),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀

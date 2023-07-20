@@ -17,7 +17,7 @@ class MyBookRepository {
   ));
 
   Future<List<ModelMyBookResponse>> getMyBookList(
-      {required PagingRequest pagingRequest, required String babyId, required HoldType? holdType}) async {
+      {required PagingRequest pagingRequest, required String babyId, required HoldType holdType}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
@@ -26,7 +26,7 @@ class MyBookRepository {
         "pageSize": pagingRequest.pageSize,
         "pageNumber": pagingRequest.pageNumber,
         "babyId": babyId,
-        "holdType": holdType?.code
+        "holdType": holdType.code
       },
       options: Options(
         headers: {"at": accessToken},

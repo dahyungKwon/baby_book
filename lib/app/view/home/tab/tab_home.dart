@@ -32,7 +32,7 @@ class TabHome extends GetView<TabHomeController> {
   int pageNumber = 1;
 
   TabHome({super.key}) {
-    Get.delete<TabHomeController>();
+    // Get.delete<TabHomeController>();
     Get.put(TabHomeController(0, bookListRepository: BookRepository()));
     refreshController = RefreshController(initialRefresh: false);
   }

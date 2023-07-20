@@ -1,4 +1,5 @@
 enum HoldType {
+  all("ALL", "전체"),
   plan("PLAN", "구매예정"),
   read("READ", "읽는중"),
   end("END", "방출"),
@@ -15,5 +16,10 @@ enum HoldType {
 
   static List<String> findDescList() {
     return HoldType.values.map((e) => e.desc).toList();
+  }
+
+  ///탭 리스트에 노출용 ("전체" 노출)
+  static List<String> findListForTabTitle() {
+    return HoldType.values.where((element) => element != HoldType.none).map((e) => e.desc).toList();
   }
 }

@@ -1,6 +1,34 @@
 part of './app_pages.dart';
 
 abstract class Routes {
+  ///전체
+  static const loginPath = "/LoginScreen";
+  static const joinPath = "/JoinScreen";
+  static const servicePolicyPath = "/ServicePolicyScreen";
+  static const privacyPolicyPath = "/PrivacyPolicyScreen";
+  static const homescreenPath = "/HomeScreen";
+  static const profilePath = "/ProfileScreen";
+  static const editProfilePath = "/EditProfileScreen";
+  static const memberCommunityPath = "/MemberCommunityScreen";
+
+  ///책 상세
+  static const bookDetailPath = "/BookDetailScreen";
+
+  ///책장
+  static const tabBookCasePath = "/TabBookCase";
+  static const bookCasePath = "/BookCaseScreen";
+
+  ///커뮤니티
+  static const communityListPath = "/CommunityListScreen";
+  static const communityAddPath = "/CommunityAddScreen";
+  static const communityDetailPath = "/CommunityDetailScreen";
+  static const communityModifyPath = "/CommunityModifyScreen";
+  static const commentDetailPath = "/CommentDetailScreen";
+
+  ///프로필
+  static const tabProfilePath = "/TabProfile";
+
+  ///사용안함
   static const homepath = "/";
   static const introPath = "/IntroScreen";
   static const forgotPath = "/ForgotPassword";
@@ -27,21 +55,4 @@ abstract class Routes {
   static const privacyPath = "/PrivacyScreen";
   static const securityPath = "/SecurityScreen";
   static const termOfServicePath = "/TermOfServiceScreen";
-
-  static const loginPath = "/LoginScreen";
-  static const joinPath = "/JoinScreen";
-  static const servicePolicyPath = "/ServicePolicyScreen";
-  static const privacyPolicyPath = "/PrivacyPolicyScreen";
-  static const homescreenPath = "/HomeScreen";
-  static const profilePath = "/ProfileScreen";
-  static const editProfilePath = "/EditProfileScreen";
-  static const memberCommunityPath = "/MemberCommunityScreen";
-
-  static const bookDetailPath = "/BookDetailScreen";
-
-  static const communityListPath = "/CommunityListScreen";
-  static const communityAddPath = "/CommunityAddScreen";
-  static const communityDetailPath = "/CommunityDetailScreen";
-  static const communityModifyPath = "/CommunityModifyScreen";
-  static const commentDetailPath = "/CommentDetailScreen";
 }

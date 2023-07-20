@@ -22,7 +22,7 @@ Widget buildProfileLayout(BuildContext context, bool loading, ModelMember member
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     _buildContents(context, member),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
-                    _bookCaseButton(context),
+                    _bookCaseButton(context, member, myProfile),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     _communityWritingButton(context, member, myProfile),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
@@ -111,9 +111,13 @@ Widget _buildContents(BuildContext context, ModelMember member) {
   );
 }
 
-Widget _bookCaseButton(BuildContext context) {
+Widget _bookCaseButton(BuildContext context, ModelMember member, bool myProfile) {
   return getButtonWithIcon(context, Colors.white, "책장", Colors.black, () {
-    Get.toNamed(Routes.profilePath);
+    if (myProfile) {
+      Get.offAllNamed(Routes.tabBookCasePath);
+    } else {
+      Get.toNamed(Routes.bookCasePath, parameters: {'memberId': member.memberId!});
+    }
   }, 16,
       weight: FontWeight.w400,
       buttonHeight: FetchPixels.getPixelHeight(60),

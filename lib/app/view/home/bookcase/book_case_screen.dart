@@ -6,16 +6,15 @@ import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCaseController.dart';
 import '../bookcase/book_case_layout.dart';
 
-class TabBookCase extends GetView<BookCaseController> {
+class BookCaseScreen extends GetView<BookCaseController> {
   late final String? memberId;
   late final String? uniqueTag;
 
-  TabBookCase({super.key}) {
+  BookCaseScreen({super.key}) {
     memberId = Get.parameters["memberId"];
     uniqueTag = getUuid();
-
     // Get.delete<BookCaseController>(tag: uniqueTag);
-    Get.put(BookCaseController(memberId: null), tag: uniqueTag);
+    Get.put(BookCaseController(memberId: memberId), tag: uniqueTag);
   }
 
   @override
@@ -23,14 +22,17 @@ class TabBookCase extends GetView<BookCaseController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.initPageController();
-
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backGroundColor,
-      body: Obx(
-        () => buildBookCaseLayout(context, controller),
-      ),
-    );
+    return WillPopScope(
+        onWillPop: () async {
+          Get.back();
+          return false;
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: backGroundColor,
+          body: Obx(
+            () => SafeArea(child: buildBookCaseLayout(context, controller)),
+          ),
+        ));
   }
 }

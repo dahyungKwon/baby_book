@@ -1,7 +1,6 @@
-import 'package:baby_book/app/view/home/book/HoldType.dart';
-import 'package:baby_book/app/view/home/bookcase/book_case_list_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
 import '../../../../base/skeleton.dart';
@@ -11,8 +10,35 @@ import '../../../controller/BookCaseController.dart';
 Widget buildBookCaseLayout(BuildContext context, BookCaseController controller) {
   return controller.loading
       ? const FullSizeSkeleton()
-      : Column(
-          children: [tabBar(context, controller), getVerSpace(FetchPixels.getPixelHeight(25)), pageViewer(controller)]);
+      : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          buildToolbar(context, controller),
+          getVerSpace(FetchPixels.getPixelHeight(25)),
+          pageViewer(controller)
+        ]);
+}
+
+Widget buildToolbar(BuildContext context, BookCaseController controller) {
+  return Container(
+      // width: FetchPixels.getPixelHeight(50),
+      // height: FetchPixels.getPixelHeight(50),
+      // padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+      color: Colors.white,
+      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+        controller.myBookCase
+            ? Container()
+            : getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+                Get.back();
+              }),
+        tabBar(context, controller),
+        // getCustomFont(
+        //   controller.myProfile ? "북마크 / 작성글 / 작성댓글" : "작성글 / 작성댓글",
+        //   18,
+        //   Colors.black,
+        //   1,
+        //   fontWeight: FontWeight.w500,
+        // ),
+      ]));
 }
 
 Widget tabBar(BuildContext context, BookCaseController controller) {
@@ -24,11 +50,11 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
           return Colors.transparent;
         },
       ),
-      isScrollable: false,
+      isScrollable: true,
       indicatorColor: Colors.transparent,
       physics: const BouncingScrollPhysics(),
       controller: controller.tabController,
-      labelPadding: EdgeInsets.fromLTRB(10, 25, 10, 0),
+      labelPadding: controller.myBookCase ? EdgeInsets.fromLTRB(10, 25, 10, 0) : EdgeInsets.fromLTRB(0, 0, 20, 0),
       // labelStyle: TextStyle(fontSize: 5),
       onTap: (index) {
         controller.pageController.jumpToPage(index);
@@ -36,7 +62,7 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
       },
       labelColor: Colors.black,
       unselectedLabelColor: Colors.black.withOpacity(0.3),
-      labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
+      labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
       tabs: List.generate(controller.tabsList.length, (index) {
         return Tab(
           height: 16.0,
@@ -57,12 +83,7 @@ Expanded pageViewer(BookCaseController controller) {
       physics: const BouncingScrollPhysics(),
       controller: controller.pageController,
       scrollDirection: Axis.horizontal,
-      children: [
-        BookCaseListScreen(memberId: controller.memberId!, holdType: null),
-        BookCaseListScreen(memberId: controller.memberId!, holdType: HoldType.plan),
-        BookCaseListScreen(memberId: controller.memberId!, holdType: HoldType.read),
-        BookCaseListScreen(memberId: controller.memberId!, holdType: HoldType.end),
-      ],
+      children: controller.bookCaseListScreenList,
       onPageChanged: (value) {
         controller.tabController.animateTo(value);
         controller.position = value;

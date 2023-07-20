@@ -8,17 +8,21 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCaseListController.dart';
+import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
 import '../book/HoldType.dart';
 
 class BookCaseListScreen extends GetView<BookCaseListController> {
   late final String? uniqueTag;
+  late RefreshController refreshController;
+  int pageNumber = 1;
 
-  BookCaseListScreen({required String memberId, required HoldType? holdType, super.key}) {
+  BookCaseListScreen({required String? memberId, required HoldType holdType, super.key}) {
     uniqueTag = getUuid();
     Get.put(
         BookCaseListController(
@@ -28,10 +32,38 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             memberId: memberId,
             holdType: holdType),
         tag: uniqueTag);
+    refreshController = RefreshController(initialRefresh: false);
   }
 
   @override
   String? get tag => uniqueTag;
+
+  void initPageNumber() {
+    pageNumber = 1;
+  }
+
+  void plusPageNumber() {
+    pageNumber++;
+  }
+
+  void onRefresh() async {
+    await controller.getAllForPullToRefresh();
+    initPageNumber(); //순서중요
+
+    await Future.delayed(Duration(milliseconds: 500));
+
+    refreshController.refreshCompleted();
+  }
+
+  void onLoading() async {
+    List<ModelMyBookResponse>? list = await controller.getAllForLoading(PagingRequest.create(pageNumber + 1));
+    if (list != null && list.isNotEmpty) {
+      plusPageNumber();
+    }
+
+    await Future.delayed(Duration(milliseconds: 500));
+    refreshController.loadComplete();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +76,34 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           ? const ListSkeleton()
           : controller.myBookResponseList.isEmpty
               ? getPaddingWidget(edgeInsets, nullListView(context))
-              : allBookingList()),
+              : draw()),
     );
   }
 
-  ListView allBookingList() {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: controller.myBookResponseList.length,
-      itemBuilder: (context, index) {
-        ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
-        return buildBookCaseItem(modelMyBookResponse, context, index, () {}, () {});
-      },
-    );
+  SmartRefresher draw() {
+    return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: const MaterialClassicHeader(
+          color: Colors.black,
+        ),
+        footer: const ClassicFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            loadingText: "Loading...",
+            idleText: "Loading...",
+            canLoadingText: "Loading..."),
+        controller: refreshController,
+        onRefresh: onRefresh,
+        onLoading: onLoading,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemCount: controller.myBookResponseList.length,
+          itemBuilder: (context, index) {
+            ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
+            return buildBookCaseItem(modelMyBookResponse, context, index, () {}, () {});
+          },
+        ));
   }
 
   Column nullListView(BuildContext context) {
@@ -65,26 +112,28 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
       children: [
         // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
         // getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+        getCustomFont("책장에 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
-          "책장에 책을 추가하여 히스토리 관리해보세요.",
+          controller.myBookCase ? "책장에 책을 추가하여 히스토리 관리해보세요." : "다른 곰들의 책장을 구경해보세요.",
           16,
           Colors.black45,
           1,
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "책 추가 하러가기", Colors.black87, () {
-          Get.toNamed(Routes.homescreenPath);
-        }, 18,
-            weight: FontWeight.w600,
-            buttonHeight: FetchPixels.getPixelHeight(60),
-            insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(100)),
-            borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
-            isBorder: true,
-            borderColor: Colors.grey,
-            borderWidth: 1.5)
+        controller.myBookCase
+            ? getButton(context, backGroundColor, "책 추가 하러가기", Colors.black87, () {
+                Get.offAllNamed(Routes.homescreenPath);
+              }, 18,
+                weight: FontWeight.w600,
+                buttonHeight: FetchPixels.getPixelHeight(60),
+                insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(100)),
+                borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
+                isBorder: true,
+                borderColor: Colors.grey,
+                borderWidth: 1.5)
+            : Container()
       ],
     );
   }

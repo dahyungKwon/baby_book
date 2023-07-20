@@ -7,6 +7,7 @@ import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
+import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -15,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
-import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../base/uuid_util.dart';
@@ -266,8 +266,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                   fontWeight: FontWeight.w500),
               // getVerSpace(FetchPixels.getPixelHeight(6)),
               GestureDetector(
-                  onTap: () {
-                    Get.toNamed(Routes.profilePath, parameters: {'memberId': modelPost.memberId});
+                  onTap: () async {
+                    String? myId = await PrefData.getMemberId();
+                    if (myId == modelPost.memberId) {
+                      Get.offAllNamed(Routes.tabProfilePath);
+                    } else {
+                      Get.toNamed(Routes.profilePath, parameters: {'memberId': modelPost.memberId});
+                    }
                   },
                   child: getCustomFont(
                       " · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 13, Colors.black45, 1,
@@ -499,8 +504,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
       getVerSpace(FetchPixels.getPixelHeight(10)),
       GestureDetector(
-          onTap: () {
-            Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+          onTap: () async {
+            String? myId = await PrefData.getMemberId();
+            if (myId == comment.comment.memberId) {
+              Get.offAllNamed(Routes.tabProfilePath);
+            } else {
+              Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+            }
           },
           child: Row(children: [
             getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),

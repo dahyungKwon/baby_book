@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../base/pref_data.dart';
 import '../../../base/uuid_util.dart';
 import '../../models/model_comment_response.dart';
 import '../../routes/app_pages.dart';
@@ -165,8 +166,13 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
       getVerSpace(FetchPixels.getPixelHeight(10)),
       Row(children: [
         GestureDetector(
-            onTap: () {
-              Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+            onTap: () async {
+              String? myId = await PrefData.getMemberId();
+              if (myId == comment.comment.memberId) {
+                Get.offAllNamed(Routes.tabProfilePath);
+              } else {
+                Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+              }
             },
             child: getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1,
                 fontWeight: FontWeight.w500)),
