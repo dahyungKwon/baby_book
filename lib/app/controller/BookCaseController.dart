@@ -9,7 +9,6 @@ import '../view/home/book/HoldType.dart';
 class BookCaseController extends GetxController with GetSingleTickerProviderStateMixin {
   late String? memberId;
   late ModelMember member;
-  bool myBookCase = false;
 
   late PageController pageController;
 
@@ -19,19 +18,19 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
 
   BookCaseController({required this.memberId});
 
+  ///myBookCase
+  final _myBookCase = false.obs;
+
+  get myBookCase => _myBookCase.value;
+
+  set myBookCase(value) => _myBookCase.value = value;
+
   ///loading
   final _loading = false.obs;
 
   get loading => _loading.value;
 
   set loading(value) => _loading.value = value;
-
-  ///북스크린
-  final _bookCaseListScreenList = <BookCaseListScreen>[].obs;
-
-  get bookCaseListScreenList => _bookCaseListScreenList.value;
-
-  set bookCaseListScreenList(value) => _bookCaseListScreenList.value = value;
 
   @override
   void onInit() async {
@@ -44,14 +43,6 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
     String? myId = await PrefData.getMemberId();
     memberId = memberId ?? myId;
     myBookCase = myId == memberId;
-
-    bookCaseListScreenList.clear();
-    bookCaseListScreenList.addAll([
-      BookCaseListScreen(memberId: memberId, holdType: HoldType.all),
-      BookCaseListScreen(memberId: memberId, holdType: HoldType.plan),
-      BookCaseListScreen(memberId: memberId, holdType: HoldType.read),
-      BookCaseListScreen(memberId: memberId, holdType: HoldType.end)
-    ]);
 
     Future.delayed(const Duration(milliseconds: 200), () {
       loading = false;

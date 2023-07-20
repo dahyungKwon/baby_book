@@ -6,15 +6,15 @@ import '../../../../base/resizer/fetch_pixels.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/BookCaseController.dart';
+import '../book/HoldType.dart';
+import 'book_case_list_screen.dart';
 
 Widget buildBookCaseLayout(BuildContext context, BookCaseController controller) {
-  return controller.loading
-      ? const FullSizeSkeleton()
-      : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          buildToolbar(context, controller),
-          getVerSpace(FetchPixels.getPixelHeight(25)),
-          pageViewer(controller)
-        ]);
+  return Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        buildToolbar(context, controller),
+        getVerSpace(FetchPixels.getPixelHeight(25)),
+        pageViewer(controller)
+      ]));
 }
 
 Widget buildToolbar(BuildContext context, BookCaseController controller) {
@@ -83,7 +83,12 @@ Expanded pageViewer(BookCaseController controller) {
       physics: const BouncingScrollPhysics(),
       controller: controller.pageController,
       scrollDirection: Axis.horizontal,
-      children: controller.bookCaseListScreenList,
+      children: [
+        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.all),
+        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.plan),
+        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.read),
+        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.end)
+      ],
       onPageChanged: (value) {
         controller.tabController.animateTo(value);
         controller.position = value;

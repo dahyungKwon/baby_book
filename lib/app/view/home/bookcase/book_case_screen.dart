@@ -2,6 +2,7 @@ import 'package:baby_book/base/color_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCaseController.dart';
 import '../bookcase/book_case_layout.dart';
@@ -28,11 +29,8 @@ class BookCaseScreen extends GetView<BookCaseController> {
           return false;
         },
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: backGroundColor,
-          body: Obx(
-            () => SafeArea(child: buildBookCaseLayout(context, controller)),
-          ),
-        ));
+            resizeToAvoidBottomInset: false,
+            backgroundColor: backGroundColor,
+            body: SafeArea(child: buildBookCaseLayout(context, controller))));
   }
 }
