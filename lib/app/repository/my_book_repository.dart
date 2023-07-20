@@ -1,13 +1,13 @@
-import 'package:baby_book/app/models/model_age_group.dart';
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
-import 'package:baby_book/app/view/home/book/category_type.dart';
+import 'package:baby_book/app/view/home/book/HoldType.dart';
 import 'package:dio/dio.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 import '../models/model_my_book_request.dart';
+import '../models/model_my_book_response.dart';
 
 class MyBookRepository {
   var dio = Dio(BaseOptions(
@@ -16,12 +16,18 @@ class MyBookRepository {
     receiveTimeout: 3000,
   ));
 
-  Future<List<ModelMyBook>> getMyBookList({required String babyId}) async {
+  Future<List<ModelMyBookResponse>> getMyBookList(
+      {required PagingRequest pagingRequest, required String babyId, required HoldType? holdType}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
       '/mybooks',
-      queryParameters: {"babyId": babyId},
+      queryParameters: {
+        "pageSize": pagingRequest.pageSize,
+        "pageNumber": pagingRequest.pageNumber,
+        "babyId": babyId,
+        "holdType": holdType?.code
+      },
       options: Options(
         headers: {"at": accessToken},
       ),
@@ -36,13 +42,13 @@ class MyBookRepository {
     }
 
     return response.data['body']
-        .map<ModelMyBook>(
-          (item) => ModelMyBook.fromJson(item),
+        .map<ModelMyBookResponse>(
+          (item) => ModelMyBookResponse.fromJson(item),
         )
         .toList();
   }
 
-  Future<ModelMyBook?> get({required int bookSetId}) async {
+  Future<ModelMyBookResponse?> get({required int bookSetId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
@@ -61,9 +67,10 @@ class MyBookRepository {
     }
 
     if (response.data['body'] != null) {
-      return ModelMyBook.fromJson(response.data['body']);
+      return ModelMyBookResponse.fromJson(response.data['body']);
     } else {
-      return ModelMyBook.createForObsInit();
+      return ModelMyBookResponse(
+          myBook: ModelMyBook.createForObsInit(), modelBookResponse: ModelBookResponse.createForObsInit());
     }
   }
 
