@@ -1,6 +1,6 @@
 enum UsedType {
   newBook("NEW_BOOK", "새책"),
-  usedBook("USED_BOOK", "읽는중"),
+  usedBook("USED_BOOK", "중고책"),
   none("NONE", "선택안함");
 
   final String code;

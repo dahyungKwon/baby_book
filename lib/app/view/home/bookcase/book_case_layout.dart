@@ -60,7 +60,7 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
         controller.pageController.jumpToPage(index);
         controller.position = index;
       },
-      labelColor: Colors.black,
+      labelColor: controller.tabsList[controller.position].color,
       unselectedLabelColor: Colors.black.withOpacity(0.3),
       labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
       tabs: List.generate(controller.tabsList.length, (index) {
@@ -69,7 +69,7 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
           child: Container(
               alignment: Alignment.center,
               child: Column(
-                children: [Text(controller.tabsList[index])],
+                children: [Text(controller.tabsList[index].desc)],
               )),
         );
       }),
@@ -83,15 +83,13 @@ Expanded pageViewer(BookCaseController controller) {
       physics: const BouncingScrollPhysics(),
       controller: controller.pageController,
       scrollDirection: Axis.horizontal,
-      children: [
-        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.all),
-        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.plan),
-        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.read),
-        BookCaseListScreen(memberId: controller.memberId, holdType: HoldType.end)
-      ],
-      onPageChanged: (value) {
-        controller.tabController.animateTo(value);
-        controller.position = value;
+      children: controller.widgetList,
+      onPageChanged: (index) {
+        controller.widgetList[index].initPageNumber();
+        controller.widgetList[index].controller.getAllForInit(controller.tabsList[index]);
+
+        controller.tabController.animateTo(index);
+        controller.position = index;
       },
     ),
   );

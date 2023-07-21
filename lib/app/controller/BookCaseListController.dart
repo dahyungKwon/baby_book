@@ -16,20 +16,23 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   final MemberRepository memberRepository;
   final BabyRepository babyRepository;
   late String? memberId;
-  late HoldType holdType;
+
+  // late HoldType holdType;
   late ModelMember member;
   late List<ModelBaby> babyList;
   bool myBookCase = false;
   ModelBaby? selectedBaby; //대표아기
 
-  List<String> tabsList = HoldType.findListForTabTitle();
+  ///map(로컬 캐시용)
+  Map<HoldType, List<ModelMyBookResponse>> map = {};
+
+  List<HoldType> tabsList = HoldType.findListForTab();
 
   BookCaseListController(
       {required this.myBookRepository,
       required this.memberRepository,
       required this.babyRepository,
-      required this.memberId,
-      required this.holdType}) {
+      required this.memberId}) {
     assert(myBookRepository != null);
     assert(memberRepository != null);
     assert(babyRepository != null);
@@ -78,7 +81,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
       }
     }
 
-    await getAllForInit();
+    await getAllForInit(HoldType.all);
 
     ///사용자경험 위해 0.2초 딜레이
     Future.delayed(const Duration(milliseconds: 200), () {
@@ -87,14 +90,23 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   }
 
   /// 첫 페이지 로딩 시 사용, 페이지 변경시에도 사용됨
-  getAllForInit() async {
-    getAllForPullToRefresh();
+  getAllForInit(HoldType holdType) async {
+    /// 캐시처리, all도 캐시 처리
+    if (map.containsKey(holdType)) {
+      _myBookResponseList.clear();
+      _myBookResponseList.addAll(map[holdType]!);
+      return;
+    }
+
+    getAllForPullToRefresh(holdType);
   }
 
   ///pull to refresh 시 사용
-  getAllForPullToRefresh() async {
+  getAllForPullToRefresh(HoldType holdType) async {
     loading = true;
     List<ModelMyBookResponse> list = await _request(holdType, PagingRequest.createDefault());
+
+    ///최초기에 paging은 0
 
     ///리스트 초기화
     _initList(holdType, list);
@@ -106,7 +118,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   }
 
   ///next page 요청 시 사용
-  Future<List<ModelMyBookResponse>> getAllForLoading(PagingRequest pagingRequest) async {
+  Future<List<ModelMyBookResponse>> getAllForLoading(HoldType holdType, PagingRequest pagingRequest) async {
     List<ModelMyBookResponse> list = await _request(holdType, pagingRequest);
 
     ///데이터 추가
@@ -139,11 +151,24 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   }
 
   void _initList(HoldType holdType, List<ModelMyBookResponse> list) {
+    // if (holdType != HoldType.all) {
+    if (map.containsKey(holdType)) {
+      map.remove(holdType);
+    }
+    map[holdType] = [];
+    map[holdType]!.addAll(list);
+    // }
+
     _myBookResponseList.clear();
     _myBookResponseList.addAll(list);
   }
 
   void _addAll(HoldType holdType, List<ModelMyBookResponse> list) {
+    map[holdType]?.addAll(list);
     _myBookResponseList.addAll(list);
+  }
+
+  Future<bool> removeBook(HoldType holdType, ModelMyBookResponse book) async {
+    return await myBookRepository.delete(myBookId: book.myBook.myBookId);
   }
 }

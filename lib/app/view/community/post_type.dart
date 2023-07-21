@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 /// TabCommunityController를 통해 PostType에 지정한 desc가 tab list로 노출되니 주의하세요!

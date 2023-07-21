@@ -2,6 +2,8 @@ import 'package:baby_book/app/models/model_my_book_response.dart';
 import 'package:baby_book/app/repository/baby_repository.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
+import 'package:baby_book/app/view/home/book/UsedType.dart';
+import 'package:baby_book/app/view/home/bookcase/book_case_bottom_sheet.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
@@ -15,22 +17,25 @@ import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCaseListController.dart';
 import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
+import '../../dialog/error_dialog.dart';
+import '../../dialog/re_confirm_dialog.dart';
 import '../book/HoldType.dart';
+import '../book/ReviewType.dart';
 
 class BookCaseListScreen extends GetView<BookCaseListController> {
   late final String? uniqueTag;
+  late HoldType holdType;
   late RefreshController refreshController;
   int pageNumber = 1;
 
-  BookCaseListScreen({required String? memberId, required HoldType holdType, super.key}) {
+  BookCaseListScreen({required String? memberId, required this.holdType, super.key}) {
     uniqueTag = getUuid();
     Get.put(
         BookCaseListController(
             myBookRepository: MyBookRepository(),
             memberRepository: MemberRepository(),
             babyRepository: BabyRepository(),
-            memberId: memberId,
-            holdType: holdType),
+            memberId: memberId),
         tag: uniqueTag);
     refreshController = RefreshController(initialRefresh: false);
   }
@@ -39,7 +44,14 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
   String? get tag => uniqueTag;
 
   void initPageNumber() {
-    pageNumber = 1;
+    ///캐시된게 있으면 맨 마지막 number를 넣어야함
+    if (controller.map.containsKey(holdType)) {
+      // 1 12345 -1 01234 /5 = 0 +1 => 1
+      // 2 678910 -1 56789 / 5 = 1 +1 => 2
+      pageNumber = (controller.map[holdType]!.length - 1) ~/ PagingRequest.defaultPageSize + 1;
+    } else {
+      pageNumber = 1;
+    }
   }
 
   void plusPageNumber() {
@@ -47,7 +59,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
   }
 
   void onRefresh() async {
-    await controller.getAllForPullToRefresh();
+    await controller.getAllForPullToRefresh(holdType);
     initPageNumber(); //순서중요
 
     await Future.delayed(Duration(milliseconds: 500));
@@ -56,7 +68,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
   }
 
   void onLoading() async {
-    List<ModelMyBookResponse>? list = await controller.getAllForLoading(PagingRequest.create(pageNumber + 1));
+    List<ModelMyBookResponse>? list = await controller.getAllForLoading(holdType, PagingRequest.create(pageNumber + 1));
     if (list != null && list.isNotEmpty) {
       plusPageNumber();
     }
@@ -145,152 +157,173 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
         function();
       },
       child: Container(
-        height: FetchPixels.getPixelHeight(120),
+        height: FetchPixels.getPixelHeight(140),
         margin: EdgeInsets.only(
-            bottom: FetchPixels.getPixelHeight(20),
+            bottom: FetchPixels.getPixelHeight(10),
             left: FetchPixels.getDefaultHorSpace(context),
             right: FetchPixels.getDefaultHorSpace(context)),
         padding:
-            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(16), horizontal: FetchPixels.getPixelWidth(16)),
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(16)),
         decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: const [
-              BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
+              BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0.0, 4.0)),
             ],
             borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
-        child: Column(
+        child: Row(
           children: [
+            ExtendedImage.network(
+              modelMyBookResponse.modelBookResponse.getFirstImg(),
+              width: FetchPixels.getPixelHeight(90),
+              height: FetchPixels.getPixelHeight(90),
+              fit: BoxFit.fitHeight,
+              cache: true,
+              loadStateChanged: (ExtendedImageState state) {
+                switch (state.extendedImageLoadState) {
+                  case LoadState.loading:
+                    return Image.asset(modelMyBookResponse.modelBookResponse.getPlaceHolderImg(), fit: BoxFit.fill);
+                  case LoadState.completed:
+                    break;
+                  case LoadState.failed:
+                    return Image.asset(modelMyBookResponse.modelBookResponse.getPlaceHolderImg(), fit: BoxFit.fill);
+                }
+              },
+            ),
+            getHorSpace(FetchPixels.getPixelWidth(16)),
             Expanded(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ExtendedImage.network(
-                    modelMyBookResponse.modelBookResponse.getFirstImg(),
-                    width: FetchPixels.getPixelHeight(80),
-                    height: FetchPixels.getPixelHeight(80),
-                    fit: BoxFit.fitHeight,
-                    cache: true,
-                    loadStateChanged: (ExtendedImageState state) {
-                      switch (state.extendedImageLoadState) {
-                        case LoadState.loading:
-                          return Image.asset(modelMyBookResponse.modelBookResponse.getPlaceHolderImg(),
-                              fit: BoxFit.fill);
-                        case LoadState.completed:
-                          break;
-                        case LoadState.failed:
-                          return Image.asset(modelMyBookResponse.modelBookResponse.getPlaceHolderImg(),
-                              fit: BoxFit.fill);
-                      }
-                    },
-                  ),
-                  getHorSpace(FetchPixels.getPixelWidth(16)),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: getHorSpace(0),
-                        ),
-                        getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 16, Colors.black, 1,
-                            fontWeight: FontWeight.w900),
-                        getVerSpace(FetchPixels.getPixelHeight(12)),
-                        getCustomFont(
-                          modelMyBookResponse.modelBookResponse.modelPublisher.publisherName ?? "",
-                          14,
-                          textColor,
-                          1,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        getVerSpace(FetchPixels.getPixelHeight(12)),
-                        // Row(
-                        //   children: [
-                        //     getSvgImage("star.svg",
-                        //         height: FetchPixels.getPixelHeight(16), width: FetchPixels.getPixelHeight(16)),
-                        //     getHorSpace(FetchPixels.getPixelWidth(6)),
-                        //     getCustomFont(modelBooking.rating ?? "", 14, Colors.black, 1, fontWeight: FontWeight.w400),
-                        //   ],
-                        // ),
-                        Expanded(
-                          flex: 1,
-                          child: getHorSpace(0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          funDelete();
-                        },
-                        child: getSvgImage("trash.svg",
-                            width: FetchPixels.getPixelHeight(20), height: FetchPixels.getPixelHeight(20)),
+                      getCustomFont(
+                        modelMyBookResponse.myBook.holdType.desc,
+                        12,
+                        modelMyBookResponse.myBook.holdType.color,
+                        1,
+                        fontWeight: FontWeight.w400,
                       ),
-                      // getPaddingWidget(
-                      //     EdgeInsets.only(bottom:FetchPixels.getPixelHeight(10) ),
-                      //     getCustomFont("\$${modelBooking.price}",
-                      //   16,
-                      //   blueColor,
+                      getHorSpace(FetchPixels.getPixelHeight(3)),
+                      // getCustomFont(
+                      //   modelMyBookResponse.modelBookResponse.modelPublisher.publisherName ?? "",
+                      //   14,
+                      //   textColor,
                       //   1,
-                      //   fontWeight: FontWeight.w900,
-                      // )),
-                      //  Row(
-                      //    children: [
-                      //      getSvgImage("star.svg",
-                      //          height: FetchPixels.getPixelHeight(16),
-                      //          width: FetchPixels.getPixelHeight(16)),
-                      //      getHorSpace(FetchPixels.getPixelWidth(6)),
-                      //      getCustomFont(
-                      //          modelBooking.rating ?? "", 14, Colors.black, 1,
-                      //          fontWeight: FontWeight.w400),
-                      //    ],
-                      //  )
+                      //   fontWeight: FontWeight.w400,
+                      // ),
                     ],
-                  )
+                  ),
+                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                  getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
+                      fontWeight: FontWeight.w500),
+                  getVerSpace(FetchPixels.getPixelHeight(10)),
+                  modelMyBookResponse.myBook.inMonth == 0
+                      ? Container()
+                      : Row(
+                          children: [
+                            getCustomFont("IN : ${modelMyBookResponse.myBook.inMonth}개월", 12, Colors.black45, 1,
+                                fontWeight: FontWeight.w400),
+                            modelMyBookResponse.myBook.outMonth == 0
+                                ? Container()
+                                : getCustomFont(
+                                    " / OUT : ${modelMyBookResponse.myBook.outMonth}개월", 12, Colors.black45, 1,
+                                    fontWeight: FontWeight.w400)
+                          ],
+                        ),
+                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                  Row(
+                    children: [
+                      modelMyBookResponse.myBook.reviewType == ReviewType.none
+                          ? Container()
+                          : getCustomFont(
+                              "${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black45, 1,
+                              fontWeight: FontWeight.w400),
+                      modelMyBookResponse.myBook.usedType == UsedType.none
+                          ? Container()
+                          : getCustomFont(modelMyBookResponse.myBook.usedType.desc, 12, Colors.black45, 1,
+                              fontWeight: FontWeight.w400),
+                    ],
+                  ),
+                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                  modelMyBookResponse.myBook.comment == null || modelMyBookResponse.myBook.comment!.isEmpty
+                      ? Container()
+                      : getCustomFont(modelMyBookResponse.myBook.comment!, 12, Colors.black45, 1,
+                          fontWeight: FontWeight.w400),
+                  modelMyBookResponse.needDetailReview()
+                      ? getSimpleTextButton("책 경험 입력하기", FetchPixels.getPixelHeight(12), secondMainColor, Colors.white,
+                          FontWeight.w400, FetchPixels.getPixelHeight(100), FetchPixels.getPixelHeight(30), () {},
+                          boxDecoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
+                              boxShadow: [
+                                BoxShadow(color: secondMainColor, blurRadius: 1, offset: Offset(0.0, 0.0)),
+                              ]))
+                      : Container(),
                 ],
               ),
             ),
-            // getVerSpace(FetchPixels.getPixelHeight(16)),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: [
-            //     Row(
-            //       children: [
-            //         getAssetImage("dot.png", FetchPixels.getPixelHeight(8),
-            //             FetchPixels.getPixelHeight(8)),
-            //         getHorSpace(FetchPixels.getPixelWidth(8)),
-            //         getCustomFont(modelBooking.owner ?? "", 14, textColor, 1,
-            //             fontWeight: FontWeight.w400),
-            //       ],
-            //     ),
-            //     Wrap(
-            //       children: [
-            //         getButton(
-            //             context,
-            //             Color(modelBooking.bgColor!.toInt()),
-            //             modelBooking.tag ?? "",
-            //             modelBooking.textColor!,
-            //             () {},
-            //             16,
-            //             weight: FontWeight.w600,
-            //             borderRadius:
-            //                 BorderRadius.circular(FetchPixels.getPixelHeight(37)),
-            //             insetsGeometrypadding: EdgeInsets.symmetric(
-            //                 vertical: FetchPixels.getPixelHeight(6),
-            //                 horizontal: FetchPixels.getPixelWidth(12)))
-            //       ],
-            //     )
-            //   ],
-            // )
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getVerSpace(FetchPixels.getPixelHeight(20)),
+                getSimpleImageButton(
+                    "ellipsis_horizontal_outline.svg",
+                    FetchPixels.getPixelHeight(60),
+                    FetchPixels.getPixelHeight(40),
+                    Colors.white,
+                    FetchPixels.getPixelHeight(26),
+                    FetchPixels.getPixelHeight(26), () {
+                  showModalBottomSheet(
+                      context: context, isScrollControlled: true, builder: (_) => BookCaseBottomSheet()).then((menu) {
+                    if (menu != null) {
+                      switch (menu) {
+                        case "수정하기":
+                          {
+                            // clickedModifyComment(context, comment);
+                            // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+                            break;
+                          }
+                        case "삭제하기":
+                          {
+                            clickedRemoveBook(modelMyBookResponse);
+                            break;
+                          }
+                      }
+                    }
+                  });
+                }, containerPadding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15))),
+              ],
+            )
           ],
         ),
       ),
     );
+  }
+
+  clickedModifyComment(BuildContext context, ModelMyBookResponse mybook) async {
+    // if (comment.deleted) {
+    //   Get.dialog(ErrorDialog("삭제된 댓글은 수정할 수 없습니다."));
+    //   return;
+    // }
+    // // controller.commentModify(comment);
+    // controller.executeModifyCommentMode(comment).then((value) => commentKeyboardUp(context));
+  }
+
+  clickedRemoveBook(ModelMyBookResponse mybook) async {
+    bool? result = await Get.dialog(ReConfirmDialog("삭제 하시겠습니까?", "삭제", "취소", () async {
+      controller.removeBook(holdType, mybook).then((result) => Get.back(result: result));
+    }));
+
+    if (result == null) {
+      ///취소선택
+      return;
+    } else if (result) {
+      onRefresh();
+    } else {
+      Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
+    }
   }
 }

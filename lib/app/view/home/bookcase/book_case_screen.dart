@@ -14,8 +14,6 @@ class BookCaseScreen extends GetView<BookCaseController> {
   BookCaseScreen({super.key}) {
     memberId = Get.parameters["memberId"];
     uniqueTag = getUuid();
-    // Get.delete<BookCaseController>(tag: uniqueTag);
-    Get.put(BookCaseController(memberId: memberId), tag: uniqueTag);
   }
 
   @override
@@ -23,6 +21,8 @@ class BookCaseScreen extends GetView<BookCaseController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.delete<BookCaseController>(tag: uniqueTag);
+    Get.put(BookCaseController(memberId: memberId), tag: uniqueTag);
     return WillPopScope(
         onWillPop: () async {
           Get.back();

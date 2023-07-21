@@ -10,16 +10,18 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
   late String? memberId;
   late ModelMember member;
 
-  late PageController pageController;
+  late PageController pageController = PageController(
+    initialPage: 0,
+  );
 
   late TabController tabController;
-  var position = 0;
-  List<String> tabsList = ["전체", "구매예정", "읽는중", "방출"];
+  List<HoldType> tabsList = HoldType.findListForTab();
+  late List<BookCaseListScreen> widgetList = [];
 
   BookCaseController({required this.memberId});
 
   ///myBookCase
-  final _myBookCase = false.obs;
+  final _myBookCase = true.obs; //깜빡거려서 true를 디폴트로함
 
   get myBookCase => _myBookCase.value;
 
@@ -32,31 +34,26 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
 
   set loading(value) => _loading.value = value;
 
+  ///position
+  final _position = 0.obs;
+
+  get position => _position.value;
+
+  set position(value) => _position.value = value;
+
   @override
   void onInit() async {
     super.onInit();
     loading = true;
 
     tabController = TabController(length: tabsList.length, vsync: this);
-    initPageController();
-
     String? myId = await PrefData.getMemberId();
     memberId = memberId ?? myId;
     myBookCase = myId == memberId;
+    widgetList = tabsList.map((e) => BookCaseListScreen(memberId: memberId, holdType: e)).toList();
 
     Future.delayed(const Duration(milliseconds: 200), () {
       loading = false;
     });
-  }
-
-  void initPageController() {
-    pageController = PageController(
-      initialPage: position,
-    );
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (pageController != null) {
-    //     pageController.jumpToPage(position);
-    //   }
-    // });
   }
 }

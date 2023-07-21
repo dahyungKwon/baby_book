@@ -70,9 +70,6 @@ GestureDetector buildBookListItem(
                       //     modelBookResponse.getCategoryType().color, 1,
                       //     fontWeight: FontWeight.w400),
                       // getVerSpace(FetchPixels.getPixelHeight(10)),
-                      getCustomFont(modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
-                          fontWeight: FontWeight.w500),
-                      getVerSpace(FetchPixels.getPixelHeight(10)),
                       getCustomFont(
                         modelBookResponse.modelPublisher.publisherName,
                         14,
@@ -80,6 +77,10 @@ GestureDetector buildBookListItem(
                         1,
                         fontWeight: FontWeight.w400,
                       ),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      getCustomFont(modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
+                          fontWeight: FontWeight.w500),
+
                       getVerSpace(FetchPixels.getPixelHeight(10)),
                       getCustomFont(
                         "${f.format(modelBookResponse.modelBook.amount ?? 0)} 원",
