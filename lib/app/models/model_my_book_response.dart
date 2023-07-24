@@ -17,7 +17,7 @@ class ModelMyBookResponse {
         modelBookResponse = ModelBookResponse.fromJson(json['bookSetResponse']);
 
   bool needDetailReview() {
-    return (myBook.inMonth == 0 || myBook.outMonth == 0) &&
+    return (myBook.inMonth == 0) &&
         (myBook.reviewType == ReviewType.none) &&
         (myBook.usedType == UsedType.none) &&
         (myBook.usedType == UsedType.none);

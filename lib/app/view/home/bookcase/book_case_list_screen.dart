@@ -21,6 +21,7 @@ import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../book/HoldType.dart';
 import '../book/ReviewType.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class BookCaseListScreen extends GetView<BookCaseListController> {
   late final String? uniqueTag;
@@ -124,7 +125,31 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
       children: [
         // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
         // getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("책장에 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
+        holdType == HoldType.all
+            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                // getCustomFont("'${holdType.desc}'", 20, holdType.color, 1, fontWeight: FontWeight.w600),
+                getCustomFont("책장에 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
+              ])
+            : Container(),
+        holdType == HoldType.plan
+            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                getCustomFont("구매 예정", 20, holdType.color, 1, fontWeight: FontWeight.w600),
+                getCustomFont(" 중인 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
+              ])
+            : Container(),
+
+        holdType == HoldType.read
+            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                getCustomFont("읽고 있는", 20, holdType.color, 1, fontWeight: FontWeight.w600),
+                getCustomFont(" 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
+              ])
+            : Container(),
+        holdType == HoldType.end
+            ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                getCustomFont("${holdType.desc}", 20, holdType.color, 1, fontWeight: FontWeight.w600),
+                getCustomFont("한 책이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w500),
+              ])
+            : Container(),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
           controller.myBookCase ? "책장에 책을 추가하여 히스토리 관리해보세요." : "다른 곰들의 책장을 구경해보세요.",
@@ -157,27 +182,28 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
         function();
       },
       child: Container(
-        height: FetchPixels.getPixelHeight(140),
-        margin: EdgeInsets.only(
-            bottom: FetchPixels.getPixelHeight(10),
-            left: FetchPixels.getDefaultHorSpace(context),
-            right: FetchPixels.getDefaultHorSpace(context)),
+        height: FetchPixels.getPixelHeight(100),
+        margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
         padding:
-            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(16)),
-        decoration: BoxDecoration(
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(10), horizontal: FetchPixels.getPixelWidth(20)),
+        decoration: const BoxDecoration(
             color: Colors.white,
-            boxShadow: const [
-              BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0.0, 4.0)),
+            boxShadow: [
+              BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(0.0, 1.0)),
             ],
-            borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
+            borderRadius: BorderRadius.zero),
         child: Row(
           children: [
             ExtendedImage.network(
               modelMyBookResponse.modelBookResponse.getFirstImg(),
-              width: FetchPixels.getPixelHeight(90),
-              height: FetchPixels.getPixelHeight(90),
+              width: FetchPixels.getPixelHeight(80),
+              height: FetchPixels.getPixelHeight(80),
               fit: BoxFit.fitHeight,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(9)),
+              // border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8)),
               cache: true,
+              // shape: BoxShape.circle,
               loadStateChanged: (ExtendedImageState state) {
                 switch (state.extendedImageLoadState) {
                   case LoadState.loading:
@@ -194,109 +220,126 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       getCustomFont(
                         modelMyBookResponse.myBook.holdType.desc,
-                        12,
+                        11,
                         modelMyBookResponse.myBook.holdType.color,
                         1,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                       ),
                       getHorSpace(FetchPixels.getPixelHeight(3)),
-                      // getCustomFont(
-                      //   modelMyBookResponse.modelBookResponse.modelPublisher.publisherName ?? "",
-                      //   14,
-                      //   textColor,
-                      //   1,
-                      //   fontWeight: FontWeight.w400,
-                      // ),
                     ],
                   ),
-                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                  getVerSpace(FetchPixels.getPixelHeight(5)),
                   getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
                       fontWeight: FontWeight.w500),
-                  getVerSpace(FetchPixels.getPixelHeight(10)),
+                  getVerSpace(FetchPixels.getPixelHeight(7)),
                   modelMyBookResponse.myBook.inMonth == 0
                       ? Container()
-                      : Row(
-                          children: [
-                            getCustomFont("IN : ${modelMyBookResponse.myBook.inMonth}개월", 12, Colors.black45, 1,
-                                fontWeight: FontWeight.w400),
-                            modelMyBookResponse.myBook.outMonth == 0
-                                ? Container()
-                                : getCustomFont(
-                                    " / OUT : ${modelMyBookResponse.myBook.outMonth}개월", 12, Colors.black45, 1,
-                                    fontWeight: FontWeight.w400)
-                          ],
-                        ),
-                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                      : Column(children: [
+                          // getVerSpace(FetchPixels.getPixelHeight(10)),
+                          Row(
+                            children: [
+                              modelMyBookResponse.myBook.inMonth != 0
+                                  ? Row(
+                                      children: [
+                                        getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w700),
+                                        getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black45, 1,
+                                            fontWeight: FontWeight.w700),
+                                      ],
+                                    )
+                                  : Container(),
+                              modelMyBookResponse.myBook.outMonth != 0
+                                  ? Row(
+                                      children: [
+                                        getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w700),
+                                        getCustomFont(
+                                            " ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black45, 1,
+                                            fontWeight: FontWeight.w700)
+                                      ],
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                          getVerSpace(FetchPixels.getPixelHeight(7)),
+                        ]),
+                  modelMyBookResponse.needDetailReview()
+                      ? getCustomFont("책경험을 입력해주세요.", 11, Colors.black45, 1, fontWeight: FontWeight.w500)
+                      : Container(),
+                  // getVerSpace(FetchPixels.getPixelHeight(3)),
+                  // modelMyBookResponse.myBook.reviewRating == null || modelMyBookResponse.myBook.reviewRating! == 0
+                  //     ? Container()
+                  //     : RatingBar.builder(
+                  //         initialRating: modelMyBookResponse.myBook.reviewRating!.toDouble(),
+                  //         minRating: 1,
+                  //         direction: Axis.horizontal,
+                  //         allowHalfRating: false,
+                  //         itemCount: 5,
+                  //         itemSize: 16,
+                  //         ignoreGestures: true,
+                  //         itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                  //         itemBuilder: (context, _) => Icon(
+                  //           Icons.star_rounded,
+                  //           color: Colors.amber,
+                  //         ),
+                  //         unratedColor: Colors.white,
+                  //         onRatingUpdate: (rating) {
+                  //           print(rating);
+                  //         },
+                  //       ),
+                  // getVerSpace(FetchPixels.getPixelHeight(3)),
                   Row(
                     children: [
                       modelMyBookResponse.myBook.reviewType == ReviewType.none
                           ? Container()
                           : getCustomFont(
-                              "${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black45, 1,
-                              fontWeight: FontWeight.w400),
+                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black54, 1,
+                              fontWeight: FontWeight.w600),
                       modelMyBookResponse.myBook.usedType == UsedType.none
                           ? Container()
-                          : getCustomFont(modelMyBookResponse.myBook.usedType.desc, 12, Colors.black45, 1,
-                              fontWeight: FontWeight.w400),
+                          : getCustomFont(" #${modelMyBookResponse.myBook.usedType.desc}구매", 12, Colors.black54, 1,
+                              fontWeight: FontWeight.w600),
                     ],
                   ),
-                  getVerSpace(FetchPixels.getPixelHeight(3)),
-                  modelMyBookResponse.myBook.comment == null || modelMyBookResponse.myBook.comment!.isEmpty
-                      ? Container()
-                      : getCustomFont(modelMyBookResponse.myBook.comment!, 12, Colors.black45, 1,
-                          fontWeight: FontWeight.w400),
-                  modelMyBookResponse.needDetailReview()
-                      ? getSimpleTextButton("책 경험 입력하기", FetchPixels.getPixelHeight(12), secondMainColor, Colors.white,
-                          FontWeight.w400, FetchPixels.getPixelHeight(100), FetchPixels.getPixelHeight(30), () {},
-                          boxDecoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
-                              boxShadow: [
-                                BoxShadow(color: secondMainColor, blurRadius: 1, offset: Offset(0.0, 0.0)),
-                              ]))
-                      : Container(),
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getVerSpace(FetchPixels.getPixelHeight(20)),
-                getSimpleImageButton(
-                    "ellipsis_horizontal_outline.svg",
-                    FetchPixels.getPixelHeight(60),
-                    FetchPixels.getPixelHeight(40),
-                    Colors.white,
-                    FetchPixels.getPixelHeight(26),
-                    FetchPixels.getPixelHeight(26), () {
-                  showModalBottomSheet(
-                      context: context, isScrollControlled: true, builder: (_) => BookCaseBottomSheet()).then((menu) {
-                    if (menu != null) {
-                      switch (menu) {
-                        case "수정하기":
-                          {
-                            // clickedModifyComment(context, comment);
-                            // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
-                            break;
-                          }
-                        case "삭제하기":
-                          {
-                            clickedRemoveBook(modelMyBookResponse);
-                            break;
-                          }
-                      }
-                    }
-                  });
-                }, containerPadding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15))),
-              ],
-            )
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     // getVerSpace(FetchPixels.getPixelHeight(20)),
+            //     getSimpleImageButton(
+            //         "ellipsis_horizontal_outline.svg",
+            //         FetchPixels.getPixelHeight(60),
+            //         FetchPixels.getPixelHeight(40),
+            //         Colors.white,
+            //         FetchPixels.getPixelHeight(26),
+            //         FetchPixels.getPixelHeight(26), () {
+            //       showModalBottomSheet(
+            //           context: context, isScrollControlled: true, builder: (_) => BookCaseBottomSheet()).then((menu) {
+            //         if (menu != null) {
+            //           switch (menu) {
+            //             case "수정하기":
+            //               {
+            //                 // clickedModifyComment(context, comment);
+            //                 // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+            //                 break;
+            //               }
+            //             case "삭제하기":
+            //               {
+            //                 clickedRemoveBook(modelMyBookResponse);
+            //                 break;
+            //               }
+            //           }
+            //         }
+            //       });
+            //     }, containerPadding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15))),
+            //   ],
+            // )
           ],
         ),
       ),

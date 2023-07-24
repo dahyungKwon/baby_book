@@ -19,6 +19,8 @@ class ModelMyBook {
   int? outMonth = 0;
   UsedType usedType;
   ReviewType reviewType;
+  int? reviewRating = 0;
+  int? tempReviewRating = 0;
   String? comment;
   DateTime createdAt;
   DateTime? updatedAt;
@@ -32,6 +34,8 @@ class ModelMyBook {
       this.outMonth,
       required this.usedType,
       required this.reviewType,
+      this.reviewRating,
+      this.tempReviewRating,
       this.comment,
       required this.createdAt,
       this.updatedAt});
@@ -46,6 +50,8 @@ class ModelMyBook {
         outMonth: 0,
         usedType: UsedType.none,
         reviewType: ReviewType.none,
+        reviewRating: 0,
+        tempReviewRating: 0,
         comment: "",
         createdAt: DateTime.now(),
         updatedAt: null);
@@ -60,6 +66,8 @@ class ModelMyBook {
         outMonth = json['outMonth'],
         usedType = UsedType.findByCode(json['usedType']),
         reviewType = ReviewType.findByCode(json['reviewType']),
+        reviewRating = json['reviewRating'],
+        tempReviewRating = json['tempReviewRating'],
         comment = json['comment'],
         createdAt = DateTime.parse(json['createdAt']),
         updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
