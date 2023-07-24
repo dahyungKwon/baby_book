@@ -19,15 +19,14 @@ import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';
 import '../../../models/model_book_response.dart';
+import '../../../models/model_member.dart';
 import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
 
 class TabHome extends GetView<TabHomeController> {
   TextEditingController searchController = TextEditingController();
   List<CategoryType> categoryLists = CategoryType.findListViewList();
-  List<ModelPopularService> popularServiceLists = DataFile.popularServiceList;
   ValueNotifier selectedPage = ValueNotifier(0);
-  final _pageController = PageController();
   late RefreshController refreshController;
   int pageNumber = 1;
 
@@ -181,7 +180,7 @@ class TabHome extends GetView<TabHomeController> {
         controller: refreshController,
         onRefresh: onRefresh,
         onLoading: onLoading,
-        child: allBookingList(controller.bookList));
+        child: allBookingList(controller.bookList, controller.member));
   }
 
   void onRefresh() async {
@@ -223,19 +222,21 @@ class TabHome extends GetView<TabHomeController> {
     print("plusPageNumber.... end...pageNumber...$pageNumber...${controller.selectedCategoryType.code}");
   }
 
-  ListView allBookingList(List<ModelBookResponse> bookList) {
+  ListView allBookingList(List<ModelBookResponse> bookList, ModelMember member) {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      // shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: bookList.length,
-      itemBuilder: (context, index) {
-        ModelBookResponse modelBookResponse = bookList[index];
-        return buildBookListItem(modelBookResponse, context, index, () {
-          Get.toNamed("${Routes.bookDetailPath}?bookSetId=${modelBookResponse.modelBook.id}");
+        scrollDirection: Axis.vertical,
+        // shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: bookList.length,
+        itemBuilder: (context, index) {
+          ModelBookResponse modelBookResponse = bookList[index];
+          return buildBookListItem(modelBookResponse, context, index, () {
+            Get.toNamed(Routes.bookDetailPath, parameters: {
+              'bookSetId': modelBookResponse.modelBook.id.toString(),
+              'babyId': member.selectedBabyId ?? ""
+            });
+          });
         });
-      },
-    );
   }
 
   Column nullListView(BuildContext context) {
@@ -264,113 +265,6 @@ class TabHome extends GetView<TabHomeController> {
             isBorder: true,
             borderColor: Colors.grey,
             borderWidth: 1.5)
-      ],
-    );
-  }
-
-  Column pageView() {
-    return Column(
-      children: [
-        SizedBox(
-          height: FetchPixels.getPixelHeight(184),
-          child: PageView.builder(
-            controller: _pageController,
-            onPageChanged: (value) {
-              selectedPage.value = value;
-            },
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: FetchPixels.getPixelWidth(374),
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFD0DDFF),
-                        borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(20)),
-                        image: getDecorationAssetImage(context, "maskgroup.png", fit: BoxFit.fill)),
-                    alignment: Alignment.center,
-                  ),
-                  Positioned(
-                      child: SizedBox(
-                    height: FetchPixels.getPixelHeight(180),
-                    width: FetchPixels.getPixelWidth(374),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        getPaddingWidget(
-                          EdgeInsets.only(
-                              left: FetchPixels.getPixelWidth(20),
-                              top: FetchPixels.getPixelHeight(20),
-                              bottom: FetchPixels.getPixelHeight(20)),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                  width: FetchPixels.getPixelHeight(130),
-                                  child: getMultilineCustomFont("Wall Painting Service", 20, Colors.black,
-                                      fontWeight: FontWeight.w900, txtHeight: 1.3)),
-                              // getVerSpace(FetchPixels.getPixelHeight(6)),
-                              getCustomFont(
-                                "Make your wall stylish",
-                                14,
-                                Colors.black,
-                                1,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              // getVerSpace(FetchPixels.getPixelHeight(16)),
-                              getButton(context, blueColor, "Book Now", Colors.white, () {}, 14,
-                                  weight: FontWeight.w600,
-                                  buttonWidth: FetchPixels.getPixelWidth(108),
-                                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
-                                  insetsGeometrypadding:
-                                      EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12))),
-                            ],
-                          ),
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(right: FetchPixels.getPixelWidth(21)),
-                            height: FetchPixels.getPixelHeight(175),
-                            width: FetchPixels.getPixelHeight(142),
-                            color: Colors.transparent,
-                            child: getAssetImage(
-                                "washer.png", FetchPixels.getPixelHeight(142), FetchPixels.getPixelHeight(175)))
-                      ],
-                    ),
-                  ))
-                ],
-              );
-            },
-          ),
-        ),
-        getVerSpace(FetchPixels.getPixelHeight(14)),
-        ValueListenableBuilder(
-          valueListenable: selectedPage,
-          builder: (context, value, child) {
-            return Container(
-              height: FetchPixels.getPixelHeight(8),
-              width: FetchPixels.getPixelWidth(44),
-              alignment: Alignment.center,
-              child: ListView.builder(
-                itemCount: 3,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return getPaddingWidget(
-                    EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
-                    getAssetImage(
-                      "dot.png",
-                      FetchPixels.getPixelHeight(8),
-                      FetchPixels.getPixelHeight(8),
-                      color: selectedPage.value == index ? blueColor : blueColor.withOpacity(0.2),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        ),
       ],
     );
   }

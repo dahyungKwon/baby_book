@@ -48,11 +48,12 @@ class MyBookRepository {
         .toList();
   }
 
-  Future<ModelMyBookResponse?> get({required int bookSetId}) async {
+  Future<ModelMyBookResponse?> get({required int bookSetId, String? babyId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
       '/mybooks/books/$bookSetId',
+      queryParameters: {"babyId": babyId},
       options: Options(
         headers: {"at": accessToken},
       ),

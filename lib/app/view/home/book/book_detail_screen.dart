@@ -23,6 +23,7 @@ import 'book_detail_bottom_sheet.dart';
 
 class BookDetailScreen extends GetView<BookDetailController> {
   late final int? bookSetId;
+  late final String? babyId;
   late final String? uniqueTag;
 
   late YoutubePlayerController youtubeController;
@@ -32,11 +33,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
 
   BookDetailScreen({super.key}) {
     bookSetId = int.parse(Get.parameters['bookSetId']!);
+    babyId = Get.parameters['babyId'];
     uniqueTag = getUuid();
 
     Get.put(
         BookDetailController(
-            bookRepository: BookRepository(), myBookRepository: MyBookRepository(), bookSetId: bookSetId!),
+            bookRepository: BookRepository(),
+            myBookRepository: MyBookRepository(),
+            bookSetId: bookSetId!,
+            babyId: babyId),
         tag: uniqueTag);
     initYoutubeController();
     sharedMode = Get.parameters['sharedType'] != null;
@@ -216,19 +221,11 @@ class BookDetailScreen extends GetView<BookDetailController> {
               bottom: FetchPixels.getPixelHeight(5),
               left: FetchPixels.getPixelWidth(20),
               right: FetchPixels.getPixelWidth(20)),
-          // decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     // boxShadow: const [
-          //     //   BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
-          //     // ],
-          //     borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
-                    // height: FetchPixels.height / 5,
-                    // width: FetchPixels.width * 1,
                     child: controller.book.existFirstImg()
                         ? ExtendedImage.network(controller.book.getFirstImg(),
                             width: FetchPixels.getPixelHeight(double.infinity),
@@ -259,43 +256,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                   //     width: FetchPixels.getPixelHeight(24), height: FetchPixels.getPixelHeight(24))
                 ],
               ),
-              // Row(
-              //   children: [
-              //     getSvgImage("star.svg",
-              //         width: FetchPixels.getPixelHeight(16), height: FetchPixels.getPixelHeight(16)),
-              //     getHorSpace(FetchPixels.getPixelWidth(6)),
-              //     getCustomFont(
-              //       controller.book.modelBook.likeCount.toString() ?? "",
-              //       14,
-              //       Colors.black,
-              //       1,
-              //       fontWeight: FontWeight.w400,
-              //     )
-              //   ],
-              // ),
               getVerSpace(FetchPixels.getPixelHeight(10)),
-              // Container(
-              //   height: 1.0,
-              //   width: 500.0,
-              //   color: Colors.black26,
-              // ),
-              // getVerSpace(FetchPixels.getPixelHeight(10)),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: DataFile.bookStateList
-              //       .map(
-              //         (e) => GestureDetector(
-              //           onTap: () {
-              //             // setState(() {
-              //             //   tag = (tag == e.key) ? "" : e.key;
-              //             // });
-              //             // server call :: change book state
-              //           },
-              //           child: renderBookState(e, e.key == tag),
-              //         ),
-              //       )
-              //       .toList(),
-              // ),
             ],
           ),
         ));
