@@ -51,7 +51,7 @@ class BookDetailController extends GetxController {
     _book.refresh();
     _myBookResponse.refresh();
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

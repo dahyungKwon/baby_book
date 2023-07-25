@@ -63,7 +63,7 @@ class BabyDialogController extends GetxController {
 
     checkAdd();
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

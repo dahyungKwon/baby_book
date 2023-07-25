@@ -17,8 +17,7 @@ class PaymentScreen extends StatefulWidget {
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen>
-    with SingleTickerProviderStateMixin {
+class _PaymentScreenState extends State<PaymentScreen> with SingleTickerProviderStateMixin {
   final PageController _controller = PageController(
     initialPage: 0,
   );
@@ -49,20 +48,13 @@ class _PaymentScreenState extends State<PaymentScreen>
           bottomNavigationBar: continueButton(context),
           body: SafeArea(
             child: Container(
-              padding:
-                  EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+              padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
               child: Column(
                 children: [
                   getVerSpace(FetchPixels.getPixelHeight(20)),
                   gettoolbarMenu(context, "back.svg", () {
                     Constant.backToPrev(context);
-                  },
-                      title: "Proceed",
-                      
-                      weight: FontWeight.w900,
-                      istext: true,
-                      fontsize: 24,
-                      textColor: Colors.black),
+                  }, title: "Proceed", weight: FontWeight.w900, istext: true, fontsize: 24, textColor: Colors.black),
                   getVerSpace(FetchPixels.getPixelHeight(30)),
                   processTracker(),
                   getVerSpace(FetchPixels.getPixelHeight(30)),
@@ -129,7 +121,7 @@ class _PaymentScreenState extends State<PaymentScreen>
   //         onTap: (index) {
   //           _controller.animateToPage(
   //             index,
-  //             duration: const Duration(milliseconds: 400),
+  //             duration: const Duration(milliseconds: 500),
   //             curve: Curves.easeInOut,
   //           );
   //           position = index;
@@ -167,10 +159,8 @@ class _PaymentScreenState extends State<PaymentScreen>
           height: FetchPixels.getPixelHeight(52),
           width: FetchPixels.getPixelHeight(52),
           padding: EdgeInsets.all(FetchPixels.getPixelHeight(14)),
-          decoration: BoxDecoration(
-              color: procced,
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(50))),
+          decoration:
+              BoxDecoration(color: procced, borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(50))),
           child: getSvgImage("location_select.svg"),
         ),
         Expanded(
@@ -186,13 +176,9 @@ class _PaymentScreenState extends State<PaymentScreen>
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0.0, 4.0)),
+                BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
               ],
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(50))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(50))),
           child: getSvgImage("wallet.svg"),
         ),
         Expanded(
@@ -207,8 +193,7 @@ class _PaymentScreenState extends State<PaymentScreen>
           padding: EdgeInsets.all(FetchPixels.getPixelHeight(14)),
           decoration: BoxDecoration(
               border: Border.all(color: const Color(0xFFE5E8F1), width: 1),
-              borderRadius:
-                  BorderRadius.circular(FetchPixels.getPixelHeight(50))),
+              borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(50))),
           child: getSvgImage("check.svg"),
         ),
       ],

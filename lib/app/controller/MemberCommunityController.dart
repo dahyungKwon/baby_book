@@ -68,7 +68,7 @@ class MemberCommunityController extends GetxController with GetSingleTickerProvi
     widgetList[0].controller.getAllForInit(memberPostTypeList[0]);
 
     ///사용자경험 위해 0.2초 딜레이
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

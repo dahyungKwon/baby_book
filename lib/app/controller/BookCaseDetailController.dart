@@ -60,7 +60,7 @@ class BookCaseDetailController extends GetxController {
     _myBookResponse.refresh();
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

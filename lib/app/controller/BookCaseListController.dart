@@ -84,7 +84,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
     await getAllForInit(HoldType.all);
 
     ///사용자경험 위해 0.2초 딜레이
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }
@@ -112,7 +112,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
     _initList(holdType, list);
 
     ///사용자경험 위해 0.2초 딜레이
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

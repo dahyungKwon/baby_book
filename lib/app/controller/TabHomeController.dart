@@ -90,7 +90,7 @@ class TabHomeController extends GetxController {
     _initList(selectedCategoryType, list);
 
     ///사용자경험 위해 0.2초 딜레이
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

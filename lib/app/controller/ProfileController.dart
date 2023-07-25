@@ -58,7 +58,7 @@ class ProfileController extends GetxController {
     babyList = await BabyRepository.getBabyList(memberId: targetMemberId!);
 
     refresh();
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

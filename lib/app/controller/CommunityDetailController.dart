@@ -120,7 +120,7 @@ class CommunityDetailController extends GetxController {
       myPost = true;
     }
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }
@@ -192,7 +192,7 @@ class CommunityDetailController extends GetxController {
         _commentList.refresh();
         commentController.text = "";
         EasyLoading.dismiss();
-        Future.delayed(const Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           scrollController.animateTo(scrollController.position.maxScrollExtent,
               duration: const Duration(milliseconds: 700), curve: Curves.ease);
         });

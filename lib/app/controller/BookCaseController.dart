@@ -52,7 +52,7 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
     myBookCase = myId == memberId;
     widgetList = tabsList.map((e) => BookCaseListScreen(memberId: memberId, holdType: e)).toList();
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

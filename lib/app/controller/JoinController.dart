@@ -194,7 +194,7 @@ class JoinController extends GetxController {
   init() async {
     loading = true;
 
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
   }

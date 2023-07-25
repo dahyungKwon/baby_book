@@ -48,7 +48,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
             await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
               controller.exitModifyCommentMode();
               Get.back();
-              Future.delayed(const Duration(milliseconds: 200), () {
+              Future.delayed(const Duration(milliseconds: 500), () {
                 commentKeyboardDown(context);
               });
             }));
