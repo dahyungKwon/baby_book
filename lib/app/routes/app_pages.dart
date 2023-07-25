@@ -12,7 +12,7 @@ import '../view/card/card_screen.dart';
 import '../view/community/community_add_screen.dart';
 import '../view/community/community_detail_screen.dart';
 import '../view/home/address_screen.dart';
-import '../view/home/bookcase/book_case_detail_screen.dart';
+import '../view/home/book/book_detail_screen.dart';
 import '../view/home/bookcase/book_case_screen.dart';
 import '../view/home/cart_screen.dart';
 import '../view/home/category_screen.dart';
@@ -53,9 +53,9 @@ class AppPages {
     GetPage(name: Routes.communityAddPath, page: () => CommunityAddScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen(), transition: Transition.cupertino),
-    // GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.bookCasePath, page: () => BookCaseScreen(), transition: Transition.cupertino),
-    GetPage(name: Routes.bookCaseDetailPath, page: () => BookCaseDetailScreen(), transition: Transition.cupertino),
+    // GetPage(name: Routes.bookCaseDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.joinPath, page: () => JoinScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.servicePolicyPath, page: () => ServicePolicyScreen(), transition: Transition.cupertino),

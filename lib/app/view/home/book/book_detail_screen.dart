@@ -15,7 +15,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../base/color_data.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
-import '../../../controller/BookCaseDetailController.dart';
+import '../../../controller/BookDetailController.dart';
 import '../../../models/model_book_state.dart';
 import '../../../models/model_kakao_link_template.dart';
 import '../../../models/model_my_book_response.dart';
@@ -23,9 +23,9 @@ import '../../../repository/book_repository.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../home_screen.dart';
-import 'book_case_bottom_sheet.dart';
+import 'book_detail_bottom_sheet.dart';
 
-class BookCaseDetailScreen extends GetView<BookCaseDetailController> {
+class BookDetailScreen extends GetView<BookDetailController> {
   late final int? bookSetId;
   late final String? babyId;
   late final String? uniqueTag;
@@ -35,13 +35,13 @@ class BookCaseDetailScreen extends GetView<BookCaseDetailController> {
   late bool sharedMode;
   var f = NumberFormat('###,###,###,###');
 
-  BookCaseDetailScreen({super.key}) {
+  BookDetailScreen({super.key}) {
     bookSetId = int.parse(Get.parameters['bookSetId']!);
     babyId = Get.parameters['babyId'];
     uniqueTag = getUuid();
 
     Get.put(
-        BookCaseDetailController(
+        BookDetailController(
             bookRepository: BookRepository(),
             myBookRepository: MyBookRepository(),
             bookSetId: bookSetId!,
@@ -136,7 +136,7 @@ class BookCaseDetailScreen extends GetView<BookCaseDetailController> {
                   showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      builder: (_) => BookCaseBottomSheet(myBook: controller.myBook)).then((menu) {
+                      builder: (_) => BookDetailBottomSheet(myBook: controller.myBook)).then((menu) {
                     if (menu != null) {
                       switch (menu) {
                         case "책 공유하기":

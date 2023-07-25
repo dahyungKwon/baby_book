@@ -231,7 +231,7 @@ class TabHome extends GetView<TabHomeController> {
         itemBuilder: (context, index) {
           ModelBookResponse modelBookResponse = bookList[index];
           return buildBookListItem(modelBookResponse, context, index, () {
-            Get.toNamed(Routes.bookCaseDetailPath, parameters: {
+            Get.toNamed(Routes.bookDetailPath, parameters: {
               'bookSetId': modelBookResponse.modelBook.id.toString(),
               'babyId': member.selectedBabyId ?? ""
             });

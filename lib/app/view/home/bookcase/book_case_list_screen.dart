@@ -3,7 +3,7 @@ import 'package:baby_book/app/repository/baby_repository.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/view/home/book/UsedType.dart';
-import 'package:baby_book/app/view/home/bookcase/book_case_bottom_sheet.dart';
+import 'package:baby_book/app/view/home/book/book_detail_bottom_sheet.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
@@ -115,7 +115,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           itemBuilder: (context, index) {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
             return buildBookCaseItem(modelMyBookResponse, context, index, () {
-              Get.toNamed(Routes.bookCaseDetailPath, parameters: {
+              Get.toNamed(Routes.bookDetailPath, parameters: {
                 'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
                 'babyId': modelMyBookResponse.myBook.babyId
               });
