@@ -28,7 +28,7 @@ class SplashScreen extends StatelessWidget {
               {
                 String? bookSetId = value.query!["bookSetId"];
                 print("AppSchemeImpl bookSetId : $bookSetId");
-                Get.toNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
+                Get.toNamed(Routes.bookCaseDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
                 break;
               }
             case "COMMUNITY":

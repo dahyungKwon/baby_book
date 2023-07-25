@@ -114,7 +114,12 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           itemCount: controller.myBookResponseList.length,
           itemBuilder: (context, index) {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
-            return buildBookCaseItem(modelMyBookResponse, context, index, () {}, () {});
+            return buildBookCaseItem(modelMyBookResponse, context, index, () {
+              Get.toNamed(Routes.bookCaseDetailPath, parameters: {
+                'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
+                'babyId': modelMyBookResponse.myBook.babyId
+              });
+            }, () {});
           },
         ));
   }
@@ -296,11 +301,11 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                       modelMyBookResponse.myBook.reviewType == ReviewType.none
                           ? Container()
                           : getCustomFont(
-                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black54, 1,
+                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black87, 1,
                               fontWeight: FontWeight.w600),
                       modelMyBookResponse.myBook.usedType == UsedType.none
                           ? Container()
-                          : getCustomFont(" #${modelMyBookResponse.myBook.usedType.desc}구매", 12, Colors.black54, 1,
+                          : getCustomFont(" #${modelMyBookResponse.myBook.usedType.desc}구매", 12, Colors.black87, 1,
                               fontWeight: FontWeight.w600),
                     ],
                   ),

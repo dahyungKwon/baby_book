@@ -14,6 +14,7 @@ class ModelMyBook {
   String myBookId;
   int bookSetId;
   String memberId;
+  String babyId;
   HoldType holdType;
   int? inMonth = 0;
   int? outMonth = 0;
@@ -29,6 +30,7 @@ class ModelMyBook {
       {required this.myBookId,
       required this.bookSetId,
       required this.memberId,
+      required this.babyId,
       required this.holdType,
       this.inMonth,
       this.outMonth,
@@ -45,6 +47,7 @@ class ModelMyBook {
         myBookId: "",
         bookSetId: 0,
         memberId: "",
+        babyId: "",
         holdType: HoldType.none,
         inMonth: 0,
         outMonth: 0,
@@ -61,6 +64,7 @@ class ModelMyBook {
       : myBookId = json['myBookId'],
         bookSetId = json['bookSetId'],
         memberId = json['memberId'],
+        babyId = json['babyId'],
         holdType = HoldType.findByCode(json['holdType']),
         inMonth = json['inMonth'],
         outMonth = json['outMonth'],

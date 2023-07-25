@@ -4,16 +4,25 @@ import 'package:sizer/sizer.dart';
 import '../../../../base/resizer/fetch_pixels.dart';
 
 class BookCaseBottomSheet extends StatefulWidget {
-  BookCaseBottomSheet({Key? key}) : super(key: key);
+  bool myBook;
+
+  BookCaseBottomSheet({required this.myBook, Key? key}) : super(key: key);
 
   @override
-  State<BookCaseBottomSheet> createState() => _BookCaseBottomSheetState();
+  State<BookCaseBottomSheet> createState() => _BookCaseBottomSheetState(myBook);
 }
 
 class _BookCaseBottomSheetState extends State<BookCaseBottomSheet> {
-  List<String> menuList = ["수정하기", "삭제하기"];
+  late List<String> menuList;
+  bool myBook;
 
-  _BookCaseBottomSheetState();
+  _BookCaseBottomSheetState(this.myBook) {
+    if (myBook) {
+      menuList = ["책 공유하기", "경험 수정하기", "책장에서 삭제하기"];
+    } else {
+      menuList = ["책 공유하기"];
+    }
+  }
 
   @override
   void initState() {

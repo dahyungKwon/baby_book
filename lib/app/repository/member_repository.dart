@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 import '../models/model_member.dart';
 import '../models/model_refresh_accesstoken.dart';
+import '../routes/app_pages.dart';
 import '../view/login/gender_type.dart';
 
 class MemberRepository {
@@ -75,7 +77,7 @@ class MemberRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.loginPath);
       } else {
         throw Exception(response.data['body']['errorCode']);
       }
