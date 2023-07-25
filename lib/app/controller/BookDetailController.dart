@@ -39,6 +39,13 @@ class BookDetailController extends GetxController {
 
   set myBook(value) => _myBook.value = value;
 
+  //mybook
+  final _myBookContainerSwitch = true.obs;
+
+  get myBookContainerSwitch => _myBookContainerSwitch.value;
+
+  set myBookContainerSwitch(value) => _myBookContainerSwitch.value = value;
+
   BookDetailController(
       {required this.bookRepository, required this.myBookRepository, required this.bookSetId, this.babyId}) {
     assert(bookRepository != null);

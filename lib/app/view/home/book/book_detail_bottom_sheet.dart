@@ -18,7 +18,7 @@ class _BookDetailBottomSheetState extends State<BookDetailBottomSheet> {
 
   _BookDetailBottomSheetState(this.myBook) {
     if (myBook) {
-      menuList = ["책 공유하기", "경험 수정하기", "책장에서 삭제하기"];
+      menuList = ["책 공유하기", "책경험 수정하기", "책장에서 삭제하기"];
     } else {
       menuList = ["책 공유하기"];
     }

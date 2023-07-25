@@ -4,7 +4,7 @@ enum HoldType {
   all("ALL", "전체", Colors.black),
   plan("PLAN", "구매예정", Color(0xFFDAA520)),
   read("READ", "읽는중", Color(0xFF1E90FF)),
-  end("END", "방출", Color(0xFF778899)),
+  end("END", "방출", Color(0xFFD2691E)),
   none("NONE", "선택안함", Colors.black);
 
   final String code;
