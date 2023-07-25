@@ -324,7 +324,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
           controller.myBookContainerSwitch
               ? Container(
                   padding: EdgeInsets.only(
-                      top: FetchPixels.getPixelHeight(10),
+                      top: FetchPixels.getPixelHeight(0),
                       bottom: FetchPixels.getPixelHeight(10),
                       left: FetchPixels.getPixelWidth(20),
                       right: FetchPixels.getPixelWidth(20)),
