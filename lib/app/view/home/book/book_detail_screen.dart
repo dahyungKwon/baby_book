@@ -211,23 +211,6 @@ class BookDetailScreen extends GetView<BookDetailController> {
     }
   }
 
-  Expanded buildMainArea(BuildContext context, EdgeInsets edgeInsets, double defHorSpace) {
-    return Expanded(
-      flex: 1,
-      child: ListView(
-        primary: true,
-        shrinkWrap: true,
-        children: [
-          buildTop(context, edgeInsets),
-          Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
-          controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
-          controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
-          buildDown(edgeInsets, context),
-        ],
-      ),
-    );
-  }
-
   Widget buildTop(BuildContext context, EdgeInsets edgeInsets) {
     return Obx(() => Container(
           padding: EdgeInsets.only(
@@ -257,7 +240,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                           })
                         : Container()),
               ),
-              getVerSpace(FetchPixels.getPixelHeight(10)),
+              getVerSpace(FetchPixels.getPixelHeight(30)),
               Column(
                 children: [
                   getCustomFont(controller.book.modelBook.name ?? "", 22, Colors.black, 1, fontWeight: FontWeight.w700),
@@ -268,10 +251,111 @@ class BookDetailScreen extends GetView<BookDetailController> {
                   //     width: FetchPixels.getPixelHeight(24), height: FetchPixels.getPixelHeight(24))
                 ],
               ),
-              getVerSpace(FetchPixels.getPixelHeight(20)),
+              getVerSpace(FetchPixels.getPixelHeight(30)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: FetchPixels.getPixelHeight(100),
+                      height: FetchPixels.getPixelHeight(80),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          getSvgImage("book.svg",
+                              width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "읽는중" ?? "",
+                            12,
+                            Colors.black54,
+                            1,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "13명" ?? "",
+                            16,
+                            Colors.black,
+                            1,
+                            fontWeight: FontWeight.w600,
+                          )
+                        ],
+                      )),
+                  Container(
+                      width: FetchPixels.getPixelHeight(100),
+                      height: FetchPixels.getPixelHeight(80),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          getSvgImage("one_comment.svg",
+                              width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "한줄코멘트" ?? "",
+                            12,
+                            Colors.black54,
+                            1,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "24개" ?? "",
+                            16,
+                            Colors.black,
+                            1,
+                            fontWeight: FontWeight.w600,
+                          )
+                        ],
+                      )),
+                  Container(
+                      width: FetchPixels.getPixelHeight(100),
+                      height: FetchPixels.getPixelHeight(80),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          getSvgImage("chatbubbles.svg",
+                              width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "커뮤니티글" ?? "",
+                            12,
+                            Colors.black54,
+                            1,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          getCustomFont(
+                            "10개" ?? "",
+                            16,
+                            Colors.black,
+                            1,
+                            fontWeight: FontWeight.w600,
+                          )
+                        ],
+                      ))
+                ],
+              ),
+              getVerSpace(FetchPixels.getPixelHeight(10)),
             ],
           ),
         ));
+  }
+
+  Expanded buildMainArea(BuildContext context, EdgeInsets edgeInsets, double defHorSpace) {
+    return Expanded(
+      flex: 1,
+      child: ListView(
+        primary: true,
+        shrinkWrap: true,
+        children: [
+          buildTop(context, edgeInsets),
+          Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
+          controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
+          controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
+          buildDown(edgeInsets, context),
+        ],
+      ),
+    );
   }
 
   Widget buildMyBook(BuildContext context, EdgeInsets edgeInsets) {
