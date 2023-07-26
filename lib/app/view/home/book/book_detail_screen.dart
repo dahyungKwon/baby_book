@@ -287,7 +287,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                       color: Colors.white,
                       child: Column(
                         children: [
-                          getSvgImage("one_comment.svg",
+                          getSvgImage("one_comment_black.svg",
                               width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
                           getVerSpace(FetchPixels.getPixelHeight(5)),
                           getCustomFont(
@@ -397,7 +397,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             20,
                             controller.myBookResponse.myBook.holdType.color,
                             1,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ],
                       ),
@@ -430,13 +430,13 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               // ),
                               getVerSpace(FetchPixels.getPixelHeight(10)),
                               Row(children: [
-                                getSvgImage("book.svg",
+                                getSvgImage("detail_noti.svg",
                                     width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                getHorSpace(FetchPixels.getPixelHeight(5)),
+                                getHorSpace(FetchPixels.getPixelHeight(2)),
                                 getCustomFont(
                                   "상세" ?? "",
-                                  15,
-                                  Colors.black87,
+                                  14,
+                                  Colors.black54,
                                   1,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -451,22 +451,22 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                           controller.myBookResponse.myBook.inMonth != 0
                                               ? Row(
                                                   children: [
-                                                    getCustomFont("시작", 15, secondMainColor, 1,
-                                                        fontWeight: FontWeight.w700),
-                                                    getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월", 15,
-                                                        Colors.black45, 1,
-                                                        fontWeight: FontWeight.w700),
+                                                    getCustomFont("시작", 16, secondMainColor, 1,
+                                                        fontWeight: FontWeight.w600),
+                                                    getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월", 16,
+                                                        Colors.black87, 1,
+                                                        fontWeight: FontWeight.w600),
                                                   ],
                                                 )
                                               : Container(),
                                           controller.myBookResponse.myBook.outMonth != 0
                                               ? Row(
                                                   children: [
-                                                    getCustomFont("   종료", 15, secondMainColor, 1,
-                                                        fontWeight: FontWeight.w700),
-                                                    getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월", 15,
-                                                        Colors.black45, 1,
-                                                        fontWeight: FontWeight.w700)
+                                                    getCustomFont("   종료", 16, secondMainColor, 1,
+                                                        fontWeight: FontWeight.w600),
+                                                    getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월", 16,
+                                                        Colors.black87, 1,
+                                                        fontWeight: FontWeight.w600)
                                                   ],
                                                 )
                                               : Container(),
@@ -480,24 +480,24 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                   controller.myBookResponse.myBook.reviewType == ReviewType.none
                                       ? Container()
                                       : getCustomFont("#${controller.myBookResponse.myBook.reviewType.desc}  " ?? "",
-                                          15, Colors.black54, 1,
+                                          16, Colors.black87, 1,
                                           fontWeight: FontWeight.w600),
                                   controller.myBookResponse.myBook.usedType == UsedType.none
                                       ? Container()
-                                      : getCustomFont(" #${controller.myBookResponse.myBook.usedType.desc}구매", 15,
-                                          Colors.black54, 1,
+                                      : getCustomFont(
+                                          "#${controller.myBookResponse.myBook.usedType.desc}구매", 16, Colors.black87, 1,
                                           fontWeight: FontWeight.w600),
                                 ],
                               ),
                               getVerSpace(FetchPixels.getPixelHeight(30)),
                               Row(children: [
-                                getSvgImage("one_comment.svg",
+                                getSvgImage("one_comment_black_a2a2a2.svg",
                                     width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                getHorSpace(FetchPixels.getPixelHeight(5)),
+                                getHorSpace(FetchPixels.getPixelHeight(2)),
                                 getCustomFont(
                                   "한줄 코멘트" ?? "",
-                                  15,
-                                  Colors.black87,
+                                  14,
+                                  Colors.black54,
                                   1,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -505,10 +505,10 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               getVerSpace(FetchPixels.getPixelHeight(5)),
                               getCustomFont(
                                 "${controller.myBookResponse.myBook.comment}  " ?? "",
-                                15,
-                                Colors.black54,
+                                16,
+                                Colors.black87,
                                 1,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                               ),
                               getVerSpace(FetchPixels.getPixelHeight(10)),
                             ],

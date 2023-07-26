@@ -251,19 +251,19 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                               modelMyBookResponse.myBook.inMonth != 0
                                   ? Row(
                                       children: [
-                                        getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w700),
-                                        getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black45, 1,
-                                            fontWeight: FontWeight.w700),
+                                        getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
+                                        getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black87, 1,
+                                            fontWeight: FontWeight.w600),
                                       ],
                                     )
                                   : Container(),
                               modelMyBookResponse.myBook.outMonth != 0
                                   ? Row(
                                       children: [
-                                        getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w700),
+                                        getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
                                         getCustomFont(
-                                            " ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black45, 1,
-                                            fontWeight: FontWeight.w700)
+                                            " ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black87, 1,
+                                            fontWeight: FontWeight.w600)
                                       ],
                                     )
                                   : Container(),
@@ -301,11 +301,11 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                       modelMyBookResponse.myBook.reviewType == ReviewType.none
                           ? Container()
                           : getCustomFont(
-                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 12, Colors.black87, 1,
+                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 11, Colors.black87, 1,
                               fontWeight: FontWeight.w600),
                       modelMyBookResponse.myBook.usedType == UsedType.none
                           ? Container()
-                          : getCustomFont(" #${modelMyBookResponse.myBook.usedType.desc}구매", 12, Colors.black87, 1,
+                          : getCustomFont("#${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
                               fontWeight: FontWeight.w600),
                     ],
                   ),

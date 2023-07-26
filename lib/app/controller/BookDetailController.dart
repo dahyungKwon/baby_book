@@ -32,14 +32,14 @@ class BookDetailController extends GetxController {
 
   set loading(value) => _loading.value = value;
 
-  //mybook
+  //내책에 포함된건지 여부
   final _myBook = false.obs;
 
   get myBook => _myBook.value;
 
   set myBook(value) => _myBook.value = value;
 
-  //mybook
+  //책경험컨테이너 폴딩여부 디폴트 열림
   final _myBookContainerSwitch = true.obs;
 
   get myBookContainerSwitch => _myBookContainerSwitch.value;
