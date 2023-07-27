@@ -9,17 +9,23 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
+import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../base/color_data.dart';
+import '../../../../base/pref_data.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
 import '../../../controller/BookDetailController.dart';
 import '../../../models/model_book_state.dart';
+import '../../../models/model_comment_response.dart';
 import '../../../models/model_kakao_link_template.dart';
 import '../../../models/model_my_book_response.dart';
 import '../../../repository/book_repository.dart';
+import '../../../repository/comment_repository.dart';
+import '../../../routes/app_pages.dart';
+import '../../community/comment_bottom_sheet.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../home_screen.dart';
@@ -46,6 +52,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
         BookDetailController(
             bookRepository: BookRepository(),
             myBookRepository: MyBookRepository(),
+            commentRepository: CommentRepository(),
             bookSetId: bookSetId!,
             babyId: babyId),
         tag: uniqueTag);
@@ -299,7 +306,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                           ),
                           getVerSpace(FetchPixels.getPixelHeight(5)),
                           getCustomFont(
-                            "24개" ?? "",
+                            "${controller.commentList.length}개" ?? "",
                             16,
                             Colors.black,
                             1,
@@ -352,7 +359,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
           Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
           controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
           controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
-          buildDown(edgeInsets, context),
+          controller.hasAward ? buildAward(context, edgeInsets) : Container(),
+          controller.hasAward
+              ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8))
+              : Container(),
+          buildBookInfo(context, edgeInsets),
+          Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
+          buildOneComment(context, edgeInsets),
+          Container(height: FetchPixels.getPixelHeight(150), color: Color(0xFFF5F6F8)),
+          // buildDown(edgeInsets, context),
         ],
       ),
     );
@@ -377,7 +392,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                       left: FetchPixels.getPixelWidth(20),
                       right: FetchPixels.getPixelWidth(20)),
                   color: Colors.white,
-                  height: FetchPixels.getPixelHeight(45),
+                  height: FetchPixels.getPixelHeight(50),
                   child: Center(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -392,13 +407,6 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             fontWeight: FontWeight.w500,
                           ),
                           getHorSpace(FetchPixels.getPixelHeight(5)),
-                          getCustomFont(
-                            "(${controller.myBookResponse.myBook.holdType.desc})",
-                            20,
-                            controller.myBookResponse.myBook.holdType.color,
-                            1,
-                            fontWeight: FontWeight.w600,
-                          ),
                         ],
                       ),
                       getSvgImage(controller.myBookContainerSwitch ? "down_arrow.svg" : "up_arrow.svg",
@@ -420,84 +428,79 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // getVerSpace(FetchPixels.getPixelHeight(10)),
-                              // getCustomFont(
-                              //   controller.myBookResponse.myBook.holdType.desc,
-                              //   18,
-                              //   controller.myBookResponse.myBook.holdType.color,
-                              //   1,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
-                              getVerSpace(FetchPixels.getPixelHeight(10)),
-                              Row(children: [
-                                getSvgImage("detail_noti.svg",
-                                    width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                getHorSpace(FetchPixels.getPixelHeight(2)),
-                                getCustomFont(
-                                  "상세" ?? "",
-                                  14,
-                                  Colors.black54,
-                                  1,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ]),
-                              getVerSpace(FetchPixels.getPixelHeight(5)),
-                              controller.myBookResponse.myBook.inMonth == 0
-                                  ? Container()
-                                  : Column(children: [
-                                      // getVerSpace(FetchPixels.getPixelHeight(10)),
-                                      Row(
-                                        children: [
-                                          controller.myBookResponse.myBook.inMonth != 0
-                                              ? Row(
-                                                  children: [
-                                                    getCustomFont("시작", 16, secondMainColor, 1,
-                                                        fontWeight: FontWeight.w600),
-                                                    getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월", 16,
-                                                        Colors.black87, 1,
-                                                        fontWeight: FontWeight.w600),
-                                                  ],
-                                                )
-                                              : Container(),
-                                          controller.myBookResponse.myBook.outMonth != 0
-                                              ? Row(
-                                                  children: [
-                                                    getCustomFont("   종료", 16, secondMainColor, 1,
-                                                        fontWeight: FontWeight.w600),
-                                                    getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월", 16,
-                                                        Colors.black87, 1,
-                                                        fontWeight: FontWeight.w600)
-                                                  ],
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
-                                      // getVerSpace(FetchPixels.getPixelHeight(7)),
-                                    ]),
+                              getCustomFont(
+                                controller.myBookResponse.myBook.holdType.desc,
+                                16,
+                                controller.myBookResponse.myBook.holdType.color,
+                                1,
+                                fontWeight: FontWeight.w600,
+                              ),
                               getVerSpace(FetchPixels.getPixelHeight(5)),
                               Row(
                                 children: [
                                   controller.myBookResponse.myBook.reviewType == ReviewType.none
                                       ? Container()
                                       : getCustomFont("#${controller.myBookResponse.myBook.reviewType.desc}  " ?? "",
-                                          16, Colors.black87, 1,
+                                          16, Colors.black, 1,
                                           fontWeight: FontWeight.w600),
                                   controller.myBookResponse.myBook.usedType == UsedType.none
                                       ? Container()
                                       : getCustomFont(
-                                          "#${controller.myBookResponse.myBook.usedType.desc}구매", 16, Colors.black87, 1,
+                                          "#${controller.myBookResponse.myBook.usedType.desc}구매", 16, Colors.black, 1,
                                           fontWeight: FontWeight.w600),
                                 ],
                               ),
-                              getVerSpace(FetchPixels.getPixelHeight(30)),
+                              getVerSpace(FetchPixels.getPixelHeight(20)),
+                              Row(
+                                children: [
+                                  getSvgImage("date.svg",
+                                      width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                                  getHorSpace(FetchPixels.getPixelHeight(5)),
+                                  getCustomFont("날짜", 14, Colors.black87, 1, fontWeight: FontWeight.w600),
+                                ],
+                              ),
+                              getVerSpace(FetchPixels.getPixelHeight(5)),
+                              controller.myBookResponse.myBook.inMonth == 0
+                                  ? Container()
+                                  : Column(children: [
+                                      if (controller.myBookResponse.myBook.inMonth != 0) ...[
+                                        Row(
+                                          children: [
+                                            controller.myBookResponse.myBook.inMonth != 0
+                                                ? Row(
+                                                    children: [
+                                                      getCustomFont("시작", 16, secondMainColor, 1,
+                                                          fontWeight: FontWeight.w600),
+                                                      getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월",
+                                                          16, Colors.black, 1,
+                                                          fontWeight: FontWeight.w600),
+                                                    ],
+                                                  )
+                                                : Container(),
+                                            controller.myBookResponse.myBook.outMonth != 0
+                                                ? Row(
+                                                    children: [
+                                                      getCustomFont("   종료", 16, secondMainColor, 1,
+                                                          fontWeight: FontWeight.w600),
+                                                      getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월",
+                                                          16, Colors.black, 1,
+                                                          fontWeight: FontWeight.w600)
+                                                    ],
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      ],
+                                    ]),
+                              getVerSpace(FetchPixels.getPixelHeight(20)),
                               Row(children: [
-                                getSvgImage("one_comment_black_a2a2a2.svg",
+                                getSvgImage("memo.svg",
                                     width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                getHorSpace(FetchPixels.getPixelHeight(2)),
+                                getHorSpace(FetchPixels.getPixelHeight(5)),
                                 getCustomFont(
-                                  "한줄 코멘트" ?? "",
+                                  "메모" ?? "",
                                   14,
-                                  Colors.black54,
+                                  Colors.black87,
                                   1,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -506,7 +509,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               getCustomFont(
                                 "${controller.myBookResponse.myBook.comment}  " ?? "",
                                 16,
-                                Colors.black87,
+                                Colors.black,
                                 1,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -521,167 +524,438 @@ class BookDetailScreen extends GetView<BookDetailController> {
         ]));
   }
 
-  Widget buildDown(EdgeInsets edgeInsets, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        getVerSpace(FetchPixels.getPixelHeight(20)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-              onTap: () {
-                // if (!isDetailMenu!) {
-                //   setState(() {
-                //     isDetailMenu = true;
-                //   });
-                // }
-              },
-              child: getCustomFont(
-                "상세정보",
-                18,
-                isDetailMenu! ? Colors.black : textColor,
-                1,
-                fontWeight: isDetailMenu! ? FontWeight.w600 : FontWeight.w500,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // if (isDetailMenu!) {
-                //   setState(() {
-                //     isDetailMenu = false;
-                //   });
-                // }
-              },
-              child: getCustomFont(
-                "게시글",
-                18,
-                isDetailMenu! ? textColor : Colors.black,
-                1,
-                fontWeight: isDetailMenu! ? FontWeight.w500 : FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        getVerSpace(FetchPixels.getPixelHeight(10)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            AnimatedContainer(
-              height: 1.0,
-              width: FetchPixels.width / 2,
-              decoration: BoxDecoration(
-                color: isDetailMenu! ? Colors.black : Colors.black26,
-              ),
-              duration: const Duration(milliseconds: 300),
-            ),
-            AnimatedContainer(
-              height: 1.0,
-              width: FetchPixels.width / 2,
-              curve: Curves.decelerate,
-              decoration: BoxDecoration(
-                color: isDetailMenu! ? Colors.black26 : Colors.black,
-              ),
-              duration: const Duration(milliseconds: 300),
-            ),
-          ],
-        ),
-        isDetailMenu! ? renderDetailMenu() : renderPostMenu(),
-      ],
-    );
-  }
-
-  Widget renderBookState(ModelBookState state, bool isSelected) {
-    return Container(
-      child: getCustomFont(
-        state.name(),
-        18,
-        isSelected ? success : textColor,
-        1,
-        fontWeight: FontWeight.w500,
-      ),
-    );
-  }
-
-  Widget renderDetailMenu() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            renderDetailRow("정가", "${f.format(controller.book.modelBook.amount ?? 0)} 원"),
-            renderDetailRow("공구가", "${f.format(controller.book.modelBook.saleAmount ?? 0)} 원"),
-            renderDetailRow("트렌드랭킹", "1위"),
-            renderDetailRow("카테고리", controller.book.getCategoryType().desc),
-            renderDetailRow("구성", controller.book.modelBook.configuration),
-            renderDetailRow("공식페이지", controller.book.modelPublisher.publisherWebUrl, isLink: true),
-            // renderDetailRow("비교전집", "영아다중(프뢰벨), 핀덴베베(한솔)"),
-            // renderDetailRow("개정판별 히스토리", ""),
-            // Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: getCustomFont("소개영상", 16, Colors.black54, 1, fontWeight: FontWeight.w600),
-            // ),
-            getVerSpace(FetchPixels.getPixelHeight(10)),
-            // YoutubePlayer(
-            //   key: ObjectKey(youtubeController),
-            //   controller: youtubeController,
-            //   bottomActions: [
-            //     CurrentPosition(),
-            //     const SizedBox(width: 10.0),
-            //     ProgressBar(isExpanded: true),
-            //     const SizedBox(width: 10.0),
-            //     RemainingDuration(),
-            //     FullScreenButton(),
-            //   ],
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget renderPostMenu() {
-    return Container();
-  }
-
-  Widget renderDetailRow(String name, String value, {bool isLink = false}) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: (FetchPixels.width - 36) * 0.3,
-              child: getCustomFont(name, 16, Colors.black54, 1, fontWeight: FontWeight.w600),
-            ),
-            if (!isLink)
-              Container(
-                width: (FetchPixels.width - 36) * 0.7,
-                child: getCustomFont(value, 16, Colors.black, 1, fontWeight: FontWeight.w600),
-              ),
-            if (isLink)
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    final url = Uri.parse(
-                      value,
-                    );
-                    if (await canLaunchUrl(url)) {
-                      launchUrl(url);
-                    } else {
-                      // ignore: avoid_print
-                      print("Can't launch $url");
-                    }
-                  },
-                  child: Text(
-                    overflow: TextOverflow.ellipsis,
-                    value,
+  Widget buildAward(BuildContext context, EdgeInsets edgeInsets) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      GestureDetector(
+          onTap: () {
+            // if (controller.myBookContainerSwitch) {
+            //   controller.myBookContainerSwitch = false;
+            // } else {
+            //   controller.myBookContainerSwitch = true;
+            // }
+          },
+          child: Container(
+              margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5), bottom: FetchPixels.getPixelHeight(5)),
+              padding: EdgeInsets.only(
+                  top: FetchPixels.getPixelHeight(10),
+                  bottom: FetchPixels.getPixelHeight(10),
+                  left: FetchPixels.getPixelWidth(20),
+                  right: FetchPixels.getPixelWidth(20)),
+              color: Colors.white,
+              height: FetchPixels.getPixelHeight(50),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      getCustomFont(
+                        "수상",
+                        20,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      getHorSpace(FetchPixels.getPixelHeight(5)),
+                    ],
                   ),
-                ),
-              ),
-          ],
+                  // getSvgImage(controller.myBookContainerSwitch ? "down_arrow.svg" : "up_arrow.svg",
+                  //     height: FetchPixels.getPixelHeight(20), width: FetchPixels.getPixelHeight(20)),
+                ],
+              )))),
+      Container(
+          padding: EdgeInsets.only(
+              top: FetchPixels.getPixelHeight(0),
+              bottom: FetchPixels.getPixelHeight(10),
+              left: FetchPixels.getPixelWidth(20),
+              right: FetchPixels.getPixelWidth(20)),
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Row(children: [
+                    getSvgImage("award.svg",
+                        width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                    getHorSpace(FetchPixels.getPixelHeight(5)),
+                    getCustomFont(
+                      "18개월 최고 추천책" ?? "",
+                      16,
+                      Colors.black,
+                      1,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ]),
+                  getVerSpace(FetchPixels.getPixelHeight(10))
+                ],
+              )
+            ],
+          ))
+    ]);
+  }
+
+  Widget buildBookInfo(BuildContext context, EdgeInsets edgeInsets) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      GestureDetector(
+          onTap: () {
+            if (controller.bookInfoContainer) {
+              controller.bookInfoContainer = false;
+            } else {
+              controller.bookInfoContainer = true;
+            }
+          },
+          child: Container(
+              margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5), bottom: FetchPixels.getPixelHeight(5)),
+              padding: EdgeInsets.only(
+                  top: FetchPixels.getPixelHeight(10),
+                  bottom: FetchPixels.getPixelHeight(10),
+                  left: FetchPixels.getPixelWidth(20),
+                  right: FetchPixels.getPixelWidth(20)),
+              color: Colors.white,
+              height: FetchPixels.getPixelHeight(50),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      getCustomFont(
+                        "책소개",
+                        20,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      getHorSpace(FetchPixels.getPixelHeight(5)),
+                    ],
+                  ),
+                  getSvgImage(controller.bookInfoContainer ? "down_arrow.svg" : "up_arrow.svg",
+                      height: FetchPixels.getPixelHeight(20), width: FetchPixels.getPixelHeight(20)),
+                ],
+              )))),
+      controller.bookInfoContainer
+          ? Container(
+              padding: EdgeInsets.only(
+                  top: FetchPixels.getPixelHeight(0),
+                  bottom: FetchPixels.getPixelHeight(10),
+                  left: FetchPixels.getPixelWidth(20),
+                  right: FetchPixels.getPixelWidth(20)),
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // getVerSpace(FetchPixels.getPixelHeight(5)),
+                      buildBookInfoRow("정가", "${f.format(controller.book.modelBook.amount ?? 0)}원"),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      controller.book.modelBook.saleAmount > 0
+                          ? buildBookInfoRow("공구가", "${f.format(controller.book.modelBook.saleAmount ?? 0)}원")
+                          : buildBookInfoRow("공구가", "올해 공구 정보가 없습니다."),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      buildBookInfoRow("카테고리", controller.book.getCategoryType().desc),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      // buildBookInfoRow("카테고리랭킹", "1위"),
+                      // getVerSpace(FetchPixels.getPixelHeight(10)),
+                      (controller.book.getWebUrl() == null || controller.book.getWebUrl()!.isEmpty)
+                          ? buildBookInfoRow("공식페이지", "제공되는 홈페이지가 없습니다.")
+                          : buildBookInfoRow("공식페이지", "바로가기", link: controller.book.getWebUrl()),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      buildBookInfoRow("구성", controller.book.modelBook.configuration,
+                          valueTextSize: 14, valueLength: 8),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                    ],
+                  )
+                ],
+              ))
+          : Container()
+    ]);
+  }
+
+  Widget buildBookInfoRow(String title, String value,
+      {String? link, double? titleTextSize, int? titleLength, double? valueTextSize, int? valueLength}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 25.w,
+          child: getCustomFont(
+            title ?? "",
+            titleTextSize ?? 16,
+            Colors.black54,
+            titleLength ?? 1,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        getVerSpace(FetchPixels.getPixelHeight(10)),
+        getHorSpace(FetchPixels.getPixelHeight(10)),
+        link != null
+            ? GestureDetector(
+                onTap: () async {
+                  final url = Uri.parse(
+                    link,
+                  );
+                  if (await canLaunchUrl(url)) {
+                    launchUrl(url);
+                  } else {
+                    // ignore: avoid_print
+                    Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
+                  }
+                },
+                child: SizedBox(
+                    width: 55.w,
+                    child: getCustomFont(
+                      value ?? "",
+                      valueTextSize ?? 16,
+                      Colors.black,
+                      valueLength ?? 3,
+                      fontWeight: FontWeight.w600,
+                    )),
+              )
+            : SizedBox(
+                width: 55.w,
+                child: getCustomFont(
+                  value ?? "",
+                  valueTextSize ?? 16,
+                  Colors.black,
+                  valueLength ?? 3,
+                  fontWeight: FontWeight.w600,
+                )),
       ],
     );
+  }
+
+  Widget buildOneComment(BuildContext context, EdgeInsets edgeInsets) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      GestureDetector(
+          onTap: () {
+            print("comment tab");
+            // if (controller.bookInfoContainer) {
+            //   controller.bookInfoContainer = false;
+            // } else {
+            //   controller.bookInfoContainer = true;
+            // }
+          },
+          child: Container(
+              margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5), bottom: FetchPixels.getPixelHeight(5)),
+              padding: EdgeInsets.only(
+                  top: FetchPixels.getPixelHeight(10),
+                  bottom: FetchPixels.getPixelHeight(10),
+                  left: FetchPixels.getPixelWidth(20),
+                  right: FetchPixels.getPixelWidth(20)),
+              color: Colors.white,
+              height: FetchPixels.getPixelHeight(50),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      getCustomFont(
+                        "한줄코멘트",
+                        20,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      getHorSpace(FetchPixels.getPixelHeight(5)),
+                      getCustomFont(
+                        "${controller.commentList.length}개",
+                        20,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  getSvgImage("more_comment.svg",
+                      height: FetchPixels.getPixelHeight(20), width: FetchPixels.getPixelHeight(20)),
+                ],
+              )))),
+      controller.commentList.isEmpty ? nullListView(context) : buildComment(context, controller.commentList)
+    ]);
+  }
+
+  Wrap buildComment(BuildContext context, List<ModelCommentResponse> commentList) {
+    List<ModelCommentResponse> list = commentList.length > 3 ? commentList.sublist(0, 3) : commentList;
+    return Wrap(
+        direction: Axis.vertical,
+        // 정렬 방향
+        alignment: WrapAlignment.start,
+        children: list
+            .map<Widget>((comment) => Wrap(
+                direction: Axis.vertical,
+                // 정렬 방향
+                alignment: WrapAlignment.start,
+                children: [mainComment(context, comment), replyComment(context, comment)]))
+            .toList());
+  }
+
+  Container mainComment(BuildContext context, ModelCommentResponse comment) {
+    return Container(
+        width: 100.w,
+        padding:
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
+        decoration: const BoxDecoration(
+            color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
+        child: innerComment(context, comment, Colors.white));
+  }
+
+  Container replyComment(BuildContext context, ModelCommentResponse parentComment) {
+    return Container(
+        color: parentComment.childComments.isEmpty ? backGroundColor : Color(0xfff4f4f4),
+        child: Column(
+            children: parentComment.childComments
+                .map<Widget>((comment) => Container(
+                    width: 100.w,
+                    margin: EdgeInsets.only(left: FetchPixels.getPixelWidth(40)),
+                    padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(60)),
+                    decoration: const BoxDecoration(
+                        color: Color(0xfff4f4f4),
+                        border: Border(bottom: BorderSide(color: Color(0xffe5e4e4), width: 0.8))),
+                    child: innerComment(context, comment, const Color(0xfff4f4f4))))
+                .toList()));
+  }
+
+  Column innerComment(BuildContext context, ModelCommentResponse comment, Color commentMenuBtnColor) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+      getVerSpace(FetchPixels.getPixelHeight(10)),
+      GestureDetector(
+          onTap: () async {
+            String? myId = await PrefData.getMemberId();
+            if (myId == comment.comment.memberId) {
+              Get.offAllNamed(Routes.tabProfilePath);
+            } else {
+              Get.toNamed(Routes.profilePath, parameters: {'memberId': comment.comment.memberId});
+            }
+          },
+          child: Row(children: [
+            getCustomFont(comment.commentWriterNickName ?? "", 13, Colors.blueGrey, 1, fontWeight: FontWeight.w500),
+            getCustomFont(comment.myComment ? "*" : "", 13, Colors.red, 1, fontWeight: FontWeight.w400)
+          ])),
+      getVerSpace(FetchPixels.getPixelHeight(7)),
+      getCustomFont(comment.comment.body ?? "", 15, comment.deleted ? Colors.black45 : Colors.black, 20,
+          fontWeight: FontWeight.w400, txtHeight: 1.5),
+      getVerSpace(FetchPixels.getPixelHeight(5)),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Row(children: [
+          getCustomFont(
+              "${DateFormat('yyyy.MM.dd. HH:mm').format(comment.comment.updatedAt!)}      ${comment.timeDiffForUi}",
+              12,
+              Colors.black54,
+              1,
+              fontWeight: FontWeight.w400),
+          getHorSpace(FetchPixels.getPixelHeight(10)),
+          // getSimpleTextButton("답글 쓰기", 12, Colors.black54, commentMenuBtnColor, FontWeight.w400,
+          //     FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
+          // comment.comment.commentParentId != null
+          //     ? Get.toNamed(
+          //         "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentParentId}")
+          //     : Get.toNamed(
+          //         "${Routes.commentDetailPath}?postId=${controller.postId}&commentId=${comment.comment.commentId}");
+          // })
+        ]),
+        Container(
+          width: FetchPixels.getPixelHeight(50),
+          height: FetchPixels.getPixelHeight(30),
+        )
+        // comment.deleted || !comment.myComment
+        //     ? Container()
+        //     : getSimpleImageButton(
+        //         "ellipsis_horizontal_outline_comment.svg",
+        //         FetchPixels.getPixelHeight(50),
+        //         FetchPixels.getPixelHeight(30),
+        //         commentMenuBtnColor,
+        //         FetchPixels.getPixelHeight(15),
+        //         FetchPixels.getPixelHeight(15),
+        //         () {
+        //           showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
+        //               .then((menu) {
+        //             if (menu != null) {
+        //               switch (menu) {
+        //                 case "수정하기":
+        //                   {
+        //                     clickedModifyComment(context, comment);
+        //                     // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+        //                     break;
+        //                   }
+        //                 case "삭제하기":
+        //                   {
+        //                     clickedRemoveComment(comment);
+        //                     break;
+        //                   }
+        //               }
+        //               print(menu);
+        //               // controller.postType = selectedPostType;
+        //             }
+        //           });
+        //         },
+        //       )
+      ]),
+      getVerSpace(FetchPixels.getPixelHeight(10))
+    ]);
+  }
+
+  Column nullListView(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
+        getVerSpace(FetchPixels.getPixelHeight(20)),
+        getCustomFont("한줄 코멘트를 등록해주세요.", 16, Colors.black, 1, fontWeight: FontWeight.w600),
+        getVerSpace(FetchPixels.getPixelHeight(10)),
+        getCustomFont(
+          "여러분의 소중한 경험을 공유해주세요.",
+          14,
+          Colors.black45,
+          1,
+          fontWeight: FontWeight.w400,
+        ),
+        getVerSpace(FetchPixels.getPixelHeight(10)),
+        getButton(context, backGroundColor, "코멘트 쓰기", Colors.black87, () {
+          // Get.toNamed(
+          //     "${Routes.commentDetailPath}?commentTargetId=${controller.bookSetCommentId}&commentId=${comment.comment.commentId}");
+        }, 14,
+            weight: FontWeight.w600,
+            buttonHeight: FetchPixels.getPixelHeight(30),
+            insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(120)),
+            borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
+            isBorder: true,
+            borderColor: Colors.grey,
+            borderWidth: 1.5),
+        getVerSpace(FetchPixels.getPixelHeight(20)),
+      ],
+    );
+  }
+
+  clickedModifyComment(BuildContext context, ModelCommentResponse comment) async {
+    if (comment.deleted) {
+      Get.dialog(ErrorDialog("삭제된 댓글은 수정할 수 없습니다."));
+      return;
+    }
+    // controller.commentModify(comment);
+    // controller.executeModifyCommentMode(comment).then((value) => commentKeyboardUp(context));
+  }
+
+  clickedRemoveComment(ModelCommentResponse comment) async {
+    if (comment.deleted) {
+      Get.dialog(ErrorDialog("이미 삭제된 댓글입니다."));
+      return;
+    }
+
+    // bool result = await Get.dialog(ReConfirmDialog("댓글을 삭제 하시겠습니까?", "삭제", "취소", () async {
+    //   controller.removeComment(comment.comment.commentId).then((result) => Get.back(result: result));
+    // }));
+    //
+    // if (result) {
+    //   controller.getComment();
+    // } else {
+    //   Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
+    // }
+  }
+
+  commentKeyboardUp(BuildContext context) {
+    // FocusScope.of(context)?.requestFocus(commentFocusNode);
+  }
+
+  commentKeyboardDown(BuildContext context) {
+    FocusScope.of(context).unfocus();
   }
 }

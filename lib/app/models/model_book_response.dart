@@ -58,4 +58,13 @@ class ModelBookResponse {
   String getPlaceHolderImg() {
     return "assets/images/book_placeholder.png";
   }
+
+  /// webUrl을 기본적으로 리턴 , 없으면 출판사 주소 전달
+  String? getWebUrl() {
+    if (modelBook.introduceWebUrl == null || modelBook.introduceWebUrl!.isEmpty) {
+      return modelPublisher.publisherWebUrl;
+    } else {
+      return modelBook.introduceWebUrl;
+    }
+  }
 }

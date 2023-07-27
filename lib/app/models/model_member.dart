@@ -44,8 +44,8 @@ class ModelMember {
         snsLoginId = json['snsLoginId'],
         accessToken = json['accessToken'],
         refreshToken = json['refreshToken'],
-        createdAt = DateTime.tryParse(json['createdAt']),
-        updatedAt = DateTime.tryParse(json['updatedAt']),
+        createdAt = json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
+        updatedAt = json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
         allAgreed = json['allAgreed'] ?? false,
         gender = json['gender'] != null ? GenderType.findByCode(json['gender']) : GenderType.none,
         selectedBabyId = json['selectedBabyId'];

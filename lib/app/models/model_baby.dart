@@ -25,8 +25,8 @@ class ModelBaby {
         memberId = json['memberId'],
         name = json['name'],
         gender = json['gender'] != null ? GenderType.findByCode(json['gender']) : GenderType.none,
-        birth = DateTime.tryParse(json['birth']),
-        createdAt = DateTime.tryParse(json['createdAt']),
+        birth = json['birth'] != null ? DateTime.tryParse(json['birth']) : null,
+        createdAt = json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
         updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
 
   getBirthdayToString() {

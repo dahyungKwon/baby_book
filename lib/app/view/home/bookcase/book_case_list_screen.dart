@@ -242,6 +242,20 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                   getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
                       fontWeight: FontWeight.w500),
                   getVerSpace(FetchPixels.getPixelHeight(7)),
+                  Row(
+                    children: [
+                      modelMyBookResponse.myBook.reviewType == ReviewType.none
+                          ? Container()
+                          : getCustomFont(
+                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 11, Colors.black87, 1,
+                              fontWeight: FontWeight.w600),
+                      modelMyBookResponse.myBook.usedType == UsedType.none
+                          ? Container()
+                          : getCustomFont("#${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
+                              fontWeight: FontWeight.w600),
+                    ],
+                  ),
+                  getVerSpace(FetchPixels.getPixelHeight(7)),
                   modelMyBookResponse.myBook.inMonth == 0
                       ? Container()
                       : Column(children: [
@@ -269,7 +283,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                                   : Container(),
                             ],
                           ),
-                          getVerSpace(FetchPixels.getPixelHeight(7)),
+                          // getVerSpace(FetchPixels.getPixelHeight(7)),
                         ]),
                   modelMyBookResponse.needDetailReview()
                       ? getCustomFont("책경험을 입력해주세요.", 11, Colors.black45, 1, fontWeight: FontWeight.w500)
@@ -296,19 +310,6 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                   //         },
                   //       ),
                   // getVerSpace(FetchPixels.getPixelHeight(3)),
-                  Row(
-                    children: [
-                      modelMyBookResponse.myBook.reviewType == ReviewType.none
-                          ? Container()
-                          : getCustomFont(
-                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 11, Colors.black87, 1,
-                              fontWeight: FontWeight.w600),
-                      modelMyBookResponse.myBook.usedType == UsedType.none
-                          ? Container()
-                          : getCustomFont("#${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
-                              fontWeight: FontWeight.w600),
-                    ],
-                  ),
                 ],
               ),
             ),

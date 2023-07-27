@@ -1,15 +1,21 @@
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
+import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../models/model_comment_response.dart';
 import '../models/model_my_book_response.dart';
 import '../view/home/book/HoldType.dart';
 
 class BookDetailController extends GetxController {
   final BookRepository bookRepository;
   final MyBookRepository myBookRepository;
+  final CommentRepository commentRepository;
   final int bookSetId;
   final String? babyId;
+  ScrollController scrollController = ScrollController();
+  late String? bookSetCommentId;
 
   //book
   final _book = ModelBookResponse.createForObsInit().obs;
@@ -46,10 +52,37 @@ class BookDetailController extends GetxController {
 
   set myBookContainerSwitch(value) => _myBookContainerSwitch.value = value;
 
+  //해당 책이 상이 있는지
+  final _hasAward = false.obs;
+
+  get hasAward => _hasAward.value;
+
+  set hasAward(value) => _hasAward.value = value;
+
+  //책소개 컨테이너
+  final _bookInfoContainer = false.obs;
+
+  get bookInfoContainer => _bookInfoContainer.value;
+
+  set bookInfoContainer(value) => _bookInfoContainer.value = value;
+
+  //한줄코멘트
+  final _commentList = <ModelCommentResponse>[].obs;
+
+  get commentList => _commentList.value;
+
+  set commentList(value) => _commentList.value = value;
+
   BookDetailController(
-      {required this.bookRepository, required this.myBookRepository, required this.bookSetId, this.babyId}) {
+      {required this.bookRepository,
+      required this.myBookRepository,
+      required this.commentRepository,
+      required this.bookSetId,
+      this.babyId}) {
     assert(bookRepository != null);
     assert(myBookRepository != null);
+    assert(commentRepository != null);
+    bookSetCommentId = "book-$bookSetId";
   }
 
   @override
@@ -66,6 +99,8 @@ class BookDetailController extends GetxController {
     _book.refresh();
     _myBookResponse.refresh();
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
+
+    commentList = await commentRepository.get(commentTargetId: "book-$bookSetId");
 
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
