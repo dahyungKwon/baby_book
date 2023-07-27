@@ -1,4 +1,5 @@
 import 'package:baby_book/app/view/community/comment_detail_screen.dart';
+import 'package:baby_book/app/view/home/book/book_comment_detail_screen.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/app/view/intro/intro_screen.dart';
 import 'package:baby_book/app/view/login/join_screen.dart';
@@ -54,7 +55,10 @@ class AppPages {
     GetPage(name: Routes.communityDetailPath, page: () => CommunityDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.commentDetailPath, page: () => CommentDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.bookDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
+    GetPage(
+        name: Routes.bookCommentDetailPath, page: () => BookCommentDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.bookCasePath, page: () => BookCaseScreen(), transition: Transition.cupertino),
+
     // GetPage(name: Routes.bookCaseDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.joinPath, page: () => JoinScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.privacyPolicyPath, page: () => PrivacyPolicyScreen(), transition: Transition.cupertino),
