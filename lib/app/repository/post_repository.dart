@@ -1,3 +1,4 @@
+import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:dio/dio.dart';
 
@@ -156,5 +157,57 @@ class PostRepository {
           (item) => ModelPost.fromJson(item),
         )
         .toList();
+  }
+
+  ///태그조회
+  Future<ModelPostTag> getPostTag({required String tag, required PagingRequest pagingRequest}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/posts/tags/$tag',
+      queryParameters: {
+        'pageSize': pagingRequest.pageSize,
+        'pageNumber': pagingRequest.pageNumber,
+      },
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return ModelPostTag.fromJson(response.data['body']);
+  }
+
+  ///북태그조회
+  Future<ModelPostTag> getPostBookTag({required int bookId, required PagingRequest pagingRequest}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/posts/books/$bookId',
+      queryParameters: {
+        'pageSize': pagingRequest.pageSize,
+        'pageNumber': pagingRequest.pageNumber,
+      },
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return ModelPostTag.fromJson(response.data['body']);
   }
 }

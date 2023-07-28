@@ -1,5 +1,8 @@
 import 'package:baby_book/app/controller/BookDetailController.dart';
+import 'package:baby_book/app/models/model_post.dart';
+import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
+import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:extended_image/extended_image.dart';
@@ -53,6 +56,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
             bookRepository: BookRepository(),
             myBookRepository: MyBookRepository(),
             commentRepository: CommentRepository(),
+            postRepository: PostRepository(),
             bookSetId: bookSetId!,
             babyId: babyId),
         tag: uniqueTag);
@@ -250,10 +254,11 @@ class BookDetailScreen extends GetView<BookDetailController> {
               getVerSpace(FetchPixels.getPixelHeight(30)),
               Column(
                 children: [
-                  getCustomFont(controller.book.modelBook.name ?? "", 22, Colors.black, 1, fontWeight: FontWeight.w700),
-                  getVerSpace(FetchPixels.getPixelHeight(10)),
                   getCustomFont(controller.book.modelPublisher.publisherName ?? "", 16, textColor, 1,
                       fontWeight: FontWeight.w400),
+                  getVerSpace(FetchPixels.getPixelHeight(5)),
+                  getCustomFont(controller.book.modelBook.name ?? "", 24, Colors.black, 1, fontWeight: FontWeight.w700),
+
                   // getSvgImage("question.svg",
                   //     width: FetchPixels.getPixelHeight(24), height: FetchPixels.getPixelHeight(24))
                 ],
@@ -306,7 +311,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                   width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
                               getVerSpace(FetchPixels.getPixelHeight(5)),
                               getCustomFont(
-                                "한줄코멘트" ?? "",
+                                "한줄 코멘트" ?? "",
                                 12,
                                 Colors.black54,
                                 1,
@@ -322,32 +327,39 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               )
                             ],
                           ))),
-                  Container(
-                      width: FetchPixels.getPixelHeight(100),
-                      height: FetchPixels.getPixelHeight(80),
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          getSvgImage("chatbubbles.svg",
-                              width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
-                          getVerSpace(FetchPixels.getPixelHeight(5)),
-                          getCustomFont(
-                            "커뮤니티글" ?? "",
-                            12,
-                            Colors.black54,
-                            1,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          getVerSpace(FetchPixels.getPixelHeight(5)),
-                          getCustomFont(
-                            "10개" ?? "",
-                            16,
-                            Colors.black,
-                            1,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ],
-                      ))
+                  GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.bookCommunityPath, parameters: {
+                          'bookId': controller.book.modelBook.id.toString(),
+                          'bookName': controller.book.modelBook.name
+                        });
+                      },
+                      child: Container(
+                          width: FetchPixels.getPixelHeight(100),
+                          height: FetchPixels.getPixelHeight(80),
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              getSvgImage("chatbubbles.svg",
+                                  width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
+                              getVerSpace(FetchPixels.getPixelHeight(5)),
+                              getCustomFont(
+                                "커뮤니티글" ?? "",
+                                12,
+                                Colors.black54,
+                                1,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              getVerSpace(FetchPixels.getPixelHeight(5)),
+                              getCustomFont(
+                                "${controller.postTag.count}개" ?? "",
+                                16,
+                                Colors.black,
+                                1,
+                                fontWeight: FontWeight.w600,
+                              )
+                            ],
+                          )))
                 ],
               ),
               getVerSpace(FetchPixels.getPixelHeight(10)),
@@ -374,6 +386,8 @@ class BookDetailScreen extends GetView<BookDetailController> {
           buildBookInfo(context, edgeInsets),
           Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
           buildOneComment(context, edgeInsets),
+          Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
+          buildCommunity(context, edgeInsets),
           Container(height: FetchPixels.getPixelHeight(150), color: Color(0xFFF5F6F8)),
           // buildDown(edgeInsets, context),
         ],
@@ -464,7 +478,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                   getSvgImage("date.svg",
                                       width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
                                   getHorSpace(FetchPixels.getPixelHeight(5)),
-                                  getCustomFont("날짜", 14, Colors.black87, 1, fontWeight: FontWeight.w400),
+                                  getCustomFont("날짜", 14, Colors.black54, 1, fontWeight: FontWeight.w400),
                                 ],
                               ),
                               getVerSpace(FetchPixels.getPixelHeight(5)),
@@ -508,7 +522,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                 getCustomFont(
                                   "메모" ?? "",
                                   14,
-                                  Colors.black87,
+                                  Colors.black54,
                                   1,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -687,7 +701,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
           width: 25.w,
           child: getCustomFont(
             title ?? "",
-            titleTextSize ?? 16,
+            titleTextSize ?? 14,
             Colors.black54,
             titleLength ?? 1,
             fontWeight: FontWeight.w400,
@@ -757,7 +771,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                   Row(
                     children: [
                       getCustomFont(
-                        "한줄코멘트",
+                        "한줄 코멘트",
                         20,
                         Colors.black,
                         1,
@@ -780,7 +794,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                 ],
               )))),
       if (controller.commentList.isEmpty) ...[
-        nullListView(context)
+        nullComment(context)
       ] else ...[
         buildComment(context, controller.commentList),
         getVerSpace(FetchPixels.getPixelHeight(20)),
@@ -846,7 +860,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
 
   Column innerComment(BuildContext context, ModelCommentResponse comment, Color commentMenuBtnColor) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-      getVerSpace(FetchPixels.getPixelHeight(10)),
+      getVerSpace(FetchPixels.getPixelHeight(20)),
       GestureDetector(
           onTap: () async {
             String? myId = await PrefData.getMemberId();
@@ -866,11 +880,11 @@ class BookDetailScreen extends GetView<BookDetailController> {
       getVerSpace(FetchPixels.getPixelHeight(10)),
       getCustomFont(comment.comment.body ?? "", 16, comment.deleted ? Colors.black45 : Colors.black, 20,
           fontWeight: FontWeight.w400),
-      getVerSpace(FetchPixels.getPixelHeight(15))
+      getVerSpace(FetchPixels.getPixelHeight(20))
     ]);
   }
 
-  Column nullListView(BuildContext context) {
+  Column nullComment(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -929,6 +943,206 @@ class BookDetailScreen extends GetView<BookDetailController> {
     // } else {
     //   Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
     // }
+  }
+
+  Widget buildCommunity(BuildContext context, EdgeInsets edgeInsets) {
+    List<ModelPost> list = controller.postTag.postList.length > 3
+        ? controller.postTag.postList.sublist(0, 3)
+        : controller.postTag.postList;
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      GestureDetector(
+          onTap: () {
+            print("community tab");
+            Get.toNamed(Routes.bookCommunityPath, parameters: {
+              'bookId': controller.book.modelBook.id.toString(),
+              'bookName': controller.book.modelBook.name
+            });
+          },
+          child: Container(
+              margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5)),
+              padding: EdgeInsets.only(
+                  top: FetchPixels.getPixelHeight(10),
+                  bottom: FetchPixels.getPixelHeight(0),
+                  left: FetchPixels.getPixelWidth(20),
+                  right: FetchPixels.getPixelWidth(20)),
+              color: Colors.white,
+              height: FetchPixels.getPixelHeight(50),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      getCustomFont(
+                        "커뮤니티글",
+                        20,
+                        Colors.black,
+                        1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      getHorSpace(FetchPixels.getPixelHeight(5)),
+                      controller.postTag.count > 0
+                          ? getCustomFont(
+                              "${controller.postTag.count}개",
+                              20,
+                              Colors.black,
+                              1,
+                              fontWeight: FontWeight.w500,
+                            )
+                          : Container(),
+                    ],
+                  ),
+                  getSvgImage("more_comment.svg",
+                      height: FetchPixels.getPixelHeight(20), width: FetchPixels.getPixelHeight(20)),
+                ],
+              )))),
+      list.isEmpty
+          ? nullPost(context)
+          : SizedBox(
+              height: FetchPixels.getPixelHeight(220),
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(
+                    horizontal: FetchPixels.getPixelWidth(10), vertical: FetchPixels.getPixelWidth(10)),
+                scrollDirection: Axis.horizontal,
+                itemCount: list.length,
+                primary: false,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  ModelPost post = list[index];
+                  return buildPostItem(post, context, index, () {
+                    Get.toNamed("${Routes.communityDetailPath}", parameters: {'postId': post.postId!, 'tag': 'book'});
+                  }, () {});
+                },
+              ),
+            ),
+    ]);
+  }
+
+  Widget nullPost(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
+        getVerSpace(FetchPixels.getPixelHeight(20)),
+        getCustomFont("글이 없습니다.", 16, Colors.black, 1, fontWeight: FontWeight.w600),
+        getVerSpace(FetchPixels.getPixelHeight(10)),
+        getCustomFont(
+          "관련된 커뮤니티 글이 없습니다.",
+          14,
+          Colors.black45,
+          1,
+          fontWeight: FontWeight.w400,
+        ),
+        // getVerSpace(FetchPixels.getPixelHeight(10)),
+        // getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () {
+        //   Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+        //     'commentTargetId': controller.bookSetCommentId!,
+        //     'bookName': controller.book.modelBook.name,
+        //     'isCommentFocus': true.toString()
+        //   });
+        // }, 14,
+        //     weight: FontWeight.w600,
+        //     buttonHeight: FetchPixels.getPixelHeight(40),
+        //     insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+        //     borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
+        //     isBorder: true,
+        //     borderColor: secondMainColor,
+        //     borderWidth: 1.5),
+        getVerSpace(FetchPixels.getPixelHeight(20)),
+      ],
+    ));
+  }
+
+  GestureDetector buildPostItem(
+      ModelPost modelPost, BuildContext context, int index, Function function, Function funDelete) {
+    return GestureDetector(
+      onTap: () {
+        function();
+      },
+      child: Container(
+        width: FetchPixels.getPixelHeight(270),
+        // height: FetchPixels.getPixelHeight(170),
+        margin: EdgeInsets.all(FetchPixels.getPixelWidth(10)),
+        // left: FetchPixels.getPixelWidth(10),
+        // right: FetchPixels.getPixelWidth(10)),
+        padding:
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(20), horizontal: FetchPixels.getPixelWidth(20)),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Color(0xFFEDEBE8), blurRadius: 3, offset: Offset(1.0, 1.0)),
+            ],
+            borderRadius: BorderRadius.zero),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(children: [
+                getCustomFont(modelPost.postType.desc ?? "", 11, modelPost.postType.color, 1,
+                    fontWeight: FontWeight.w500),
+                // getVerSpace(FetchPixels.getPixelHeight(6)),
+                getCustomFont(" · ${modelPost.nickName} · ${modelPost.timeDiffForUi}" ?? "", 10, Colors.black45, 1,
+                    fontWeight: FontWeight.w500)
+              ]),
+              getVerSpace(FetchPixels.getPixelHeight(14)),
+              getCustomFont(modelPost.title ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+              getVerSpace(FetchPixels.getPixelHeight(8)),
+              getCustomFont(
+                modelPost.contents ?? "",
+                14,
+                Colors.black54,
+                2,
+                fontWeight: FontWeight.w400,
+              ),
+              getVerSpace(FetchPixels.getPixelHeight(35)),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, //Center Row contents horizontally,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        getSvgImage(modelPost.liked ? "heart_selected.svg" : "heart.svg",
+                            height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                        getHorSpace(FetchPixels.getPixelWidth(6)),
+                        getCustomFont(numberFormat.format(modelPost.likeCount), 14,
+                            modelPost.liked ? const Color(0xFFF65E5E) : Colors.black54, 1,
+                            fontWeight: FontWeight.w400),
+                        getHorSpace(FetchPixels.getPixelHeight(30))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        getSvgImage("chatbox_ellipses_outline.svg",
+                            height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                        getHorSpace(FetchPixels.getPixelWidth(6)),
+                        getCustomFont(numberFormat.format(modelPost.commentCount), 14, Colors.black54, 1,
+                            fontWeight: FontWeight.w400),
+                        getHorSpace(FetchPixels.getPixelHeight(30))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        getSvgImage("eye_outline.svg",
+                            height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+                        getHorSpace(FetchPixels.getPixelWidth(6)),
+                        getCustomFont(numberFormat.format(modelPost.viewCount), 14, Colors.black54, 1,
+                            fontWeight: FontWeight.w400),
+                        getHorSpace(FetchPixels.getPixelHeight(30))
+                      ],
+                    ),
+                  ]),
+            ]),
+      ),
+    );
   }
 
   commentKeyboardUp(BuildContext context) {

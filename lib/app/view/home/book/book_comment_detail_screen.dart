@@ -76,15 +76,13 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: buildBottom(context)),
             body: SafeArea(
-                child: controller.loading
-                    ? const FullSizeSkeleton()
-                    : RefreshIndicator(
-                        color: Colors.black87,
-                        backgroundColor: Colors.white,
-                        onRefresh: () async {
-                          controller.init();
-                        },
-                        child: Column(children: [buildTop(context), buildBody(context, controller.commentList)]))))));
+                child: RefreshIndicator(
+                    color: Colors.black87,
+                    backgroundColor: Colors.white,
+                    onRefresh: () async {
+                      controller.init();
+                    },
+                    child: Column(children: [buildTop(context), buildBody(context, controller.commentList)]))))));
   }
 
   Widget buildTop(BuildContext context) {
@@ -100,7 +98,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
               Get.back();
             }),
             getCustomFont(
-              bookName!,
+              "${bookName!}",
               18,
               Colors.black,
               1,
@@ -111,48 +109,56 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
   }
 
   Widget buildBody(BuildContext context, List<ModelCommentResponse> commentList) {
-    return Expanded(
-        child: Container(
-            color: Color(0xFFF5F6F8),
-            child: Scrollbar(
-              controller: controller.scrollController,
-              child: ListView(
-                controller: controller.scrollController,
-                scrollDirection: Axis.vertical,
-                physics: const AlwaysScrollableScrollPhysics(),
-                shrinkWrap: true,
-                // primary: true,
-                children: [commentList.isEmpty ? nullListView(context) : buildComment(context, commentList)],
-              ),
-            )));
+    EdgeInsets edgeInsets = EdgeInsets.symmetric(
+      horizontal: FetchPixels.getDefaultHorSpace(context),
+    );
+
+    return controller.loading
+        ? const Expanded(child: ListSkeleton())
+        : commentList.isEmpty
+            ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
+            : Expanded(
+                child: Container(
+                    color: Color(0xFFF5F6F8),
+                    child: Scrollbar(
+                      controller: controller.scrollController,
+                      child: ListView(
+                        controller: controller.scrollController,
+                        scrollDirection: Axis.vertical,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        // primary: true,
+                        children: [buildComment(context, commentList)],
+                      ),
+                    )));
   }
 
   Widget nullListView(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
-        getVerSpace(FetchPixels.getPixelHeight(150)),
-        getCustomFont("한줄 코멘트를 등록해주세요.", 16, Colors.black, 1, fontWeight: FontWeight.w600),
+        // getVerSpace(FetchPixels.getPixelHeight(40)),
+        getCustomFont("한줄 코멘트를 등록해주세요.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
           "여러분의 소중한 경험을 공유해주세요.",
-          14,
+          16,
           Colors.black45,
           1,
           fontWeight: FontWeight.w400,
         ),
-        getVerSpace(FetchPixels.getPixelHeight(10)),
-        // getButton(context, backGroundColor, "코멘트 쓰기", Colors.black87, () {
-        //   Get.toNamed(Routes.bookCommentDetailPath, parameters: {'commentTargetId': controller.bookSetCommentId!});
-        // }, 14,
-        //     weight: FontWeight.w600,
-        //     buttonHeight: FetchPixels.getPixelHeight(30),
-        //     insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(120)),
-        //     borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
-        //     isBorder: true,
-        //     borderColor: Colors.grey,
-        //     borderWidth: 1.5),
-        // getVerSpace(FetchPixels.getPixelHeight(20)),
+        getVerSpace(FetchPixels.getPixelHeight(30)),
+        //   getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () {
+        //     Get.toNamed("${Routes.communityAddPath}?postType=${memberPostType.code}");
+        //   }, 18,
+        //       weight: FontWeight.w600,
+        //       buttonHeight: FetchPixels.getPixelHeight(60),
+        //       insetsGeometry: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(120)),
+        //       borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(14)),
+        //       isBorder: true,
+        //       borderColor: Colors.grey,
+        //       borderWidth: 1.5)
       ],
     );
   }
@@ -281,7 +287,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
           Expanded(
               child: getDefaultTextFiledWithLabel2(
             context,
-            controller.modifyCommentMode ? "한줄 코멘트를 수정 해주세요." : "한줄 코멘트를 남겨주세요.",
+            controller.modifyCommentMode ? "한줄 코멘트를 수정 해주세요." : "한줄 코멘트를 등록해주세요.",
             Colors.black45.withOpacity(0.3),
             controller.commentController,
             Colors.grey,

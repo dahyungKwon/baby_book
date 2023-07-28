@@ -2,16 +2,20 @@ import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
+import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../models/model_comment_response.dart';
 import '../models/model_my_book_response.dart';
+import '../models/model_post_tag.dart';
+import '../repository/paging_request.dart';
 import '../view/home/book/HoldType.dart';
 
 class BookDetailController extends GetxController {
   final BookRepository bookRepository;
   final MyBookRepository myBookRepository;
   final CommentRepository commentRepository;
+  final PostRepository postRepository;
   final int bookSetId;
   final String? babyId;
   ScrollController scrollController = ScrollController();
@@ -60,7 +64,7 @@ class BookDetailController extends GetxController {
   set hasAward(value) => _hasAward.value = value;
 
   //책소개 컨테이너
-  final _bookInfoContainer = false.obs;
+  final _bookInfoContainer = true.obs;
 
   get bookInfoContainer => _bookInfoContainer.value;
 
@@ -73,15 +77,24 @@ class BookDetailController extends GetxController {
 
   set commentList(value) => _commentList.value = value;
 
+  //커뮤니티태그
+  final _postTag = ModelPostTag.createForObsInit().obs;
+
+  get postTag => _postTag.value;
+
+  set postTag(value) => _postTag.value = value;
+
   BookDetailController(
       {required this.bookRepository,
       required this.myBookRepository,
       required this.commentRepository,
+      required this.postRepository,
       required this.bookSetId,
       this.babyId}) {
     assert(bookRepository != null);
     assert(myBookRepository != null);
     assert(commentRepository != null);
+    assert(postRepository != null);
     bookSetCommentId = "book-$bookSetId";
   }
 
@@ -101,6 +114,9 @@ class BookDetailController extends GetxController {
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
 
     commentList = await commentRepository.get(commentTargetId: "book-$bookSetId");
+
+    postTag =
+        await postRepository.getPostBookTag(bookId: book.modelBook.id, pagingRequest: PagingRequest.createDefault());
 
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
