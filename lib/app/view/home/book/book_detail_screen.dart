@@ -285,7 +285,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                           ),
                           getVerSpace(FetchPixels.getPixelHeight(5)),
                           getCustomFont(
-                            "13명" ?? "",
+                            "${controller.bookMember.count}명" ?? "",
                             16,
                             Colors.black,
                             1,
@@ -388,7 +388,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
           buildOneComment(context, edgeInsets),
           Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
           buildCommunity(context, edgeInsets),
-          Container(height: FetchPixels.getPixelHeight(150), color: Color(0xFFF5F6F8)),
+          Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
           // buildDown(edgeInsets, context),
         ],
       ),

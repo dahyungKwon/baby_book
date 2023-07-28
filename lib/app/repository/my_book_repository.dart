@@ -1,5 +1,6 @@
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/models/model_my_book.dart';
+import 'package:baby_book/app/models/model_my_book_member_response.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/app/view/home/book/HoldType.dart';
 import 'package:dio/dio.dart';
@@ -145,5 +146,28 @@ class MyBookRepository {
     }
 
     return true;
+  }
+
+  ///해당 책을 몇명이 보고 있는지와 멤버리스트
+  Future<ModelMyBookMemberResponse> getListByBook({required int bookId, required PagingRequest pagingRequest}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.get(
+      '/mybooks/books/$bookId/members',
+      queryParameters: {"pageSize": pagingRequest.pageSize, "pageNumber": pagingRequest.pageNumber},
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return ModelMyBookMemberResponse.fromJson(response.data['body']);
   }
 }

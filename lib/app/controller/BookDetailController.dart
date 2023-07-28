@@ -1,4 +1,5 @@
 import 'package:baby_book/app/models/model_book_response.dart';
+import 'package:baby_book/app/models/model_my_book_member_response.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
@@ -20,6 +21,7 @@ class BookDetailController extends GetxController {
   final String? babyId;
   ScrollController scrollController = ScrollController();
   late String? bookSetCommentId;
+  late ModelMyBookMemberResponse bookMember;
 
   //book
   final _book = ModelBookResponse.createForObsInit().obs;
@@ -117,6 +119,8 @@ class BookDetailController extends GetxController {
 
     postTag =
         await postRepository.getPostBookTag(bookId: book.modelBook.id, pagingRequest: PagingRequest.createDefault());
+
+    bookMember = await myBookRepository.getListByBook(bookId: bookSetId, pagingRequest: PagingRequest.createDefault());
 
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
