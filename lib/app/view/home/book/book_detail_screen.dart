@@ -267,32 +267,39 @@ class BookDetailScreen extends GetView<BookDetailController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                      width: FetchPixels.getPixelHeight(100),
-                      height: FetchPixels.getPixelHeight(80),
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          getSvgImage("book.svg",
-                              width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
-                          getVerSpace(FetchPixels.getPixelHeight(5)),
-                          getCustomFont(
-                            "읽는중" ?? "",
-                            12,
-                            Colors.black54,
-                            1,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          getVerSpace(FetchPixels.getPixelHeight(5)),
-                          getCustomFont(
-                            "${controller.bookMember.count}명" ?? "",
-                            16,
-                            Colors.black,
-                            1,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ],
-                      )),
+                  GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.bookMemberPath, parameters: {
+                          'bookId': controller.book.modelBook.id.toString(),
+                          'bookName': controller.book.modelBook.name,
+                        });
+                      },
+                      child: Container(
+                          width: FetchPixels.getPixelHeight(100),
+                          height: FetchPixels.getPixelHeight(80),
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              getSvgImage("book.svg",
+                                  width: FetchPixels.getPixelHeight(25), height: FetchPixels.getPixelHeight(25)),
+                              getVerSpace(FetchPixels.getPixelHeight(5)),
+                              getCustomFont(
+                                "읽는중" ?? "",
+                                12,
+                                Colors.black54,
+                                1,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              getVerSpace(FetchPixels.getPixelHeight(5)),
+                              getCustomFont(
+                                "${controller.bookMember.count}명" ?? "",
+                                16,
+                                Colors.black,
+                                1,
+                                fontWeight: FontWeight.w600,
+                              )
+                            ],
+                          ))),
                   GestureDetector(
                       onTap: () {
                         Get.toNamed(Routes.bookCommentDetailPath, parameters: {
@@ -1062,7 +1069,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
         function();
       },
       child: Container(
-        width: FetchPixels.getPixelHeight(270),
+        width: FetchPixels.getPixelHeight(300),
         // height: FetchPixels.getPixelHeight(170),
         margin: EdgeInsets.all(FetchPixels.getPixelWidth(10)),
         // left: FetchPixels.getPixelWidth(10),

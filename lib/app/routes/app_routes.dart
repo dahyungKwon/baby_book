@@ -15,6 +15,7 @@ abstract class Routes {
   static const bookDetailPath = "/BookDetailScreen";
   static const bookCommentDetailPath = "/BookCommentDetailScreen";
   static const bookCommunityPath = "/BookCommunityScreen";
+  static const bookMemberPath = "/BookMemberScreen";
 
   ///책장
   static const tabBookCasePath = "/TabBookCase";

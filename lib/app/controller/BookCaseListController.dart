@@ -136,7 +136,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
 
       print("_request......${holdType.code}........${pagingRequest.pageNumber}");
       return await myBookRepository.getMyBookList(
-          pagingRequest: pagingRequest, babyId: selectedBaby!.babyId!, holdType: holdType);
+          pagingRequest: pagingRequest, memberId: memberId!, babyId: selectedBaby!.babyId!, holdType: holdType);
     } on InvalidMemberException catch (e) {
       print(e);
       loading = false;

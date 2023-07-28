@@ -115,10 +115,12 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           itemBuilder: (context, index) {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
             return buildBookCaseItem(modelMyBookResponse, context, index, () {
-              Get.toNamed(Routes.bookDetailPath, parameters: {
-                'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
-                'babyId': modelMyBookResponse.myBook.babyId
-              });
+              if (controller.myBookCase) {
+                Get.toNamed(Routes.bookDetailPath, parameters: {
+                  'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
+                  'babyId': modelMyBookResponse.myBook.babyId
+                });
+              }
             }, () {});
           },
         ));
