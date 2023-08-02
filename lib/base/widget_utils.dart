@@ -1296,7 +1296,7 @@ Widget getSimpleImageButton(String svgImageName, double containerWidth, double c
 
 Widget getSimpleTextButton(String text, double textSize, Color textColor, Color containerColor, FontWeight fontWeight,
     double width, double height, Function? function,
-    {BoxDecoration? boxDecoration}) {
+    {BoxDecoration? boxDecoration, Alignment? alignment}) {
   return GestureDetector(
     onTap: () {
       if (function != null) {
@@ -1305,7 +1305,7 @@ Widget getSimpleTextButton(String text, double textSize, Color textColor, Color 
     },
     child: Container(
         color: boxDecoration == null ? containerColor : null,
-        alignment: Alignment.center,
+        alignment: alignment ?? Alignment.center,
         width: width,
         height: height,
         decoration: boxDecoration,

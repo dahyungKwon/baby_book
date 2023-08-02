@@ -63,6 +63,27 @@ class MemberRepository {
     return ModelMember.fromJson(response.data['body']);
   }
 
+  static Future<bool> deleteMember({required String memberId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.delete(
+      '/members/$memberId',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
+  }
+
   static Future<ModelMember> getMember({
     required String memberId,
   }) async {

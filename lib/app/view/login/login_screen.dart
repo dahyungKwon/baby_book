@@ -136,7 +136,7 @@ class LoginScreen extends StatelessWidget {
                       Get.toNamed(Routes.privacyPolicyPath);
                     },
                     child: getCustomFont(
-                      "개인정보 취급방침 보기",
+                      "개인정보 처리방침 보기",
                       14,
                       Colors.blueAccent,
                       1,

@@ -31,11 +31,11 @@ import '../view/login/service_policy_screen.dart';
 import '../view/notification_screen.dart';
 import '../view/profile/edit_profile_screen.dart';
 import '../view/profile/profile_screen.dart';
+import '../view/profile/setting_screen.dart';
 import '../view/search/search_screen.dart';
 import '../view/setting/help_screen.dart';
 import '../view/setting/privacy_screen.dart';
 import '../view/setting/security_screen.dart';
-import '../view/setting/setting_screen.dart';
 import '../view/setting/term_of_service_screen.dart';
 import '../view/signup/select_country.dart';
 import '../view/signup/signup_screen.dart';
@@ -70,6 +70,7 @@ class AppPages {
     GetPage(name: Routes.profilePath, page: () => ProfileScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.settingPath, page: () => SettingScreen(), transition: Transition.cupertino), //현재 안씀
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀
@@ -89,7 +90,7 @@ class AppPages {
     GetPage(name: Routes.myAddressPath, page: () => MyAddressScreen()), //현재 안씀
     GetPage(name: Routes.editAddressPath, page: () => EditAddressScreen()), //현재 안씀
     GetPage(name: Routes.cardPath, page: () => CardScreen()), //현재 안씀
-    GetPage(name: Routes.settingPath, page: () => SettingScreen()), //현재 안씀
+
     GetPage(name: Routes.notificationPath, page: () => NotificationScreen()), //현재 안씀
     GetPage(name: Routes.searchPath, page: () => SearchScreen()), //현재 안씀
     GetPage(name: Routes.bookingPath, page: () => BookingDetail()), //현재 안씀

@@ -341,7 +341,7 @@ class JoinScreen extends GetView<JoinController> {
                 Get.toNamed(Routes.privacyPolicyPath);
               },
               child: getCustomFont(
-                "개인정보 취급방침 동의",
+                "개인정보 처리방침 동의",
                 FetchPixels.getPixelHeight(16),
                 Colors.blueAccent,
                 1,

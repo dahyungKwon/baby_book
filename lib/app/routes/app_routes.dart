@@ -31,6 +31,7 @@ abstract class Routes {
 
   ///프로필
   static const tabProfilePath = "/TabProfile";
+  static const settingPath = "/SettingScreen";
 
   ///사용안함
   static const homepath = "/";
@@ -51,7 +52,7 @@ abstract class Routes {
   static const myAddressPath = "/MyAddressScreen";
   static const editAddressPath = "/EditAddressScreen";
   static const cardPath = "/CardScreen";
-  static const settingPath = "/SettingScreen";
+  // static const settingPath = "/SettingScreen";
   static const notificationPath = "/NotificationScreen";
   static const searchPath = "/SearchScreen";
   static const bookingPath = "/BookingDetail";

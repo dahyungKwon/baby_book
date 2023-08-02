@@ -343,7 +343,7 @@ class JoinController extends GetxController {
       }
 
       if (!privacyAgreed) {
-        Get.dialog(ErrorDialog("개인정보 취급방침을 동의 해주세요."));
+        Get.dialog(ErrorDialog("개인정보 처리방침을 동의 해주세요."));
         return;
       }
 
@@ -423,7 +423,7 @@ class JoinController extends GetxController {
     }
 
     if (!privacyAgreed) {
-      Get.dialog(ErrorDialog("개인정보 취급방침을 자세히 읽고 동의 해주세요."));
+      Get.dialog(ErrorDialog("개인정보 처리방침을 자세히 읽고 동의 해주세요."));
       return;
     }
 

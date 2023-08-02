@@ -105,14 +105,22 @@ class PrefData {
     }
   }
 
-  static setRefreshToken(String refreshTokenParam) async {
+  static setRefreshToken(String? refreshTokenParam) async {
     SharedPreferences preferences = await getPrefInstance();
-    preferences.setString(refreshToken, refreshTokenParam);
+    if (refreshTokenParam == null) {
+      preferences.remove(refreshToken);
+    } else {
+      preferences.setString(refreshToken, refreshTokenParam);
+    }
   }
 
-  static setMemberId(String memberIdParam) async {
+  static setMemberId(String? memberIdParam) async {
     SharedPreferences preferences = await getPrefInstance();
-    preferences.setString(memberId, memberIdParam);
+    if (memberIdParam == null) {
+      preferences.remove(memberId);
+    } else {
+      preferences.setString(memberId, memberIdParam);
+    }
   }
 
   static setAgreed(bool agreedParam) async {

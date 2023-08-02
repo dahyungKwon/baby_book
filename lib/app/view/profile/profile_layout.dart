@@ -48,8 +48,9 @@ Widget _buildToolbarWidget(BuildContext context, bool myProfile) {
               }),
         myProfile
             ? getSimpleImageButton("setting.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {},
-                containerPadding: EdgeInsets.only(right: FetchPixels.getPixelHeight(0)))
+                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                Get.toNamed(Routes.settingPath);
+              }, containerPadding: EdgeInsets.only(right: FetchPixels.getPixelHeight(0)))
             : SizedBox(width: FetchPixels.getPixelHeight(50), height: FetchPixels.getPixelHeight(50)),
       ]));
 }
