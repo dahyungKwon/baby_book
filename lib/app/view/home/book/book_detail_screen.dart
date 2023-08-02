@@ -457,92 +457,107 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              getCustomFont(
-                                controller.myBookResponse.myBook.holdType.desc,
-                                16,
-                                controller.myBookResponse.myBook.holdType.color,
-                                1,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              getVerSpace(FetchPixels.getPixelHeight(5)),
-                              Row(
-                                children: [
+                              buildBookInfoRow("상태", controller.myBookResponse.myBook.holdType.desc,
+                                  valueColor: controller.myBookResponse.myBook.holdType.color),
+                              getVerSpace(FetchPixels.getPixelHeight(15)),
+                              buildBookInfoRow(
+                                  "별점",
                                   controller.myBookResponse.myBook.reviewType == ReviewType.none
-                                      ? Container()
-                                      : getCustomFont("#${controller.myBookResponse.myBook.reviewType.desc}  " ?? "",
-                                          16, Colors.black, 1,
-                                          fontWeight: FontWeight.w400),
+                                      ? ""
+                                      : controller.myBookResponse.myBook.reviewType.desc),
+                              getVerSpace(FetchPixels.getPixelHeight(15)),
+                              buildBookInfoRow(
+                                  "새책여부",
                                   controller.myBookResponse.myBook.usedType == UsedType.none
-                                      ? Container()
-                                      : getCustomFont(
-                                          "#${controller.myBookResponse.myBook.usedType.desc}구매", 16, Colors.black, 1,
-                                          fontWeight: FontWeight.w400),
-                                ],
-                              ),
-                              getVerSpace(FetchPixels.getPixelHeight(20)),
-                              Row(
-                                children: [
-                                  getSvgImage("date.svg",
-                                      width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                  getHorSpace(FetchPixels.getPixelHeight(5)),
-                                  getCustomFont("날짜", 14, Colors.black54, 1, fontWeight: FontWeight.w400),
-                                ],
-                              ),
-                              getVerSpace(FetchPixels.getPixelHeight(5)),
-                              controller.myBookResponse.myBook.inMonth == 0
-                                  ? Container()
-                                  : Column(children: [
-                                      if (controller.myBookResponse.myBook.inMonth != 0) ...[
-                                        Row(
-                                          children: [
-                                            controller.myBookResponse.myBook.inMonth != 0
-                                                ? Row(
-                                                    children: [
-                                                      getCustomFont("시작", 16, secondMainColor, 1,
-                                                          fontWeight: FontWeight.w500),
-                                                      getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월",
-                                                          16, Colors.black, 1,
-                                                          fontWeight: FontWeight.w400),
-                                                    ],
-                                                  )
-                                                : Container(),
-                                            controller.myBookResponse.myBook.outMonth != 0
-                                                ? Row(
-                                                    children: [
-                                                      getCustomFont("   종료", 16, secondMainColor, 1,
-                                                          fontWeight: FontWeight.w500),
-                                                      getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월",
-                                                          16, Colors.black, 1,
-                                                          fontWeight: FontWeight.w400)
-                                                    ],
-                                                  )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ],
-                                    ]),
-                              getVerSpace(FetchPixels.getPixelHeight(20)),
-                              Row(children: [
-                                getSvgImage("memo.svg",
-                                    width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
-                                getHorSpace(FetchPixels.getPixelHeight(5)),
-                                getCustomFont(
-                                  "메모" ?? "",
-                                  14,
-                                  Colors.black54,
-                                  1,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ]),
-                              getVerSpace(FetchPixels.getPixelHeight(5)),
-                              getCustomFont(
-                                "${controller.myBookResponse.myBook.comment}  " ?? "",
-                                16,
-                                Colors.black,
-                                1,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              getVerSpace(FetchPixels.getPixelHeight(10)),
+                                      ? ""
+                                      : "${controller.myBookResponse.myBook.usedType.desc}구매"),
+                              // Row(
+                              //   children: [
+                              //     controller.myBookResponse.myBook.reviewType == ReviewType.none
+                              //         ? Container()
+                              //         : getCustomFont("#${controller.myBookResponse.myBook.reviewType.desc}  " ?? "",
+                              //             16, Colors.black, 1,
+                              //             fontWeight: FontWeight.w400),
+                              //     controller.myBookResponse.myBook.usedType == UsedType.none
+                              //         ? Container()
+                              //         : getCustomFont(
+                              //             "#${controller.myBookResponse.myBook.usedType.desc}구매", 16, Colors.black, 1,
+                              //             fontWeight: FontWeight.w400),
+                              //   ],
+                              // ),
+                              getVerSpace(FetchPixels.getPixelHeight(15)),
+                              buildBookInfoRow(
+                                  "날짜",
+                                  controller.myBookResponse.myBook.inMonth == 0
+                                      ? ""
+                                      : controller.myBookResponse.myBook.outMonth == 0
+                                          ? "${controller.myBookResponse.myBook.inMonth}개월 -"
+                                          : "${controller.myBookResponse.myBook.inMonth}개월 - ${controller.myBookResponse.myBook.outMonth}개월"),
+                              // getVerSpace(FetchPixels.getPixelHeight(15)),
+                              // Row(
+                              //   children: [
+                              //     getSvgImage("date.svg",
+                              //        ㄱ width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                              //     getHorSpace(FetchPixels.getPixelHeight(5)),
+                              //     getCustomFont("날짜", 14, Colors.black54, 1, fontWeight: FontWeight.w400),
+                              //   ],
+                              // ),
+                              // controller.myBookResponse.myBook.inMonth == 0
+                              //     ? Container()
+                              //     : Column(children: [
+                              //         if (controller.myBookResponse.myBook.inMonth != 0) ...[
+                              //           Row(
+                              //             children: [
+                              //               controller.myBookResponse.myBook.inMonth != 0
+                              //                   ? Row(
+                              //                       children: [
+                              //                         getCustomFont("시작", 16, secondMainColor, 1,
+                              //                             fontWeight: FontWeight.w500),
+                              //                         getCustomFont(" ${controller.myBookResponse.myBook.inMonth}개월",
+                              //                             16, Colors.black, 1,
+                              //                             fontWeight: FontWeight.w400),
+                              //                       ],
+                              //                     )
+                              //                   : Container(),
+                              //               controller.myBookResponse.myBook.outMonth != 0
+                              //                   ? Row(
+                              //                       children: [
+                              //                         getCustomFont("   종료", 16, secondMainColor, 1,
+                              //                             fontWeight: FontWeight.w500),
+                              //                         getCustomFont(" ${controller.myBookResponse.myBook.outMonth}개월",
+                              //                             16, Colors.black, 1,
+                              //                             fontWeight: FontWeight.w400)
+                              //                       ],
+                              //                     )
+                              //                   : Container(),
+                              //             ],
+                              //           ),
+                              //         ],
+                              //       ]),
+                              // getVerSpace(FetchPixels.getPixelHeight(20)),
+                              getVerSpace(FetchPixels.getPixelHeight(15)),
+                              buildBookInfoRow("메모", controller.myBookResponse.myBook.comment),
+                              // Row(children: [
+                              //   getSvgImage("memo.svg",
+                              //       width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                              //   getHorSpace(FetchPixels.getPixelHeight(5)),
+                              //   getCustomFont(
+                              //     "메모" ?? "",
+                              //     14,
+                              //     Colors.black54,
+                              //     1,
+                              //     fontWeight: FontWeight.w400,
+                              //   ),
+                              // ]),
+                              // getVerSpace(FetchPixels.getPixelHeight(5)),
+                              // getCustomFont(
+                              //   "${controller.myBookResponse.myBook.comment}  " ?? "",
+                              //   16,
+                              //   Colors.black,
+                              //   1,
+                              //   fontWeight: FontWeight.w400,
+                              // ),
+                              getVerSpace(FetchPixels.getPixelHeight(15)),
                             ],
                           ),
                         ],
@@ -701,7 +716,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
   }
 
   Widget buildBookInfoRow(String title, String value,
-      {String? link, double? titleTextSize, int? titleLength, double? valueTextSize, int? valueLength}) {
+      {String? link,
+      double? titleTextSize,
+      int? titleLength,
+      double? valueTextSize,
+      int? valueLength,
+      Color? valueColor}) {
     return Row(
       children: [
         SizedBox(
@@ -743,7 +763,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                 child: getCustomFont(
                   value ?? "",
                   valueTextSize ?? 16,
-                  Colors.black,
+                  valueColor ?? Colors.black,
                   valueLength ?? 3,
                   fontWeight: FontWeight.w400,
                 )),
@@ -1070,7 +1090,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
       },
       child: Container(
         width: FetchPixels.getPixelHeight(300),
-        // height: FetchPixels.getPixelHeight(170),
+        height: FetchPixels.getPixelHeight(200),
         margin: EdgeInsets.all(FetchPixels.getPixelWidth(10)),
         // left: FetchPixels.getPixelWidth(10),
         // right: FetchPixels.getPixelWidth(10)),
@@ -1104,7 +1124,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                 2,
                 fontWeight: FontWeight.w400,
               ),
-              getVerSpace(FetchPixels.getPixelHeight(35)),
+              getVerSpace(FetchPixels.getPixelHeight(25)),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, //Center Row contents horizontally,
                   crossAxisAlignment: CrossAxisAlignment.center,

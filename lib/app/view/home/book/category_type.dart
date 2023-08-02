@@ -17,7 +17,7 @@ enum CategoryType {
   english("ENGLISH", "영어", Color(0xFFFA8072)),
   art("ART", "예술", Color(0xFFC53D65)),
   etc("ETC", "기타", Colors.black),
-  none("NONE", "글 타입을 선택해주세요.", Colors.black45);
+  none("NONE", "선택안함", Colors.black45);
 
   final String code;
   final String desc;
