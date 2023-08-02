@@ -7,12 +7,14 @@ import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../../base/constant.dart';
 import '../../controller/HomeScreenController.dart';
 
 class HomeScreen extends GetView<HomeScreenController> {
+  DateTime? currentBackPressTime;
   List<String> bottomBarNoSelectedImgList = ["home.svg", "book.svg", "chatbubbles.svg", "person.svg"];
   List<String> bottomBarSelectedImgList = [
     "home_selected.svg",
@@ -39,6 +41,7 @@ class HomeScreen extends GetView<HomeScreenController> {
     double size = FetchPixels.getPixelHeight(50);
     double iconSize = FetchPixels.getPixelHeight(26);
     return WillPopScope(
+        onWillPop: onWillPop,
         child: Obx(() => Scaffold(
             resizeToAvoidBottomInset: true,
             backgroundColor: backGroundColor,
@@ -101,10 +104,21 @@ class HomeScreen extends GetView<HomeScreenController> {
                       ),
                     ),
                   );
-                }))))),
-        onWillPop: () async {
-          Constant.closeApp();
-          return false;
-        });
+                }))))));
+  }
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+
+    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      final msg = "'뒤로' 버튼을 한 번 더 누르면 종료됩니다.";
+
+      Fluttertoast.showToast(msg: msg);
+      return Future.value(false);
+    }
+
+    Constant.closeApp();
+    return Future.value(true);
   }
 }

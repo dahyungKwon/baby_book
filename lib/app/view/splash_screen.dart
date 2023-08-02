@@ -28,13 +28,13 @@ class SplashScreen extends StatelessWidget {
               {
                 String? bookSetId = value.query!["bookSetId"];
                 print("AppSchemeImpl bookSetId : $bookSetId");
-                Get.toNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
+                Get.offAllNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
                 break;
               }
             case "COMMUNITY":
               {
                 String? postId = value.query!["postId"];
-                Get.toNamed(Routes.communityDetailPath,
+                Get.offAllNamed(Routes.communityDetailPath,
                     parameters: {'sharedType': sharedType, 'postId': postId!, 'tag': 'share'});
                 break;
               }
@@ -47,12 +47,12 @@ class SplashScreen extends StatelessWidget {
       Timer(const Duration(seconds: 1), () async {
         if (await isLogin()) {
           if (await isAgreed()) {
-            Get.toNamed(Routes.homescreenPath);
+            Get.offAllNamed(Routes.homescreenPath);
           } else {
-            Get.toNamed(Routes.joinPath);
+            Get.offAllNamed(Routes.joinPath);
           }
         } else {
-          Get.toNamed(Routes.loginPath);
+          Get.offAllNamed(Routes.loginPath);
         }
       });
     });
