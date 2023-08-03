@@ -99,23 +99,96 @@ class BookDetailScreen extends GetView<BookDetailController> {
           }
           return false;
         },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: Obx(
-              () => SafeArea(
-                child: controller.loading
-                    ? const FullSizeSkeleton()
-                    : Column(
-                        children: [
-                          // getVerSpace(FetchPixels.getPixelHeight(20)),
-                          buildToolbar(context),
-                          getVerSpace(FetchPixels.getPixelHeight(10)),
-                          buildMainArea(context, edgeInsets, defHorSpace)
-                        ],
-                      ),
-              ),
-            )));
+        child: Obx(() => controller.loading
+            ? const FullSizeSkeleton()
+            : Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: backGroundColor,
+                bottomNavigationBar: Container(
+                    height: FetchPixels.getPixelHeight(65),
+                    padding: EdgeInsets.only(
+                        top: FetchPixels.getPixelHeight(8),
+                        bottom: FetchPixels.getPixelHeight(8),
+                        left: FetchPixels.getPixelWidth(10),
+                        right: FetchPixels.getPixelWidth(10)),
+                    decoration: const BoxDecoration(
+                        color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: controller.myBook
+                          ? Container()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                    onTap: () async {
+                                      if (controller.like) {
+                                        await controller.clickCancelLike();
+                                        controller.like = false;
+                                        controller.likeCount -= 1;
+                                      } else {
+                                        await controller.clickLike();
+                                        controller.like = true;
+                                        controller.likeCount += 1;
+                                      }
+                                    },
+                                    child: Container(
+                                        color: Colors.transparent,
+                                        width: FetchPixels.getPixelWidth(80),
+                                        padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
+                                        child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              controller.likeCount > 0
+                                                  ? getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                                      height: FetchPixels.getPixelHeight(20),
+                                                      width: FetchPixels.getPixelHeight(20))
+                                                  : getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                                      height: FetchPixels.getPixelHeight(25),
+                                                      width: FetchPixels.getPixelHeight(25)),
+                                              getVerSpace(FetchPixels.getPixelWidth(5)),
+                                              controller.likeCount > 0
+                                                  ? getCustomFont(controller.getLikeCount(), 14,
+                                                      controller.like ? const Color(0xFFF65E5E) : Colors.black54, 1,
+                                                      fontWeight: FontWeight.w400)
+                                                  : Container(),
+                                            ]))),
+                                Expanded(
+                                    child: Container(
+                                        color: secondMainColor,
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            // crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              getSvgImage("add_bookcase.svg",
+                                                  width: FetchPixels.getPixelHeight(20),
+                                                  height: FetchPixels.getPixelHeight(20)),
+                                              getHorSpace(FetchPixels.getPixelHeight(4)),
+                                              getSimpleTextButton(
+                                                  "책장에 담기",
+                                                  18,
+                                                  Colors.white,
+                                                  secondMainColor,
+                                                  FontWeight.w500,
+                                                  FetchPixels.getPixelHeight(100),
+                                                  FetchPixels.getPixelHeight(50),
+                                                  () async {})
+                                            ]))),
+                              ],
+                            ),
+                    )),
+                body: SafeArea(
+                  child: Column(
+                    children: [
+                      // getVerSpace(FetchPixels.getPixelHeight(20)),
+                      buildToolbar(context),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      buildMainArea(context, edgeInsets, defHorSpace)
+                    ],
+                  ),
+                ),
+              )));
   }
 
   Widget buildToolbar(BuildContext context) {
@@ -384,8 +457,8 @@ class BookDetailScreen extends GetView<BookDetailController> {
         children: [
           buildTop(context, edgeInsets),
           Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
-          controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
-          controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
+          // controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
+          // controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
           controller.hasAward ? buildAward(context, edgeInsets) : Container(),
           controller.hasAward
               ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8))

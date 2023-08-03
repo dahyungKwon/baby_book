@@ -69,4 +69,46 @@ class BookRepository {
 
     return ModelBookResponse.fromJson(response.data['body']);
   }
+
+  Future<bool> like({required int bookSetId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.post(
+      '/bookset/$bookSetId/like',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
+  }
+
+  Future<bool> cancelLike({required int bookSetId}) async {
+    var accessToken = await PrefData.getAccessToken();
+
+    final response = await dio.post(
+      '/bookset/$bookSetId/cancel-like',
+      options: Options(
+        headers: {"at": accessToken},
+      ),
+    );
+
+    if (response.data['code'] == 'FAIL') {
+      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+        throw InvalidMemberException();
+      } else {
+        throw Exception(response.data['body']['errorCode']);
+      }
+    }
+
+    return true;
+  }
 }

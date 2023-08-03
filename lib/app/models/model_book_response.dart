@@ -14,6 +14,7 @@ class ModelBookResponse {
   List<ModelBookTag>? tagList;
   List<ModelBookImg>? imgUrlList;
   ModelPublisher modelPublisher;
+  bool liked = false;
 
   ModelBookResponse(
       {required this.modelBook,
@@ -21,7 +22,8 @@ class ModelBookResponse {
       this.styleList,
       this.tagList,
       this.imgUrlList,
-      required this.modelPublisher});
+      required this.modelPublisher,
+      required this.liked});
 
   static ModelBookResponse createForObsInit() {
     return ModelBookResponse(
@@ -30,7 +32,8 @@ class ModelBookResponse {
         styleList: [],
         tagList: [],
         imgUrlList: [],
-        modelPublisher: ModelPublisher(publisherId: 0, publisherLogoUrl: "", publisherName: "", publisherWebUrl: ""));
+        modelPublisher: ModelPublisher(publisherId: 0, publisherLogoUrl: "", publisherName: "", publisherWebUrl: ""),
+        liked: false);
   }
 
   // JSON형태에서부터 데이터를 받아온다.
@@ -41,7 +44,8 @@ class ModelBookResponse {
         styleList = List<ModelBookStyle>.from(json['styleList'].map((item) => ModelBookStyle.fromJson(item))).toList(),
         tagList = List<ModelBookTag>.from(json['tagList'].map((item) => ModelBookTag.fromJson(item))).toList(),
         imgUrlList = List<ModelBookImg>.from(json['imgList'].map((item) => ModelBookImg.fromJson(item))).toList(),
-        modelPublisher = ModelPublisher.fromJson(json['publisher']);
+        modelPublisher = ModelPublisher.fromJson(json['publisher']),
+        liked = json['liked'] != null ? json['liked'] : false;
 
   CategoryType getCategoryType() {
     return categoryList.isNotEmpty ? categoryList[0].bookSetCategoryType : CategoryType.none;

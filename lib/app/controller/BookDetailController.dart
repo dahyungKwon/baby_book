@@ -51,6 +51,20 @@ class BookDetailController extends GetxController {
 
   set myBook(value) => _myBook.value = value;
 
+  //좋아요여부
+  final _like = false.obs;
+
+  get like => _like.value;
+
+  set like(value) => _like.value = value;
+
+  //좋아요카운트
+  final _likeCount = 0.obs;
+
+  get likeCount => _likeCount.value;
+
+  set likeCount(value) => _likeCount.value = value;
+
   //책경험컨테이너 폴딩여부 디폴트 열림
   final _myBookContainerSwitch = true.obs;
 
@@ -114,6 +128,8 @@ class BookDetailController extends GetxController {
     _book.refresh();
     _myBookResponse.refresh();
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
+    like = book.liked;
+    likeCount = book.modelBook.likeCount;
 
     commentList = await commentRepository.get(commentTargetId: "book-$bookSetId");
 
@@ -129,5 +145,17 @@ class BookDetailController extends GetxController {
 
   Future<bool> removeBook() async {
     return await myBookRepository.delete(myBookId: myBookResponse.myBook.myBookId);
+  }
+
+  String getLikeCount() {
+    return likeCount >= 10000 ? "9999+" : likeCount.toString();
+  }
+
+  Future<bool> clickLike() async {
+    return await bookRepository.like(bookSetId: bookSetId);
+  }
+
+  Future<bool> clickCancelLike() async {
+    return await bookRepository.cancelLike(bookSetId: bookSetId);
   }
 }
