@@ -4,7 +4,7 @@ enum HoldType {
   all("ALL", "전체", Colors.black),
   plan("PLAN", "구매예정", Color(0xFFDAA520)),
   read("READ", "읽는중", Color(0xFF1E90FF)),
-  end("END", "방출", Color(0xFFD2691E)),
+  end("END", "방출", Color(0xFF757474)),
   none("NONE", "선택안함", Colors.black);
 
   final String code;
@@ -24,5 +24,26 @@ enum HoldType {
   ///탭 리스트에 노출용 ("전체" 노출)
   static List<HoldType> findListForTab() {
     return HoldType.values.where((element) => element != HoldType.none).toList();
+  }
+
+  String getBookDetailImage() {
+    switch (this) {
+      case HoldType.plan:
+        {
+          return "book_plan2.svg";
+        }
+      case HoldType.read:
+        {
+          return "book_read.svg";
+        }
+      case HoldType.end:
+        {
+          return "book_end.svg";
+        }
+      default:
+        {
+          return "add_bookcase.svg";
+        }
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
+import 'package:baby_book/app/view/home/book/book_experience_bottom_sheet.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:extended_image/extended_image.dart';
@@ -115,68 +116,91 @@ class BookDetailScreen extends GetView<BookDetailController> {
                         color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
                     child: Container(
                       color: Colors.transparent,
-                      child: controller.myBook
-                          ? Container()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                    onTap: () async {
-                                      if (controller.like) {
-                                        await controller.clickCancelLike();
-                                        controller.like = false;
-                                        controller.likeCount -= 1;
-                                      } else {
-                                        await controller.clickLike();
-                                        controller.like = true;
-                                        controller.likeCount += 1;
-                                      }
-                                    },
-                                    child: Container(
-                                        color: Colors.transparent,
-                                        width: FetchPixels.getPixelWidth(80),
-                                        padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              controller.likeCount > 0
-                                                  ? getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
-                                                      height: FetchPixels.getPixelHeight(20),
-                                                      width: FetchPixels.getPixelHeight(20))
-                                                  : getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
-                                                      height: FetchPixels.getPixelHeight(25),
-                                                      width: FetchPixels.getPixelHeight(25)),
-                                              getVerSpace(FetchPixels.getPixelWidth(5)),
-                                              controller.likeCount > 0
-                                                  ? getCustomFont(controller.getLikeCount(), 14,
-                                                      controller.like ? const Color(0xFFF65E5E) : Colors.black54, 1,
-                                                      fontWeight: FontWeight.w400)
-                                                  : Container(),
-                                            ]))),
-                                Expanded(
-                                    child: Container(
-                                        color: secondMainColor,
-                                        child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            // crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              getSvgImage("add_bookcase.svg",
-                                                  width: FetchPixels.getPixelHeight(20),
-                                                  height: FetchPixels.getPixelHeight(20)),
-                                              getHorSpace(FetchPixels.getPixelHeight(4)),
-                                              getSimpleTextButton(
-                                                  "책장에 담기",
-                                                  18,
-                                                  Colors.white,
-                                                  secondMainColor,
-                                                  FontWeight.w500,
-                                                  FetchPixels.getPixelHeight(100),
-                                                  FetchPixels.getPixelHeight(50),
-                                                  () async {})
-                                            ]))),
-                              ],
-                            ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                              onTap: () async {
+                                if (controller.like) {
+                                  await controller.clickCancelLike();
+                                  controller.like = false;
+                                  controller.likeCount -= 1;
+                                } else {
+                                  await controller.clickLike();
+                                  controller.like = true;
+                                  controller.likeCount += 1;
+                                }
+                              },
+                              child: Container(
+                                  color: Colors.transparent,
+                                  width: FetchPixels.getPixelWidth(80),
+                                  padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
+                                  child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        controller.likeCount > 0
+                                            ? getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                                height: FetchPixels.getPixelHeight(20),
+                                                width: FetchPixels.getPixelHeight(20))
+                                            : getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                                height: FetchPixels.getPixelHeight(25),
+                                                width: FetchPixels.getPixelHeight(25)),
+                                        getVerSpace(FetchPixels.getPixelWidth(5)),
+                                        controller.likeCount > 0
+                                            ? getCustomFont(controller.getLikeCount(), 14,
+                                                controller.like ? const Color(0xFFF65E5E) : Colors.black54, 1,
+                                                fontWeight: FontWeight.w400)
+                                            : Container(),
+                                      ]))),
+                          Expanded(
+                            child: GestureDetector(
+                                onTap: () {
+                                  print("탭");
+                                  showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (_) => BookExperienceBottomSheet(
+                                            mybook: controller.myBookResponse.myBook,
+                                          )).then((mybook) {
+                                    // if (selectedGender != null) {
+                                    //   changeGender(selectedGender);
+                                    // }
+                                  });
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: controller.myBookResponse.myBook.holdType.color,
+                                      borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(6)),
+                                      boxShadow: const [
+                                        BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 0.0)),
+                                      ],
+                                    ),
+                                    height: FetchPixels.getPixelHeight(80),
+                                    // color: controller.myBookResponse.myBook.holdType.color,
+                                    child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        // crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          getSvgImage(
+                                              controller.myBook
+                                                  ? controller.myBookResponse.myBook.holdType.getBookDetailImage()
+                                                  : "add_bookcase.svg",
+                                              width: FetchPixels.getPixelHeight(15),
+                                              height: FetchPixels.getPixelHeight(20)),
+                                          getHorSpace(FetchPixels.getPixelHeight(10)),
+                                          getCustomFont(
+                                              controller.myBook
+                                                  ? controller.myBookResponse.myBook.holdType.desc
+                                                  : "책장에 담기",
+                                              16,
+                                              Colors.white,
+                                              1,
+                                              fontWeight: FontWeight.w500),
+                                        ]))),
+                          )
+                        ],
+                      ),
                     )),
                 body: SafeArea(
                   child: Column(
@@ -774,8 +798,8 @@ class BookDetailScreen extends GetView<BookDetailController> {
                       // buildBookInfoRow("카테고리랭킹", "1위"),
                       // getVerSpace(FetchPixels.getPixelHeight(10)),
                       (controller.book.getWebUrl() == null || controller.book.getWebUrl()!.isEmpty)
-                          ? buildBookInfoRow("공식페이지", "제공되는 홈페이지가 없습니다.")
-                          : buildBookInfoRow("공식페이지", "바로가기", link: controller.book.getWebUrl()),
+                          ? buildBookInfoRow("홈페이지", "제공되는 홈페이지가 없습니다.")
+                          : buildBookInfoRow("홈페이지", "바로가기", link: controller.book.getWebUrl()),
                       getVerSpace(FetchPixels.getPixelHeight(15)),
                       buildBookInfoRow("구성", controller.book.modelBook.configuration,
                           valueTextSize: 14, valueLength: 8),
