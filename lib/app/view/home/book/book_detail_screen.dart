@@ -184,7 +184,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                         children: [
                                           getSvgImage(
                                               controller.myBook
-                                                  ? controller.myBookResponse.myBook.holdType.getBookDetailImage()
+                                                  ? controller.myBookResponse.myBook.holdType.image
                                                   : "add_bookcase.svg",
                                               width: FetchPixels.getPixelHeight(15),
                                               height: FetchPixels.getPixelHeight(20)),
@@ -559,9 +559,9 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               getVerSpace(FetchPixels.getPixelHeight(15)),
                               buildBookInfoRow(
                                   "별점",
-                                  controller.myBookResponse.myBook.reviewType == ReviewType.none
+                                  controller.myBookResponse.myBook.selectedReviewType == ReviewType.none
                                       ? ""
-                                      : controller.myBookResponse.myBook.reviewType.desc),
+                                      : controller.myBookResponse.myBook.selectedReviewType.desc),
                               getVerSpace(FetchPixels.getPixelHeight(15)),
                               buildBookInfoRow(
                                   "새책여부",

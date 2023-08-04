@@ -6,7 +6,7 @@ import '../exception/exception_invalid_member.dart';
 
 class CommentRepository {
   var dio = Dio(BaseOptions(
-    baseUrl: 'http://ec2-15-165-18-218.ap-northeast-2.compute.amazonaws.com:3001/apis',
+    baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
     receiveTimeout: 3000,
   ));

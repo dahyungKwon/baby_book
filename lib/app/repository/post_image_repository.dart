@@ -8,13 +8,13 @@ import 'package:http_parser/http_parser.dart';
 class PostImageRepository {
   /// 파일 전송 시 사용됨 [중요!!]
   var fileDio = Dio(BaseOptions(
-      baseUrl: 'http://ec2-15-165-18-218.ap-northeast-2.compute.amazonaws.com:3001/apis',
+      baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
       connectTimeout: 5000,
       receiveTimeout: 10000,
       contentType: 'multipart/form-data'));
 
   var dio = Dio(BaseOptions(
-    baseUrl: 'http://ec2-15-165-18-218.ap-northeast-2.compute.amazonaws.com:3001/apis',
+    baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
     connectTimeout: 5000,
     receiveTimeout: 10000,
   ));

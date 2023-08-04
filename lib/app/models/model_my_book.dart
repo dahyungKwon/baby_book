@@ -20,6 +20,7 @@ class ModelMyBook {
   int? outMonth = 0;
   UsedType usedType;
   ReviewType reviewType;
+  ReviewType tempReviewType;
   int? reviewRating = 0;
   int? tempReviewRating = 0;
   String? comment;
@@ -36,6 +37,7 @@ class ModelMyBook {
       this.outMonth,
       required this.usedType,
       required this.reviewType,
+      required this.tempReviewType,
       this.reviewRating,
       this.tempReviewRating,
       this.comment,
@@ -53,6 +55,7 @@ class ModelMyBook {
         outMonth: 0,
         usedType: UsedType.none,
         reviewType: ReviewType.none,
+        tempReviewType: ReviewType.none,
         reviewRating: 0,
         tempReviewRating: 0,
         comment: "",
@@ -70,6 +73,7 @@ class ModelMyBook {
         outMonth = json['outMonth'],
         usedType = UsedType.findByCode(json['usedType']),
         reviewType = ReviewType.findByCode(json['reviewType']),
+        tempReviewType = ReviewType.findByCode(json['tempReviewType']),
         reviewRating = json['reviewRating'],
         tempReviewRating = json['tempReviewRating'],
         comment = json['comment'],
