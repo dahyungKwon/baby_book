@@ -4,9 +4,11 @@ import 'package:baby_book/app/view/home/book/review_type_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pinput/pinput.dart';
 import '../repository/my_book_repository.dart';
 import '../view/home/book/HoldType.dart';
 import '../view/home/book/UsedType.dart';
+import '../view/home/book/month_bottom_sheet.dart';
 import '../view/home/book/used_type_bottom_sheet.dart';
 
 class BookExperienceBottomSheetController extends GetxController {
@@ -14,6 +16,8 @@ class BookExperienceBottomSheetController extends GetxController {
   TextEditingController tempReviewTypeTextEditing = TextEditingController();
   TextEditingController reviewTypeTextEditing = TextEditingController();
   TextEditingController usedTypeTextEditing = TextEditingController();
+  TextEditingController inMonthTextEditing = TextEditingController();
+  TextEditingController outMonthTextEditing = TextEditingController();
   TextEditingController memoTypeTextEditing = TextEditingController();
 
   //mybook
@@ -33,12 +37,34 @@ class BookExperienceBottomSheetController extends GetxController {
   BookExperienceBottomSheetController({required this.myBookRepository, required ModelMyBook mybook}) {
     assert(myBookRepository != null);
     this.mybook = mybook;
+    _mybook.refresh();
+    memoTypeTextEditing.text = (mybook.comment ?? "")!;
+    memoTypeTextEditing.moveCursorToEnd();
   }
 
   @override
   void onInit() async {
     super.onInit();
     init();
+
+    memoTypeTextEditing.addListener(_titleListener);
+  }
+
+  void _titleListener() {
+    print("text : ${memoTypeTextEditing.text}");
+    mybook.comment = memoTypeTextEditing.text;
+    _mybook.refresh();
+  }
+
+  @override
+  void dispose() {
+    tempReviewTypeTextEditing.dispose();
+    reviewTypeTextEditing.dispose();
+    usedTypeTextEditing.dispose();
+    inMonthTextEditing.dispose();
+    outMonthTextEditing.dispose();
+    memoTypeTextEditing.dispose();
+    super.dispose();
   }
 
   init() async {
@@ -66,6 +92,16 @@ class BookExperienceBottomSheetController extends GetxController {
 
   changeUsedType(UsedType usedType) {
     mybook.usedType = usedType;
+    _mybook.refresh();
+  }
+
+  changeInMonth(int inMonth) {
+    mybook.inMonth = inMonth;
+    _mybook.refresh();
+  }
+
+  changeOutMonth(int outMonth) {
+    mybook.outMonth = outMonth;
     _mybook.refresh();
   }
 
@@ -106,6 +142,34 @@ class BookExperienceBottomSheetController extends GetxController {
             )).then((selectedUsedType) {
       if (selectedUsedType != null) {
         changeUsedType(selectedUsedType);
+      }
+    });
+  }
+
+  showInMonthBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => MonthBottomSheet(
+              month: mybook.inMonth,
+              inMonth: true,
+            )).then((selectedInMonth) {
+      if (selectedInMonth != null) {
+        changeInMonth(selectedInMonth);
+      }
+    });
+  }
+
+  showOutMonthBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => MonthBottomSheet(
+              month: mybook.outMonth,
+              inMonth: false,
+            )).then((selectedOutMonth) {
+      if (selectedOutMonth != null) {
+        changeOutMonth(selectedOutMonth);
       }
     });
   }

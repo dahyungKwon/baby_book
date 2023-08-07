@@ -1,12 +1,15 @@
 import 'package:baby_book/app/models/model_book_response.dart';
+import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_my_book_member_response.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
+import 'package:baby_book/base/pref_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../models/model_comment_response.dart';
+import '../models/model_my_book_request.dart';
 import '../models/model_my_book_response.dart';
 import '../models/model_post_tag.dart';
 import '../repository/paging_request.dart';
@@ -22,6 +25,9 @@ class BookDetailController extends GetxController {
   ScrollController scrollController = ScrollController();
   late String? bookSetCommentId;
   late ModelMyBookMemberResponse bookMember;
+  late HoldType lastHoldType;
+
+  ///변경 후 취소시 다시 원복하기 위한 용도
 
   //book
   final _book = ModelBookResponse.createForObsInit().obs;
@@ -125,8 +131,8 @@ class BookDetailController extends GetxController {
 
     book = await bookRepository.get(bookSetId: bookSetId);
     myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);
-    _book.refresh();
-    _myBookResponse.refresh();
+    // _book.refresh();
+    // _myBookResponse.refresh();
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
     like = book.liked;
     likeCount = book.modelBook.likeCount;
@@ -143,10 +149,6 @@ class BookDetailController extends GetxController {
     });
   }
 
-  Future<bool> removeBook() async {
-    return await myBookRepository.delete(myBookId: myBookResponse.myBook.myBookId);
-  }
-
   String getLikeCount() {
     return likeCount >= 10000 ? "9999+" : likeCount.toString();
   }
@@ -157,5 +159,64 @@ class BookDetailController extends GetxController {
 
   Future<bool> clickCancelLike() async {
     return await bookRepository.cancelLike(bookSetId: bookSetId);
+  }
+
+  Future<bool> removeMyBook() async {
+    bool result = await myBookRepository.delete(myBookId: myBookResponse.myBook.myBookId);
+    if (result) {
+      reloadMyBook();
+    }
+
+    return result;
+  }
+
+  Future<bool> addMyBook(ModelMyBook myBook) async {
+    String? memberId = await PrefData.getMemberId();
+    await myBookRepository.post(
+        request: ModelMyBookRequest(
+      bookSetId: bookSetId,
+      memberId: memberId!,
+      babyId: babyId!,
+      holdType: myBook.holdType,
+      inMonth: myBook.inMonth,
+      outMonth: myBook.outMonth,
+      usedType: myBook.usedType,
+      reviewType: myBook.reviewType,
+      reviewRating: myBook.reviewRating,
+      tempReviewRating: myBook.tempReviewRating,
+      comment: myBook.comment,
+    ));
+
+    reloadMyBook();
+    return true;
+  }
+
+  Future<bool> modifyMyBook(ModelMyBook myBook) async {
+    await myBookRepository.modify(
+        myBookId: myBook.myBookId,
+        request: ModelMyBookRequest(
+          bookSetId: myBook.bookSetId,
+          memberId: myBook.memberId,
+          babyId: myBook.babyId,
+          holdType: myBook.holdType,
+          inMonth: myBook.inMonth,
+          outMonth: myBook.outMonth,
+          usedType: myBook.usedType,
+          reviewType: myBook.reviewType,
+          reviewRating: myBook.reviewRating,
+          tempReviewRating: myBook.tempReviewRating,
+          comment: myBook.comment,
+        ));
+
+    reloadMyBook();
+    return true;
+  }
+
+  reloadMyBook() async {
+    myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);
+    myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
+
+    _myBookResponse.refresh();
+    _myBook.refresh();
   }
 }

@@ -21,8 +21,8 @@ class ModelMyBook {
   UsedType usedType;
   ReviewType reviewType;
   ReviewType tempReviewType;
-  int? reviewRating = 0;
-  int? tempReviewRating = 0;
+  double? reviewRating = 0;
+  double? tempReviewRating = 0;
   String? comment;
   DateTime createdAt;
   DateTime? updatedAt;
@@ -79,4 +79,21 @@ class ModelMyBook {
         comment = json['comment'],
         createdAt = DateTime.parse(json['createdAt']),
         updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
+
+  ModelMyBook.copy(ModelMyBook oldBook)
+      : myBookId = oldBook.myBookId,
+        bookSetId = oldBook.bookSetId,
+        memberId = oldBook.memberId,
+        babyId = oldBook.babyId,
+        holdType = oldBook.holdType,
+        inMonth = oldBook.inMonth,
+        outMonth = oldBook.outMonth,
+        usedType = oldBook.usedType,
+        reviewType = oldBook.reviewType,
+        tempReviewType = oldBook.tempReviewType,
+        reviewRating = oldBook.reviewRating,
+        tempReviewRating = oldBook.tempReviewRating,
+        comment = oldBook.comment,
+        createdAt = oldBook.createdAt,
+        updatedAt = oldBook.updatedAt;
 }

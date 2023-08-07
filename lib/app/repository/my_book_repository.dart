@@ -110,7 +110,7 @@ class MyBookRepository {
   }) async {
     var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.post(
+    final response = await dio.put(
       '/mybooks/$myBookId',
       data: request.toJson(),
       options: Options(

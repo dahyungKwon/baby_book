@@ -1,11 +1,12 @@
+import 'package:baby_book/base/color_data.dart';
 import 'package:flutter/material.dart';
 
 enum HoldType {
   all("ALL", "전체", Colors.black, "add_bookcase.svg"),
-  plan("PLAN", "구매예정", Color(0xFFDAA520), "book_plan2.svg"),
-  read("READ", "읽는중", Color(0xFF1E90FF), "book_read.svg"),
-  end("END", "방출", Color(0xFF757474), "book_end.svg"),
-  none("NONE", "선택안함", Colors.black, "add_bookcase.svg");
+  plan("PLAN", "구매예정", Color(0xFFEC6E5D), "book_plan2.svg"),
+  read("READ", "읽는중", Color(0xFF5D8DE7), "book_read.svg"),
+  end("END", "방출", Color(0xFFC98B6F), "book_end.svg"),
+  none("NONE", "선택안함", Color(0xFF464343), "add_bookcase.svg");
 
   final String code;
   final String desc;

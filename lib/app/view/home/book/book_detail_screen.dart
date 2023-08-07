@@ -1,4 +1,5 @@
 import 'package:baby_book/app/controller/BookDetailController.dart';
+import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
@@ -22,6 +23,7 @@ import '../../../../base/pref_data.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
 import '../../../controller/BookDetailController.dart';
+import '../../../controller/BookExperienceBottomSheetController.dart';
 import '../../../models/model_book_state.dart';
 import '../../../models/model_comment_response.dart';
 import '../../../models/model_kakao_link_template.dart';
@@ -33,6 +35,7 @@ import '../../community/comment_bottom_sheet.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../home_screen.dart';
+import 'HoldType.dart';
 import 'ReviewType.dart';
 import 'UsedType.dart';
 import 'book_detail_bottom_sheet.dart';
@@ -157,16 +160,36 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             child: GestureDetector(
                                 onTap: () {
                                   print("탭");
+
+                                  ///책장에 있는 상태에서 빼려고하다가 취소한경우 원복하기 위한 용도
+                                  controller.lastHoldType = controller.myBookResponse.myBook.holdType;
                                   showModalBottomSheet(
                                       context: context,
                                       isScrollControlled: true,
                                       builder: (_) => BookExperienceBottomSheet(
                                             mybook: controller.myBookResponse.myBook,
-                                          )).then((mybook) {
-                                    // if (selectedGender != null) {
-                                    //   changeGender(selectedGender);
-                                    // }
-                                  });
+                                          )).then((obj) {
+                                    // ModelMyBook mybook = Get.find<BookExperienceBottomSheetController>(
+                                    //         tag: controller.bookSetId.toString())
+                                    //     .mybook;
+                                    ModelMyBook mybook = controller.myBookResponse.myBook;
+                                    if (mybook == null) {
+                                      return;
+                                    }
+                                    if (mybook.myBookId != "" && mybook.holdType == HoldType.none) {
+                                      /// 책 경험 있었는데 없어진 경우 (책경험 제거하려는 목적)
+                                      _clickedRemoveBook();
+                                    } else if (mybook.myBookId == "" && mybook.holdType != HoldType.none) {
+                                      ///책경험이 없었는데 신규로 추가된 경우
+                                      controller.addMyBook(mybook);
+                                    } else if (mybook.myBookId == "" && mybook.holdType == HoldType.none) {
+                                      ///아무것도 안한경우
+                                      print("선택안함");
+                                    } else {
+                                      ///그외는 모두 수정
+                                      controller.modifyMyBook(mybook);
+                                    }
+                                  }).whenComplete(() => {print("end")});
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -278,14 +301,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
 
   _clickedRemoveBook() async {
     bool? result = await Get.dialog(ReConfirmDialog("책장에서 삭제하시겠습니까?", "삭제", "취소", () async {
-      controller.removeBook().then((result) => Get.back(result: result));
+      controller.removeMyBook().then((result) => Get.back(result: result));
     }));
 
     if (result == null) {
       ///취소선택
+      controller.myBookResponse.myBook.holdType = controller.lastHoldType;
       return;
     } else if (result) {
-      Get.back();
+      Get.reload();
     } else {
       Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
     }

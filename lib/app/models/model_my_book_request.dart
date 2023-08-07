@@ -19,6 +19,8 @@ class ModelMyBookRequest {
   int? outMonth = 0;
   UsedType usedType;
   ReviewType reviewType;
+  double? reviewRating;
+  double? tempReviewRating;
   String? comment;
 
   ModelMyBookRequest(
@@ -30,6 +32,8 @@ class ModelMyBookRequest {
       this.outMonth,
       required this.usedType,
       required this.reviewType,
+      this.reviewRating,
+      this.tempReviewRating,
       this.comment});
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +45,8 @@ class ModelMyBookRequest {
         'outMonth': outMonth,
         'usedType': usedType.code,
         'reviewType': reviewType.code,
+        'reviewRating': reviewRating,
+        'tempReviewRating': tempReviewRating,
         'comment': comment
       };
 }

@@ -632,7 +632,8 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
     FocusNode? myFocusNode,
     bool? autofocus,
     required Color boxColor,
-    BoxDecoration? boxDecoration}) {
+    BoxDecoration? boxDecoration,
+    Function? editingComplete}) {
   myFocusNode ??= FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {
@@ -688,6 +689,11 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
                             focusNode: myFocusNode,
                             obscureText: isPass,
                             showCursor: true,
+                            onEditingComplete: () {
+                              if (editingComplete != null) {
+                                editingComplete();
+                              }
+                            },
                             // cursorColor: Colors.black87,
                             style: TextStyle(
                               color: Colors.black,
