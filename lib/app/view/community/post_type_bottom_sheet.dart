@@ -26,7 +26,7 @@ class _PostTypeBottomSheetState extends State<PostTypeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 40.h,
+        height: 30.h,
         child: Container(
           color: Colors.white,
           padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),

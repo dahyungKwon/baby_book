@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 /// TabCommunityController를 통해 PostType에 지정한 desc가 tab list로 노출되니 주의하세요!
 enum PostType {
   all("ALL", "전체", Colors.black),
-  review("REVIEW", "전집후기", Color(0xFFDAA520)),
-  bookcase("BOOKCASE", "책장소개", Color(0xFF20B2AA)),
-  english("ENGLISH", "엄마표영어", Color(0xFFFA8072)),
-  question("QUESTION", "육아고민", Color(0xFF1E90FF)),
-  grow("GROW", "성장일기", Color(0xFF2E8B57)),
-  recommend("RECOMMEND", "강추", Color(0xFFD2691E)),
-  free("FREE", "자유이야기", Color(0xFF778899)),
+  // culture("CULTURE", "책육아문화", Color(0xFFEC6E5D)),
+  review("REVIEW", "책 후기", Color(0xFFEC6E5D)),
+  question("QUESTION", "책 질문", Color(0xFF1E90FF)),
+  english("ENGLISH", "영어", Color(0xFFCCAF12)),
+  free("FREE", "자유이야기", Color(0xFF78C759)),
   none("NONE", "글 타입을 선택해주세요.", Colors.black45);
 
   final String code;
