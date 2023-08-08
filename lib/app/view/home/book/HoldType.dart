@@ -5,7 +5,7 @@ enum HoldType {
   all("ALL", "전체", Colors.black, "add_bookcase.svg"),
   plan("PLAN", "구매예정", Color(0xFFEC6E5D), "book_plan2.svg"),
   read("READ", "읽는중", Color(0xFF5D8DE7), "book_read.svg"),
-  end("END", "방출", Color(0xFFC98B6F), "book_end.svg"),
+  end("END", "방출", Color(0xFF6B6A6A), "book_end.svg"),
   none("NONE", "선택안함", Color(0xFF464343), "add_bookcase.svg");
 
   final String code;

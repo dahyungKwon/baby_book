@@ -1,3 +1,4 @@
+import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_my_book_response.dart';
 import 'package:baby_book/app/repository/baby_repository.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
@@ -10,7 +11,10 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
@@ -28,6 +32,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
   late HoldType holdType;
   late RefreshController refreshController;
   int pageNumber = 1;
+  var f = NumberFormat('###,###,###,###');
 
   BookCaseListScreen({required String? memberId, required this.holdType, super.key}) {
     uniqueTag = getUuid();
@@ -89,11 +94,11 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           ? const ListSkeleton()
           : controller.myBookResponseList.isEmpty
               ? getPaddingWidget(edgeInsets, nullListView(context))
-              : draw()),
+              : draw(edgeInsets)),
     );
   }
 
-  SmartRefresher draw() {
+  SmartRefresher draw(EdgeInsets edgeInsets) {
     return SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -114,7 +119,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           itemCount: controller.myBookResponseList.length,
           itemBuilder: (context, index) {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
-            return buildBookCaseItem(modelMyBookResponse, context, index, () {
+            return buildBookCaseItem(context, edgeInsets, modelMyBookResponse, index, () {
               if (controller.myBookCase) {
                 Get.toNamed(Routes.bookDetailPath, parameters: {
                   'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
@@ -182,17 +187,17 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
     );
   }
 
-  GestureDetector buildBookCaseItem(
-      ModelMyBookResponse modelMyBookResponse, BuildContext context, int index, Function function, Function funDelete) {
+  GestureDetector buildBookCaseItem(BuildContext context, EdgeInsets edgeInsets,
+      ModelMyBookResponse modelMyBookResponse, int index, Function function, Function funDelete) {
     return GestureDetector(
       onTap: () {
         function();
       },
       child: Container(
-        height: FetchPixels.getPixelHeight(100),
+        height: FetchPixels.getPixelHeight(120),
         margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
         padding:
-            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(10), horizontal: FetchPixels.getPixelWidth(20)),
+            EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(0), horizontal: FetchPixels.getPixelWidth(20)),
         decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -203,8 +208,8 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           children: [
             ExtendedImage.network(
               modelMyBookResponse.modelBookResponse.getFirstImg(),
-              width: FetchPixels.getPixelHeight(80),
-              height: FetchPixels.getPixelHeight(80),
+              width: FetchPixels.getPixelHeight(90),
+              height: FetchPixels.getPixelHeight(90),
               fit: BoxFit.fitHeight,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(9)),
@@ -222,7 +227,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                 }
               },
             ),
-            getHorSpace(FetchPixels.getPixelWidth(16)),
+            getHorSpace(FetchPixels.getPixelWidth(20)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,81 +242,15 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                         1,
                         fontWeight: FontWeight.w500,
                       ),
-                      getHorSpace(FetchPixels.getPixelHeight(3)),
+                      // getHorSpace(FetchPixels.getPixelHeight(3)),
                     ],
                   ),
-                  getVerSpace(FetchPixels.getPixelHeight(5)),
+                  getVerSpace(FetchPixels.getPixelHeight(3)),
                   getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
                       fontWeight: FontWeight.w500),
-                  getVerSpace(FetchPixels.getPixelHeight(7)),
-                  Row(
-                    children: [
-                      modelMyBookResponse.myBook.reviewType == ReviewType.none
-                          ? Container()
-                          : getCustomFont(
-                              "#${modelMyBookResponse.myBook.reviewType.desc}  " ?? "", 11, Colors.black87, 1,
-                              fontWeight: FontWeight.w600),
-                      modelMyBookResponse.myBook.usedType == UsedType.none
-                          ? Container()
-                          : getCustomFont("#${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
-                              fontWeight: FontWeight.w600),
-                    ],
-                  ),
-                  getVerSpace(FetchPixels.getPixelHeight(7)),
-                  modelMyBookResponse.myBook.inMonth == 0
-                      ? Container()
-                      : Column(children: [
-                          // getVerSpace(FetchPixels.getPixelHeight(10)),
-                          Row(
-                            children: [
-                              modelMyBookResponse.myBook.inMonth != 0
-                                  ? Row(
-                                      children: [
-                                        getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
-                                        getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black87, 1,
-                                            fontWeight: FontWeight.w600),
-                                      ],
-                                    )
-                                  : Container(),
-                              modelMyBookResponse.myBook.outMonth != 0
-                                  ? Row(
-                                      children: [
-                                        getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
-                                        getCustomFont(
-                                            " ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black87, 1,
-                                            fontWeight: FontWeight.w600)
-                                      ],
-                                    )
-                                  : Container(),
-                            ],
-                          ),
-                          // getVerSpace(FetchPixels.getPixelHeight(7)),
-                        ]),
-                  modelMyBookResponse.needDetailReview()
-                      ? getCustomFont("책경험을 입력해주세요.", 11, Colors.black45, 1, fontWeight: FontWeight.w500)
-                      : Container(),
-                  // getVerSpace(FetchPixels.getPixelHeight(3)),
-                  // modelMyBookResponse.myBook.reviewRating == null || modelMyBookResponse.myBook.reviewRating! == 0
-                  //     ? Container()
-                  //     : RatingBar.builder(
-                  //         initialRating: modelMyBookResponse.myBook.reviewRating!.toDouble(),
-                  //         minRating: 1,
-                  //         direction: Axis.horizontal,
-                  //         allowHalfRating: false,
-                  //         itemCount: 5,
-                  //         itemSize: 16,
-                  //         ignoreGestures: true,
-                  //         itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                  //         itemBuilder: (context, _) => Icon(
-                  //           Icons.star_rounded,
-                  //           color: Colors.amber,
-                  //         ),
-                  //         unratedColor: Colors.white,
-                  //         onRatingUpdate: (rating) {
-                  //           print(rating);
-                  //         },
-                  //       ),
-                  // getVerSpace(FetchPixels.getPixelHeight(3)),
+                  getVerSpace(FetchPixels.getPixelHeight(10)),
+                  buildMyBookV1(context, edgeInsets, modelMyBookResponse)
+                  // buildMyBook(context, edgeInsets, modelMyBookResponse),
                 ],
               ),
             ),
@@ -354,6 +293,161 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
     );
   }
 
+  Widget buildMyBookV1(BuildContext context, EdgeInsets edgeInsets, ModelMyBookResponse modelMyBookResponse) {
+    if (modelMyBookResponse.needDetailReview()) {
+      return getCustomFont(modelMyBookResponse.myBook.holdType == HoldType.plan ? "기대평점을 입력해주세요." : "책경험을 입력해주세요.", 11,
+          Colors.black45, 1,
+          fontWeight: FontWeight.w500);
+    } else {
+      if (modelMyBookResponse.myBook.holdType == HoldType.plan) {
+        return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getCustomFont("기대평점", 11, Colors.black45, 1, fontWeight: FontWeight.w500),
+              getVerSpace(FetchPixels.getPixelHeight(5)),
+              modelMyBookResponse.myBook.tempReviewRating == null || modelMyBookResponse.myBook.tempReviewRating! == 0
+                  ? Container()
+                  : RatingBar.builder(
+                      initialRating: modelMyBookResponse.myBook.tempReviewRating!.toDouble(),
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 12,
+                      ignoreGestures: true,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star_rounded,
+                        color: Colors.amber,
+                      ),
+                      unratedColor: Colors.amber.withAlpha(40),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    )
+            ]);
+      } else if (modelMyBookResponse.myBook.holdType == HoldType.read ||
+          modelMyBookResponse.myBook.holdType == HoldType.end) {
+        return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              modelMyBookResponse.myBook.usedType == UsedType.none
+                  ? Container()
+                  : getCustomFont("${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
+                      fontWeight: FontWeight.w600),
+              getVerSpace(FetchPixels.getPixelHeight(5)),
+              modelMyBookResponse.myBook.inMonth == 0
+                  ? Container()
+                  : Column(children: [
+                      Row(
+                        children: [
+                          modelMyBookResponse.myBook.inMonth != 0
+                              ? Row(
+                                  children: [
+                                    getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
+                                    getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black87, 1,
+                                        fontWeight: FontWeight.w600),
+                                  ],
+                                )
+                              : Container(),
+                          modelMyBookResponse.myBook.holdType == HoldType.end &&
+                                  modelMyBookResponse.myBook.outMonth != 0
+                              ? Row(
+                                  children: [
+                                    getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
+                                    getCustomFont(" ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black87, 1,
+                                        fontWeight: FontWeight.w600)
+                                  ],
+                                )
+                              : Container(),
+                        ],
+                      ),
+                      // getVerSpace(FetchPixels.getPixelHeight(7)),
+                    ]),
+              getVerSpace(FetchPixels.getPixelHeight(5)),
+              modelMyBookResponse.myBook.reviewRating == null || modelMyBookResponse.myBook.reviewRating! == 0
+                  ? Container()
+                  : RatingBar.builder(
+                      initialRating: modelMyBookResponse.myBook.reviewRating!.toDouble(),
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 12,
+                      ignoreGestures: true,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star_rounded,
+                        color: Colors.amber,
+                      ),
+                      unratedColor: Colors.amber.withAlpha(40),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    ),
+              // getVerSpace(FetchPixels.getPixelHeight(5)),
+            ]);
+      } else {
+        return Container();
+      }
+    }
+  }
+
+  Widget buildMyBook(BuildContext context, EdgeInsets edgeInsets, ModelMyBookResponse modelMyBookResponse) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      modelMyBookResponse.needDetailReview()
+          ? getCustomFont("책경험을 입력해주세요.", 14, Colors.black45, 1, fontWeight: FontWeight.w400)
+          : Column(
+              children: [
+                Column(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildBookInfoRow("상태", modelMyBookResponse.myBook.holdType.desc,
+                            valueColor: modelMyBookResponse.myBook.holdType.color),
+                        getVerSpace(FetchPixels.getPixelHeight(5)),
+                        if (modelMyBookResponse.myBook.holdType == HoldType.plan) ...[
+                          buildBookInfoRow("기대평점", "", tempRating: true, mybook: modelMyBookResponse.myBook),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          buildBookInfoRow("한줄메모", modelMyBookResponse.myBook.comment ?? ""),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                        ] else if (modelMyBookResponse.myBook.holdType == HoldType.read ||
+                            modelMyBookResponse.myBook.holdType == HoldType.end) ...[
+                          buildBookInfoRow(
+                              "날짜",
+                              modelMyBookResponse.myBook.inMonth == 0
+                                  ? ""
+                                  : modelMyBookResponse.myBook.holdType != HoldType.end ||
+                                          modelMyBookResponse.myBook.outMonth == 0
+                                      ? "${modelMyBookResponse.myBook.inMonth}개월 ~"
+                                      : "${modelMyBookResponse.myBook.inMonth}개월 ~ ${modelMyBookResponse.myBook.outMonth}개월"),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          buildBookInfoRow("평점", "", rating: true, mybook: modelMyBookResponse.myBook),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          buildBookInfoRow(
+                              "구매방식",
+                              modelMyBookResponse.myBook.usedType == UsedType.none
+                                  ? ""
+                                  : "${modelMyBookResponse.myBook.usedType.desc}구매"),
+                          getVerSpace(FetchPixels.getPixelHeight(5)),
+                          if (controller.myBookCase) ...[
+                            buildBookInfoRow("한줄메모", modelMyBookResponse.myBook.comment ?? ""),
+                            getVerSpace(FetchPixels.getPixelHeight(5))
+                          ]
+                        ]
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            )
+    ]);
+  }
+
   clickedModifyComment(BuildContext context, ModelMyBookResponse mybook) async {
     // if (comment.deleted) {
     //   Get.dialog(ErrorDialog("삭제된 댓글은 수정할 수 없습니다."));
@@ -376,5 +470,110 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
     } else {
       Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
     }
+  }
+
+  Widget buildBookInfoRow(String title, String value,
+      {String? link,
+      double? titleTextSize,
+      int? titleLength,
+      double? valueTextSize,
+      int? valueLength,
+      Color? valueColor,
+      bool? tempRating,
+      bool? rating,
+      ModelMyBook? mybook}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 15.w,
+          child: getCustomFont(
+            title ?? "",
+            titleTextSize ?? 11,
+            Colors.black45,
+            titleLength ?? 1,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        getHorSpace(FetchPixels.getPixelHeight(5)),
+        if (rating == true) ...[
+          mybook!.reviewRating == null || mybook!.reviewRating! == 0
+              ? Container()
+              : RatingBar.builder(
+                  initialRating: mybook!.reviewRating!.toDouble(),
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 16,
+                  ignoreGestures: true,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star_rounded,
+                    color: Colors.amber,
+                  ),
+                  unratedColor: Colors.amber.withAlpha(40),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                ),
+        ] else if (tempRating == true) ...[
+          mybook!.tempReviewRating == null || mybook!.tempReviewRating! == 0
+              ? Container()
+              : RatingBar.builder(
+                  initialRating: mybook.tempReviewRating!.toDouble(),
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 16,
+                  ignoreGestures: true,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star_rounded,
+                    color: Colors.amber,
+                  ),
+                  unratedColor: Colors.amber.withAlpha(40),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                ),
+        ] else ...[
+          link != null
+              ? GestureDetector(
+                  onTap: () async {
+                    final url = Uri.parse(
+                      link,
+                    );
+                    if (await canLaunchUrl(url)) {
+                      launchUrl(url);
+                    } else {
+                      // ignore: avoid_print
+                      Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
+                    }
+                  },
+                  child: Expanded(
+                      child: SizedBox(
+                          // width: 55.w,
+                          child: getCustomFont(
+                    value ?? "",
+                    valueTextSize ?? 13,
+                    Colors.blueAccent,
+                    valueLength ?? 3,
+                    fontWeight: FontWeight.w400,
+                  ))),
+                )
+              : Expanded(
+                  child: SizedBox(
+                      // width: 55.w,
+                      child: getCustomFont(
+                  value ?? "",
+                  valueTextSize ?? 13,
+                  valueColor ?? Colors.black,
+                  valueLength ?? 1,
+                  fontWeight: FontWeight.w400,
+                )))
+        ]
+      ],
+    );
   }
 }

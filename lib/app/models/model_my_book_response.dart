@@ -1,3 +1,5 @@
+import 'package:baby_book/app/view/home/book/HoldType.dart';
+
 import '../view/home/book/ReviewType.dart';
 import '../view/home/book/UsedType.dart';
 import 'model_book_response.dart';
@@ -22,9 +24,12 @@ class ModelMyBookResponse {
   }
 
   bool needDetailReview() {
-    return (myBook.inMonth == 0) &&
-        (myBook.reviewType == ReviewType.none) &&
-        (myBook.usedType == UsedType.none) &&
-        (myBook.usedType == UsedType.none);
+    if (myBook.holdType == HoldType.plan) {
+      return (myBook.tempReviewRating == null || myBook.tempReviewRating == 0);
+    } else {
+      return (myBook.inMonth == 0) &&
+          (myBook.reviewRating == null || myBook.reviewRating == 0) &&
+          (myBook.usedType == UsedType.none);
+    }
   }
 }

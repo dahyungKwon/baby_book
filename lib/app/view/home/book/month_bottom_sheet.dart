@@ -2,15 +2,19 @@ import 'package:baby_book/app/view/home/book/UsedType.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
+import '../../dialog/error_dialog.dart';
 
 class MonthBottomSheet extends StatefulWidget {
   int month;
   bool inMonth;
+  int? startMonth = 0;
 
-  MonthBottomSheet({required this.month, required this.inMonth, Key? key}) : super(key: key);
+  MonthBottomSheet({required this.month, required this.inMonth, this.startMonth, Key? key}) : super(key: key);
 
   @override
   State<MonthBottomSheet> createState() => _MonthBottomSheet();
@@ -19,12 +23,14 @@ class MonthBottomSheet extends StatefulWidget {
 class _MonthBottomSheet extends State<MonthBottomSheet> {
   late int selectedMonth;
   late bool selectedInMonth;
+  late int startMonth;
 
   @override
   void initState() {
     super.initState();
     selectedMonth = widget.month;
     selectedInMonth = widget.inMonth;
+    startMonth = widget.startMonth ?? 0;
   }
 
   @override
@@ -54,6 +60,7 @@ class _MonthBottomSheet extends State<MonthBottomSheet> {
                   children: [
                     _MonthBottomSheetPicker(
                         selectedMonth: selectedMonth!,
+                        startMonth: startMonth,
                         monthBottomSheetSetter: (int month) {
                           setState(() {
                             selectedMonth = month;
@@ -74,8 +81,10 @@ class _MonthBottomSheetPicker extends StatelessWidget {
   late int selectedMonth;
   final MonthBottomSheetSetter monthBottomSheetSetter;
   late FixedExtentScrollController monthPickerScrollController;
+  late int startMonth;
 
-  _MonthBottomSheetPicker({required this.selectedMonth, required this.monthBottomSheetSetter, Key? key}) {
+  _MonthBottomSheetPicker(
+      {required this.selectedMonth, required this.monthBottomSheetSetter, required this.startMonth, Key? key}) {
     ///해당 책이나 선택된 베이비 기준으로할 수 있다.
     ///현재는 12개월로 디폴트 잡아둠
     if (selectedMonth == null || selectedMonth == 0) {
@@ -100,39 +109,41 @@ class _MonthBottomSheetPicker extends StatelessWidget {
         //   ),
         // ),
         Container(
-          width: FetchPixels.getPixelHeight(200),
-          height: FetchPixels.getPixelHeight(200),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-          child: CupertinoPicker.builder(
-              itemExtent: 50,
-              childCount: 14 * 12 + 1,
-              scrollController: monthPickerScrollController,
-              onSelectedItemChanged: (i) {
-                monthBottomSheetSetter(i);
-                // Navigator.pop(context, i);
-              },
-              itemBuilder: (context, index) {
-                return Center(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "$index 개월",
-                    ),
-                    Text(
-                      " 만${calAge(index)}세",
-                      style: TextStyle(color: Colors.black45, fontSize: 13),
-                    )
-                  ],
-                )
-                    // style: theme.textTheme.bodyText1!
-                    //     .copyWith(color: Colors.white, fontSize: 25),
-                    );
-              }),
-        ),
-        getSimpleTextButton("확인", 18, Colors.black, Colors.white, FontWeight.w500,
+            width: FetchPixels.getPixelHeight(200),
+            height: FetchPixels.getPixelHeight(200),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+            child: CupertinoPicker.builder(
+                itemExtent: 50,
+                childCount: 14 * 12 + 1,
+                scrollController: monthPickerScrollController,
+                onSelectedItemChanged: (i) {
+                  monthBottomSheetSetter(i);
+                  // Navigator.pop(context, i);
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                      color: Colors.white,
+                      child: Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "$index 개월",
+                          ),
+                          Text(
+                            " 만${calAge(index)}세",
+                            style: TextStyle(color: Colors.black45, fontSize: 13),
+                          )
+                        ],
+                      )));
+                })),
+        getSimpleTextButton("선택", 18, Colors.black, Colors.white, FontWeight.w500,
             FetchPixels.getPixelHeight(double.infinity), FetchPixels.getPixelHeight(50), () {
-          Navigator.pop(context, selectedMonth);
+          if (selectedMonth < startMonth) {
+            Get.dialog(ErrorDialog("시작 개월수 ($startMonth개월)\n이후로 선택해주세요."));
+          } else {
+            Navigator.pop(context, selectedMonth);
+          }
         })
       ],
     );

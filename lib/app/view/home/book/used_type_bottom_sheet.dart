@@ -38,7 +38,7 @@ class _UsedTypeBottomSheetState extends State<UsedTypeBottomSheet> {
               Row(children: [
                 getHorSpace(FetchPixels.getPixelHeight(10)),
                 getCustomFont(
-                  "새책여부를 선택해주세요.",
+                  "구매방식을 선택해주세요.",
                   18,
                   Colors.black,
                   1,

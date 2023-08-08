@@ -235,6 +235,8 @@ class BookDetailScreen extends GetView<BookDetailController> {
         ///아무것도 안한경우
         print("선택안함");
       } else {
+        mybook.changedHoldType();
+
         ///그외는 모두 수정
         controller.modifyMyBook(mybook);
       }
@@ -568,56 +570,60 @@ class BookDetailScreen extends GetView<BookDetailController> {
                     ],
                   )))),
           controller.myBookContainerSwitch
-              ? Container(
-                  padding: EdgeInsets.only(
-                      top: FetchPixels.getPixelHeight(0),
-                      bottom: FetchPixels.getPixelHeight(10),
-                      left: FetchPixels.getPixelWidth(20),
-                      right: FetchPixels.getPixelWidth(20)),
-                  child: Column(
-                    children: [
-                      Column(
+              ? GestureDetector(
+                  onTap: () {
+                    buildBookExperience(context);
+                  },
+                  child: Container(
+                      padding: EdgeInsets.only(
+                          top: FetchPixels.getPixelHeight(0),
+                          bottom: FetchPixels.getPixelHeight(10),
+                          left: FetchPixels.getPixelWidth(20),
+                          right: FetchPixels.getPixelWidth(20)),
+                      child: Column(
                         children: [
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildBookInfoRow("상태", controller.myBookResponse.myBook.holdType.desc,
-                                  valueColor: controller.myBookResponse.myBook.holdType.color),
-                              getVerSpace(FetchPixels.getPixelHeight(15)),
-                              if (controller.myBookResponse.myBook.holdType == HoldType.plan) ...[
-                                buildBookInfoRow("기대평점", "", tempRating: true),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                                buildBookInfoRow("메모", controller.myBookResponse.myBook.comment),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                              ] else if (controller.myBookResponse.myBook.holdType == HoldType.read ||
-                                  controller.myBookResponse.myBook.holdType == HoldType.end) ...[
-                                buildBookInfoRow(
-                                    "날짜",
-                                    controller.myBookResponse.myBook.inMonth == 0
-                                        ? ""
-                                        : controller.myBookResponse.myBook.holdType != HoldType.end ||
-                                                controller.myBookResponse.myBook.outMonth == 0
-                                            ? "${controller.myBookResponse.myBook.inMonth}개월 ~"
-                                            : "${controller.myBookResponse.myBook.inMonth}개월 ~ ${controller.myBookResponse.myBook.outMonth}개월"),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                                buildBookInfoRow("평점", "", rating: true),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                                buildBookInfoRow(
-                                    "새책여부",
-                                    controller.myBookResponse.myBook.usedType == UsedType.none
-                                        ? ""
-                                        : "${controller.myBookResponse.myBook.usedType.desc}구매"),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                                buildBookInfoRow("메모", controller.myBookResponse.myBook.comment),
-                                getVerSpace(FetchPixels.getPixelHeight(15)),
-                              ]
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  buildBookInfoRow("상태", controller.myBookResponse.myBook.holdType.desc,
+                                      valueColor: controller.myBookResponse.myBook.holdType.color),
+                                  getVerSpace(FetchPixels.getPixelHeight(15)),
+                                  if (controller.myBookResponse.myBook.holdType == HoldType.plan) ...[
+                                    buildBookInfoRow("기대평점", "", tempRating: true),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                    buildBookInfoRow("한줄메모", controller.myBookResponse.myBook.comment),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                  ] else if (controller.myBookResponse.myBook.holdType == HoldType.read ||
+                                      controller.myBookResponse.myBook.holdType == HoldType.end) ...[
+                                    buildBookInfoRow(
+                                        "구매방식",
+                                        controller.myBookResponse.myBook.usedType == UsedType.none
+                                            ? ""
+                                            : "${controller.myBookResponse.myBook.usedType.desc}구매"),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                    buildBookInfoRow(
+                                        "날짜",
+                                        controller.myBookResponse.myBook.inMonth == 0
+                                            ? ""
+                                            : controller.myBookResponse.myBook.holdType != HoldType.end ||
+                                                    controller.myBookResponse.myBook.outMonth == 0
+                                                ? "${controller.myBookResponse.myBook.inMonth}개월 ~"
+                                                : "${controller.myBookResponse.myBook.inMonth}개월 ~ ${controller.myBookResponse.myBook.outMonth}개월"),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                    buildBookInfoRow("평점", "", rating: true),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                    buildBookInfoRow("한줄메모", controller.myBookResponse.myBook.comment),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
+                                  ]
+                                ],
+                              ),
                             ],
-                          ),
+                          )
                         ],
-                      )
-                    ],
-                  ))
+                      )))
               : Container(),
         ]));
   }

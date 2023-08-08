@@ -61,24 +61,24 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
                   ] else if (controller.mybook.holdType == HoldType.read) ...[
                     buildHoldType(),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
+                    buildUsedType(context),
+                    getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildInMonth(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildReviewType(context),
-                    getVerSpace(FetchPixels.getPixelHeight(20)),
-                    buildUsedType(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildMemo(context),
                     buildModifyBtn(context)
                   ] else if (controller.mybook.holdType == HoldType.end) ...[
                     buildHoldType(),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
+                    buildUsedType(context),
+                    getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildInMonth(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildOutMonth(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildReviewType(context),
-                    getVerSpace(FetchPixels.getPixelHeight(20)),
-                    buildUsedType(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildMemo(context),
                     buildModifyBtn(context)
@@ -335,7 +335,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("새책여부" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("구매방식" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
               // getVerSpace(10),
               // getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
               // getVerSpace(30),
@@ -343,7 +343,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           )),
       getDefaultTextFiledWithLabel2(
           context,
-          controller.mybook.usedType == UsedType.none ? "새책여부를 선택해주세요." : controller.mybook.usedType.desc,
+          controller.mybook.usedType == UsedType.none ? "구매방식을 선택해주세요." : controller.mybook.usedType.desc,
           controller.mybook.usedType == UsedType.none ? Colors.black45.withOpacity(0.3) : Colors.black,
           controller.usedTypeTextEditing,
           Colors.black87,
@@ -426,7 +426,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           FetchPixels.getPixelHeight(20),
           boxColor: backGroundColor,
           FontWeight.w400, function: () {
-        controller.showOutMonthBottomSheet(context);
+        controller.showOutMonthBottomSheet(context, controller.mybook.inMonth);
       },
           isEnable: false,
           withprefix: false,
@@ -454,7 +454,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: getDefaultTextFiledWithLabel2(context, "메모를 입력해주세요.", Colors.black45.withOpacity(0.3),
+              child: getDefaultTextFiledWithLabel2(context, "한줄메모를 입력해주세요.", Colors.black45.withOpacity(0.3),
                   controller.memoTypeTextEditing, Colors.grey, FetchPixels.getPixelHeight(20), FontWeight.w400,
                   function: () {},
                   isEnable: false,

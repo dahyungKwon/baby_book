@@ -160,12 +160,13 @@ class BookExperienceBottomSheetController extends GetxController {
     });
   }
 
-  showOutMonthBottomSheet(BuildContext context) {
+  showOutMonthBottomSheet(BuildContext context, int startMonth) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (_) => MonthBottomSheet(
               month: mybook.outMonth,
+              startMonth: startMonth,
               inMonth: false,
             )).then((selectedOutMonth) {
       if (selectedOutMonth != null) {

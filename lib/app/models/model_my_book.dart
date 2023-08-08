@@ -63,6 +63,18 @@ class ModelMyBook {
         updatedAt: null);
   }
 
+  changedHoldType() {
+    if (holdType == HoldType.plan) {
+      inMonth = 0;
+      outMonth = 0;
+      usedType = UsedType.none;
+      reviewType = ReviewType.none;
+      reviewRating = 0;
+    } else if (holdType == HoldType.read) {
+      outMonth = 0;
+    }
+  }
+
   ModelMyBook.fromJson(Map<String, dynamic> json)
       : myBookId = json['myBookId'],
         bookSetId = json['bookSetId'],
