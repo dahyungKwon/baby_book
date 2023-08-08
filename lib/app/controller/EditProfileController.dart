@@ -148,7 +148,12 @@ class EditProfileController extends GetxController {
       return;
     }
 
-    bool existNickName = await MemberRepository.existNickName(nickName: nickName);
+    bool? existNickName = await MemberRepository.existNickName(nickName: nickName);
+    if (existNickName == null) {
+      ///네트웍에러
+      return;
+    }
+
     if (existNickName) {
       Get.dialog(ErrorDialog("이미 존재하는 닉네임입니다."));
       return;
@@ -209,32 +214,52 @@ class EditProfileController extends GetxController {
     List<ModelBaby> registeredBabyList = [];
     for (ModelBaby baby in selectedBabyList) {
       if (baby.babyId!.startsWith("temp")) {
-        ModelBaby createdBaby = await BabyRepository.createBaby(
+        ModelBaby? createdBaby = await BabyRepository.createBaby(
             memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
+        if (createdBaby == null) {
+          ///네트웍오류
+          return;
+        }
+
         registeredBabyList.add(createdBaby);
 
         if (baby.babyId == representBabyId) {
           createdRepresentBabyId = createdBaby.babyId!;
         }
       } else {
-        registeredBabyList.add(await BabyRepository.putBaby(
-            babyId: baby.babyId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!));
+        ModelBaby? changedBaby = await BabyRepository.putBaby(
+            babyId: baby.babyId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
+
+        if (changedBaby == null) {
+          ///네트웍에러
+          return;
+        }
+
+        registeredBabyList.add(changedBaby);
       }
     }
 
     for (ModelBaby deletedBaby in deletedBabyList) {
       if (deletedBaby.babyId != null) {
-        await BabyRepository.deleteBaby(babyId: deletedBaby.babyId!);
+        bool result = await BabyRepository.deleteBaby(babyId: deletedBaby.babyId!);
+        if (!result) {
+          ///네트웍에러
+          return;
+        }
       }
     }
 
-    ModelMember member = await MemberRepository.putMember(
+    ModelMember? member = await MemberRepository.putMember(
         memberId: memberId!,
         nickName: checkedNickName,
         allAgreed: true,
         gender: gender,
         selectedBabyId: createdRepresentBabyId ?? representBabyId,
         contents: contentsController.text);
+    if (member == null) {
+      ///네트웍에러
+      return;
+    }
 
     await PrefData.setAgreed(true);
 

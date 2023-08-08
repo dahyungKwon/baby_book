@@ -142,7 +142,9 @@ class BookDetailController extends GetxController {
     postTag =
         await postRepository.getPostBookTag(bookId: book.modelBook.id, pagingRequest: PagingRequest.createDefault());
 
-    bookMember = await myBookRepository.getListByBook(bookId: bookSetId, pagingRequest: PagingRequest.createDefault());
+    bookMember =
+        await myBookRepository.getListByBook(bookId: bookSetId, pagingRequest: PagingRequest.createDefault()) ??
+            ModelMyBookMemberResponse.createForObsInit();
 
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
@@ -172,7 +174,7 @@ class BookDetailController extends GetxController {
 
   Future<bool> addMyBook(ModelMyBook myBook) async {
     String? memberId = await PrefData.getMemberId();
-    await myBookRepository.post(
+    ModelMyBook? result = await myBookRepository.post(
         request: ModelMyBookRequest(
       bookSetId: bookSetId,
       memberId: memberId!,
@@ -187,12 +189,14 @@ class BookDetailController extends GetxController {
       comment: myBook.comment,
     ));
 
-    reloadMyBook();
+    if (result != null) {
+      reloadMyBook();
+    }
     return true;
   }
 
   Future<bool> modifyMyBook(ModelMyBook myBook) async {
-    await myBookRepository.modify(
+    ModelMyBook? result = await myBookRepository.modify(
         myBookId: myBook.myBookId,
         request: ModelMyBookRequest(
           bookSetId: myBook.bookSetId,
@@ -208,7 +212,9 @@ class BookDetailController extends GetxController {
           comment: myBook.comment,
         ));
 
-    reloadMyBook();
+    if (result != null) {
+      reloadMyBook();
+    }
     return true;
   }
 

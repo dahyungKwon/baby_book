@@ -41,7 +41,8 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             myBookRepository: MyBookRepository(),
             memberRepository: MemberRepository(),
             babyRepository: BabyRepository(),
-            memberId: memberId),
+            memberId: memberId,
+            holdType: holdType),
         tag: uniqueTag);
     refreshController = RefreshController(initialRefresh: false);
   }

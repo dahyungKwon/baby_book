@@ -82,21 +82,9 @@ class MemberCommunityListController extends GetxController {
 
   Future<List<ModelPost>> _request(MemberPostType memberPostType, PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    try {
-      print("_request......${memberPostType.code}........${pagingRequest.pageNumber}");
-      return await postRepository.getPostListByMemberPostType(
-          memberId: memberId, memberPostType: memberPostType, pagingRequest: pagingRequest);
-    } on InvalidMemberException catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    }
-
-    return [];
+    print("_request......${memberPostType.code}........${pagingRequest.pageNumber}");
+    return await postRepository.getPostListByMemberPostType(
+        memberId: memberId, memberPostType: memberPostType, pagingRequest: pagingRequest);
   }
 
   void _initList(MemberPostType memberPostType, List<ModelPost> list) {

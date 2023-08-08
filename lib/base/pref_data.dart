@@ -15,6 +15,7 @@ class PrefData {
   static String refreshToken = "${prefName}refreshToken";
   static String memberId = "${prefName}memberId";
   static String agreed = "${prefName}agreed";
+  static String lastLoginDate = "${prefName}lastLoginDate";
 
   static Future<SharedPreferences> getPrefInstance() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -126,5 +127,31 @@ class PrefData {
   static setAgreed(bool agreedParam) async {
     SharedPreferences preferences = await getPrefInstance();
     preferences.setBool(agreed, agreedParam);
+  }
+
+  static setLastLoginDate(DateTime? lastDate) async {
+    SharedPreferences preferences = await getPrefInstance();
+    if (lastDate == null) {
+      preferences.remove(lastLoginDate);
+    } else {
+      preferences.setString(lastLoginDate, lastDate.toIso8601String());
+    }
+  }
+
+  static Future<bool> needRefreshAuth() async {
+    SharedPreferences preferences = await getPrefInstance();
+    String? lastDateString = preferences.getString(lastLoginDate);
+    if (lastDateString == null || lastDateString.isEmpty) {
+      return true;
+    }
+
+    DateTime lastDateTime = DateTime.parse(lastDateString);
+    DateTime lastDate = DateTime(lastDateTime.year, lastDateTime.month, lastDateTime.day);
+
+    DateTime nowDateTime = DateTime.now();
+    DateTime nowDate = DateTime(nowDateTime.year, nowDateTime.month, nowDateTime.day);
+
+    //lastDate가 nowDate보다 지난 시간이면 refresh 해야함 (일단위)
+    return lastDate.isBefore(nowDate);
   }
 }

@@ -90,85 +90,61 @@ class CommentDetailController extends GetxController {
   }
 
   Future<bool> addComment() async {
-    try {
-      EasyLoading.show(maskType: EasyLoadingMaskType.black);
-      ModelCommentResponse response =
-          await commentRepository.post(commentTargetId: postId, body: commentController.text, parentId: commentId);
-      if (response != null) {
-        ///답글쓰는 상황
-        commentList[0].childComments.add(response);
-        _commentList.refresh();
-        commentController.text = "";
-        EasyLoading.dismiss();
-        Future.delayed(const Duration(milliseconds: 500), () {
-          scrollController.animateTo(scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 700), curve: Curves.ease);
-        });
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
 
-        return true;
-      } else {
-        EasyLoading.dismiss();
-        Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
-      }
-    } on InvalidMemberException catch (e) {
-      print(e);
+    ModelCommentResponse? response =
+        await commentRepository.post(commentTargetId: postId, body: commentController.text, parentId: commentId);
+
+    if (response != null) {
+      ///답글쓰는 상황
+      commentList[0].childComments.add(response);
+      _commentList.refresh();
+      commentController.text = "";
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 700), curve: Curves.ease);
+      });
+
+      return true;
+    } else {
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
+      return false;
     }
-
-    return false;
   }
 
   Future<bool> modifyComment() async {
-    try {
-      if (selectedComment == null) {
-        Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
-        return false;
-      }
-      EasyLoading.show(maskType: EasyLoadingMaskType.black);
-      bool result = await commentRepository.modify(
-          commentId: selectedComment!.comment.commentId,
-          commentTargetId: selectedComment!.comment.commentTargetId,
-          body: commentController.text,
-          parentId: selectedComment!.comment.commentParentId);
-      if (result) {
-        selectedComment!.comment.body = commentController.text;
-        selectedComment!.comment.updatedAt = DateTime.now();
-        selectedComment!.timeDiffForUi = "방금 전";
-        // getComment();
-        exitModifyCommentMode();
+    if (selectedComment == null) {
+      Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
+      return false;
+    }
 
-        EasyLoading.dismiss();
-        return true;
-      } else {
-        EasyLoading.dismiss();
-        Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
-      }
-    } on InvalidMemberException catch (e) {
-      print(e);
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+
+    bool result = await commentRepository.modify(
+        commentId: selectedComment!.comment.commentId,
+        commentTargetId: selectedComment!.comment.commentTargetId,
+        body: commentController.text,
+        parentId: selectedComment!.comment.commentParentId);
+
+    if (result) {
+      selectedComment!.comment.body = commentController.text;
+      selectedComment!.comment.updatedAt = DateTime.now();
+      selectedComment!.timeDiffForUi = "방금 전";
+      // getComment();
+      exitModifyCommentMode();
+
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
+      return true;
+    } else {
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
     }
 
     return false;
   }
 
   Future<bool> removeComment(String commentId) async {
-    try {
-      await commentRepository.delete(commentId: commentId);
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+    return await commentRepository.delete(commentId: commentId);
   }
 
   Future<bool> executeModifyCommentMode(ModelCommentResponse comment) async {

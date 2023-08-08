@@ -65,21 +65,13 @@ class BookMemberListController extends GetxController {
 
   Future<List<ModelMyBookMemberBody>> _request(PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    try {
-      ModelMyBookMemberResponse bookMemberResponse =
-          await myBookRepository.getListByBook(bookId: bookId, pagingRequest: pagingRequest);
+    ModelMyBookMemberResponse? bookMemberResponse =
+        await myBookRepository.getListByBook(bookId: bookId, pagingRequest: pagingRequest);
+    if (bookMemberResponse == null) {
+      return [];
+    } else {
       return bookMemberResponse.memberList;
-    } on InvalidMemberException catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
     }
-
-    return [];
   }
 
   void _initList(List<ModelMyBookMemberBody> list) {

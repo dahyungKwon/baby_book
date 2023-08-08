@@ -125,36 +125,48 @@ class CommunityDetailController extends GetxController {
     });
   }
 
-  clickBookmark() {
+  clickBookmark() async {
     if (bookmark) {
-      postFeedbackRepository.cancelBookmark(postId: postId);
-      bookmark = false;
-      post.bookmark = false;
-      post.bookmarkCount = post.bookmarkCount - 1;
+      bool result = await postFeedbackRepository.cancelBookmark(postId: postId);
+      if (result) {
+        bookmark = false;
+        post.bookmark = false;
+        post.bookmarkCount = post.bookmarkCount - 1;
+      }
     } else {
-      postFeedbackRepository.bookmark(postId: postId);
-      bookmark = true;
-      post.bookmark = true;
-      post.bookmarkCount = post.bookmarkCount + 1;
+      bool result = await postFeedbackRepository.bookmark(postId: postId);
+      if (result) {
+        bookmark = true;
+        post.bookmark = true;
+        post.bookmarkCount = post.bookmarkCount + 1;
+      }
     }
   }
 
-  clickLiked() {
+  clickLiked() async {
     if (liked) {
-      postFeedbackRepository.cancelLike(postId: postId);
-      liked = false;
-      post.liked = false;
-      post.likeCount = post.likeCount - 1;
+      bool result = await postFeedbackRepository.cancelLike(postId: postId);
+      if (result) {
+        liked = false;
+        post.liked = false;
+        post.likeCount = post.likeCount - 1;
+      }
     } else {
-      postFeedbackRepository.like(postId: postId);
-      liked = true;
-      post.liked = true;
-      post.likeCount = post.likeCount + 1;
+      bool result = await postFeedbackRepository.like(postId: postId);
+      if (result) {
+        liked = true;
+        post.liked = true;
+        post.likeCount = post.likeCount + 1;
+      }
     }
   }
 
   Future<bool> getPost() async {
-    ModelPost selectedPost = await postRepository.get(postId: postId);
+    ModelPost? selectedPost = await postRepository.get(postId: postId);
+    if (selectedPost == null) {
+      return false;
+    }
+
     post.copyWith(selectedPost: selectedPost);
     bookmark = post.bookmark; //북마크 별도 관리
     liked = post.liked; //좋아요 별도 관리
@@ -164,13 +176,7 @@ class CommunityDetailController extends GetxController {
   }
 
   Future<bool> removePost() async {
-    try {
-      await postRepository.delete(postId: postId);
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+    return await postRepository.delete(postId: postId);
   }
 
   Future<bool> getComment() async {
@@ -183,84 +189,59 @@ class CommunityDetailController extends GetxController {
   }
 
   Future<bool> addComment() async {
-    try {
-      EasyLoading.show(maskType: EasyLoadingMaskType.black);
-      ModelCommentResponse response =
-          await commentRepository.post(commentTargetId: postId, body: commentController.text);
-      if (response != null) {
-        commentList.add(response);
-        _commentList.refresh();
-        commentController.text = "";
-        EasyLoading.dismiss();
-        Future.delayed(const Duration(milliseconds: 500), () {
-          scrollController.animateTo(scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 700), curve: Curves.ease);
-        });
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
 
-        return true;
-      } else {
-        EasyLoading.dismiss();
-        Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
-      }
-    } on InvalidMemberException catch (e) {
-      print(e);
+    ModelCommentResponse? response =
+        await commentRepository.post(commentTargetId: postId, body: commentController.text);
+
+    if (response != null) {
+      commentList.add(response);
+      _commentList.refresh();
+      commentController.text = "";
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
+      Future.delayed(const Duration(milliseconds: 500), () {
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 700), curve: Curves.ease);
+      });
+
+      return true;
+    } else {
       EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
+      return false;
     }
-
-    return false;
   }
 
   Future<bool> modifyComment() async {
-    try {
-      if (selectedComment == null) {
-        Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
-        return false;
-      }
-      EasyLoading.show(maskType: EasyLoadingMaskType.black);
-      bool result = await commentRepository.modify(
-          commentId: selectedComment!.comment.commentId,
-          commentTargetId: selectedComment!.comment.commentTargetId,
-          body: commentController.text,
-          parentId: selectedComment!.comment.commentParentId);
-      if (result) {
-        selectedComment!.comment.body = commentController.text;
-        selectedComment!.comment.updatedAt = DateTime.now();
-        selectedComment!.timeDiffForUi = "방금 전";
-        // getComment();
-        exitModifyCommentMode();
-
-        EasyLoading.dismiss();
-        return true;
-      } else {
-        EasyLoading.dismiss();
-        Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
-      }
-    } on InvalidMemberException catch (e) {
-      print(e);
-      EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      EasyLoading.dismiss();
-      Get.toNamed(Routes.loginPath);
+    if (selectedComment == null) {
+      Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
+      return false;
     }
 
-    return false;
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+
+    bool result = await commentRepository.modify(
+        commentId: selectedComment!.comment.commentId,
+        commentTargetId: selectedComment!.comment.commentTargetId,
+        body: commentController.text,
+        parentId: selectedComment!.comment.commentParentId);
+
+    if (result) {
+      selectedComment!.comment.body = commentController.text;
+      selectedComment!.comment.updatedAt = DateTime.now();
+      selectedComment!.timeDiffForUi = "방금 전";
+      // getComment();
+      exitModifyCommentMode();
+
+      EasyLoading.dismiss();
+      return true;
+    } else {
+      EasyLoading.dismiss();
+      return false;
+    }
   }
 
   Future<bool> removeComment(String commentId) async {
-    try {
-      await commentRepository.delete(commentId: commentId);
-      return true;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+    return await commentRepository.delete(commentId: commentId);
   }
 
   Future<bool> executeModifyCommentMode(ModelCommentResponse comment) async {

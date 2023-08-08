@@ -126,13 +126,17 @@ class BookDetailScreen extends GetView<BookDetailController> {
                           GestureDetector(
                               onTap: () async {
                                 if (controller.like) {
-                                  await controller.clickCancelLike();
-                                  controller.like = false;
-                                  controller.likeCount -= 1;
+                                  bool result = await controller.clickCancelLike();
+                                  if (result) {
+                                    controller.like = false;
+                                    controller.likeCount -= 1;
+                                  }
                                 } else {
-                                  await controller.clickLike();
-                                  controller.like = true;
-                                  controller.likeCount += 1;
+                                  bool result = await controller.clickLike();
+                                  if (result) {
+                                    controller.like = true;
+                                    controller.likeCount += 1;
+                                  }
                                 }
                               },
                               child: Container(

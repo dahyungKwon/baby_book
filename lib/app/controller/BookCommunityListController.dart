@@ -65,20 +65,13 @@ class BookCommunityListController extends GetxController {
 
   Future<List<ModelPost>> _request(PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    try {
-      ModelPostTag postTag = await postRepository.getPostBookTag(bookId: bookId, pagingRequest: pagingRequest);
-      return postTag.postList;
-    } on InvalidMemberException catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    }
 
-    return [];
+    ModelPostTag? postTag = await postRepository.getPostBookTag(bookId: bookId, pagingRequest: pagingRequest);
+    if (postTag == null) {
+      return [];
+    } else {
+      return postTag.postList;
+    }
   }
 
   void _initList(List<ModelPost> list) {

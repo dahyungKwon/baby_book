@@ -3,6 +3,7 @@ part of './app_pages.dart';
 abstract class Routes {
   ///전체
   static const loginPath = "/LoginScreen";
+  static const reAuthPath = "/ReAuthScreen";
   static const joinPath = "/JoinScreen";
   static const servicePolicyPath = "/ServicePolicyScreen";
   static const privacyPolicyPath = "/PrivacyPolicyScreen";

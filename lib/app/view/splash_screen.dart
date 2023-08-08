@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,28 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //app scheme
+    checkAppScheme();
+
+    //멤버 상태 체크
+    checkMemberStatus();
+
+    FetchPixels(context);
+    return WillPopScope(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Container(
+              color: Colors.white,
+              child: Center(
+                  child: getAssetImage("sp8.png", FetchPixels.getPixelWidth(double.infinity),
+                      FetchPixels.getPixelHeight(double.infinity)))),
+        ),
+        onWillPop: () async {
+          Get.back();
+          return false;
+        });
+  }
+
+  checkAppScheme() {
     AppSchemeImpl appScheme = AppSchemeImpl.getInstance()!!;
     appScheme.getInitScheme().then((value) {
       if (value != null) {
@@ -43,34 +66,22 @@ class SplashScreen extends StatelessWidget {
           return;
         }
       }
-
-      Timer(const Duration(seconds: 1), () async {
-        if (await isLogin()) {
-          if (await isAgreed()) {
-            Get.offAllNamed(Routes.homescreenPath);
-          } else {
-            Get.offAllNamed(Routes.joinPath);
-          }
-        } else {
-          Get.offAllNamed(Routes.loginPath);
-        }
-      });
     });
+  }
 
-    FetchPixels(context);
-
-    return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Container(
-              color: Colors.white,
-              child: Center(
-                  child: getAssetImage("sp8.png", FetchPixels.getPixelWidth(double.infinity),
-                      FetchPixels.getPixelHeight(double.infinity)))),
-        ),
-        onWillPop: () async {
-          Get.back();
-          return false;
-        });
+  checkMemberStatus() {
+    Timer(const Duration(seconds: 1), () async {
+      if (!await isLogin()) {
+        Get.offAllNamed(Routes.loginPath);
+      }
+      if (!await isAgreed()) {
+        Get.offAllNamed(Routes.joinPath);
+      }
+      if (await PrefData.needRefreshAuth()) {
+        Get.offAllNamed(Routes.reAuthPath);
+      } else {
+        Get.offAllNamed(Routes.homescreenPath);
+      }
+    });
   }
 }

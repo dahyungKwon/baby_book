@@ -16,6 +16,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   final MemberRepository memberRepository;
   final BabyRepository babyRepository;
   late String? memberId;
+  late HoldType? holdType;
 
   // late HoldType holdType;
   late ModelMember member;
@@ -32,7 +33,8 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
       {required this.myBookRepository,
       required this.memberRepository,
       required this.babyRepository,
-      required this.memberId}) {
+      required this.memberId,
+      required this.holdType}) {
     assert(myBookRepository != null);
     assert(memberRepository != null);
     assert(babyRepository != null);
@@ -81,7 +83,9 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
       }
     }
 
-    await getAllForInit(HoldType.all);
+    if (holdType == HoldType.all) {
+      await getAllForInit(HoldType.all);
+    }
 
     ///사용자경험 위해 0.2초 딜레이
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -128,26 +132,14 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
 
   Future<List<ModelMyBookResponse>> _request(HoldType holdType, PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    try {
-      if (selectedBaby == null) {
-        print("_request......selected baby is null, so don't connect server");
-        return Future(() => []);
-      }
-
-      print("_request......${holdType.code}........${pagingRequest.pageNumber}");
-      return await myBookRepository.getMyBookList(
-          pagingRequest: pagingRequest, memberId: memberId!, babyId: selectedBaby!.babyId!, holdType: holdType);
-    } on InvalidMemberException catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
+    if (selectedBaby == null) {
+      print("_request......selected baby is null, so don't connect server");
+      return Future(() => []);
     }
 
-    return [];
+    print("_request......${holdType.code}........${pagingRequest.pageNumber}");
+    return await myBookRepository.getMyBookList(
+        pagingRequest: pagingRequest, memberId: memberId!, babyId: selectedBaby!.babyId!, holdType: holdType);
   }
 
   void _initList(HoldType holdType, List<ModelMyBookResponse> list) {

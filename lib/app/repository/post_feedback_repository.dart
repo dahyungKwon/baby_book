@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
+import '../routes/app_pages.dart';
+import '../view/dialog/error_dialog.dart';
 
 class PostFeedbackRepository {
   var dio = Dio(BaseOptions(
@@ -10,7 +13,7 @@ class PostFeedbackRepository {
     receiveTimeout: 3000,
   ));
 
-  like({required String postId}) async {
+  Future<bool> like({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.post(
@@ -22,14 +25,16 @@ class PostFeedbackRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+    return true;
   }
 
-  cancelLike({required String postId}) async {
+  Future<bool> cancelLike({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.delete(
@@ -41,14 +46,17 @@ class PostFeedbackRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+
+    return true;
   }
 
-  bookmark({required String postId}) async {
+  Future<bool> bookmark({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.post(
@@ -60,14 +68,17 @@ class PostFeedbackRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+
+    return true;
   }
 
-  cancelBookmark({required String postId}) async {
+  Future<bool> cancelBookmark({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.delete(
@@ -79,10 +90,13 @@ class PostFeedbackRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+
+    return true;
   }
 }

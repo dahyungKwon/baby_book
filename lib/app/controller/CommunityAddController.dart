@@ -182,10 +182,18 @@ class CommunityAddController extends GetxController {
 
       String selectedPostId = "";
       if (modifyMode) {
-        await postRepository.put(postId: modifyPostId!, modelPostRequest: request);
+        bool result = await postRepository.put(postId: modifyPostId!, modelPostRequest: request);
+        if (!result) {
+          ///네트워크 에러
+          return;
+        }
         selectedPostId = modifyPostId!;
       } else {
-        ModelPost post = await postRepository.add(modelPostRequest: request);
+        ModelPost? post = await postRepository.add(modelPostRequest: request);
+        if (post == null) {
+          ///네트워크 에러
+          return;
+        }
         selectedPostId = post.postId;
       }
 
@@ -209,10 +217,10 @@ class CommunityAddController extends GetxController {
       }
     } on InvalidMemberException catch (e) {
       print(e);
-      Get.toNamed(Routes.loginPath);
+      Get.toNamed(Routes.reAuthPath);
     } catch (e) {
       print(e);
-      Get.toNamed(Routes.loginPath);
+      Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: $e"));
     }
   }
 
@@ -296,7 +304,14 @@ class CommunityAddController extends GetxController {
     modifyMode = true;
     modifyPostId = postId;
 
-    ModelPost post = await postRepository.get(postId: postId);
+    ModelPost? post = await postRepository.get(postId: postId);
+
+    ///네트워크에러
+    if (post == null) {
+      loading = false;
+      return;
+    }
+
     postType = post.postType;
     titleController.text = post.title;
     contentsController.text = post.contents;

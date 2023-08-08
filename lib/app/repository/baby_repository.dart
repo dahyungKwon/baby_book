@@ -1,9 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 import '../models/model_baby.dart';
+import '../routes/app_pages.dart';
+import '../view/dialog/error_dialog.dart';
 import '../view/login/gender_type.dart';
 
 class BabyRepository {
@@ -13,7 +17,7 @@ class BabyRepository {
     receiveTimeout: 3000,
   ));
 
-  static Future<ModelBaby> createBaby({
+  static Future<ModelBaby?> createBaby({
     required String memberId,
     required String name,
     required GenderType gender,
@@ -34,16 +38,17 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
     return ModelBaby.fromJson(response.data['body']);
   }
 
-  static Future<ModelBaby> putBaby({
+  static Future<ModelBaby?> putBaby({
     required String babyId,
     String? name,
     GenderType? gender,
@@ -66,9 +71,10 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
@@ -89,9 +95,10 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return ModelBaby();
       }
     }
 
@@ -111,9 +118,10 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return [];
       }
     }
 
@@ -138,9 +146,10 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
 
@@ -159,9 +168,10 @@ class BabyRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
 

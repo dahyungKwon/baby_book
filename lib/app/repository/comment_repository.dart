@@ -1,8 +1,11 @@
 import 'package:baby_book/app/models/model_comment_response.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
+import '../routes/app_pages.dart';
+import '../view/dialog/error_dialog.dart';
 
 class CommentRepository {
   var dio = Dio(BaseOptions(
@@ -26,9 +29,10 @@ class CommentRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return [];
       }
     }
 
@@ -53,9 +57,10 @@ class CommentRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return [];
       }
     }
 
@@ -66,7 +71,7 @@ class CommentRepository {
         .toList();
   }
 
-  Future<ModelCommentResponse> post({
+  Future<ModelCommentResponse?> post({
     String commentType = "COMMUNITY",
     required String commentTargetId,
     required String body,
@@ -84,9 +89,10 @@ class CommentRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
@@ -112,9 +118,10 @@ class CommentRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
 
@@ -135,9 +142,10 @@ class CommentRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
 

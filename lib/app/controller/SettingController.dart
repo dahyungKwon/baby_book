@@ -35,14 +35,17 @@ class SettingController extends GetxController with GetSingleTickerProviderState
 
   deleteMember() async {
     await Get.dialog(ReConfirmDialog("아기곰책육아 회원 탈퇴 하시겠습니까?", "네", "아니오", () async {
-      await MemberRepository.deleteMember(memberId: memberId);
-      await PrefData.setAgreed(false);
-      await PrefData.setLogIn(false);
-      await PrefData.setMemberId(null);
-      await PrefData.setAccessToken(null);
-      await PrefData.setRefreshToken(null);
+      bool result = await MemberRepository.deleteMember(memberId: memberId);
+      if (result) {
+        await PrefData.setAgreed(false);
+        await PrefData.setLogIn(false);
+        await PrefData.setMemberId(null);
+        await PrefData.setAccessToken(null);
+        await PrefData.setRefreshToken(null);
+        await PrefData.setLastLoginDate(null);
 
-      Get.toNamed(Routes.loginPath);
+        Get.toNamed(Routes.loginPath);
+      }
     }));
   }
 

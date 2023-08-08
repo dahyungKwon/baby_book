@@ -106,23 +106,11 @@ class TabHomeController extends GetxController {
 
   Future<List<ModelBookResponse>> _request(CategoryType categoryType, PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    try {
-      print("_request......${categoryType.code}........${pagingRequest.pageNumber}");
-      return await bookListRepository.getBookList(
-          ageGroup: ModelAgeGroup.getAgeGroup(selectedAgeGroupId),
-          categoryType: selectedCategoryType,
-          pagingRequest: pagingRequest);
-    } on InvalidMemberException catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    } catch (e) {
-      print(e);
-      loading = false;
-      Get.toNamed(Routes.loginPath);
-    }
-
-    return [];
+    print("_request......${categoryType.code}........${pagingRequest.pageNumber}");
+    return await bookListRepository.getBookList(
+        ageGroup: ModelAgeGroup.getAgeGroup(selectedAgeGroupId),
+        categoryType: selectedCategoryType,
+        pagingRequest: pagingRequest);
   }
 
   void initCache() {

@@ -207,7 +207,12 @@ class JoinController extends GetxController {
       return;
     }
 
-    bool existNickName = await MemberRepository.existNickName(nickName: nickName);
+    bool? existNickName = await MemberRepository.existNickName(nickName: nickName);
+    if (existNickName == null) {
+      ///네트웍에러
+      return;
+    }
+
     if (existNickName) {
       Get.dialog(ErrorDialog("이미 존재하는 닉네임입니다."));
       return;
@@ -433,8 +438,12 @@ class JoinController extends GetxController {
     String createdRepresentBabyId = "";
     List<ModelBaby> registeredBabyList = [];
     for (ModelBaby baby in selectedBabyList) {
-      ModelBaby createdBaby = await BabyRepository.createBaby(
+      ModelBaby? createdBaby = await BabyRepository.createBaby(
           memberId: memberId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
+      if (createdBaby == null) {
+        ///네트웍오류
+        return;
+      }
       registeredBabyList.add(createdBaby);
 
       if (baby.babyId == representBabyId) {
@@ -442,12 +451,16 @@ class JoinController extends GetxController {
       }
     }
 
-    ModelMember member = await MemberRepository.putMember(
+    ModelMember? member = await MemberRepository.putMember(
         memberId: memberId!,
         nickName: checkedNickName,
         allAgreed: true,
         gender: gender,
         selectedBabyId: createdRepresentBabyId);
+    if (member == null) {
+      ///네트웍에러
+      return;
+    }
 
     await PrefData.setAgreed(true);
 

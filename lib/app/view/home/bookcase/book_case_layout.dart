@@ -65,7 +65,7 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
       labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
       tabs: List.generate(controller.tabsList.length, (index) {
         return Tab(
-          height: 16.0,
+          height: 20.0,
           child: Container(
               alignment: Alignment.center,
               child: Column(

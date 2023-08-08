@@ -26,6 +26,7 @@ import '../view/home/payment_screen.dart';
 import '../view/login/forgot_password.dart';
 import '../view/login/login_screen.dart';
 import '../view/login/privacy_policy_screen.dart';
+import '../view/login/re_auth_screen.dart';
 import '../view/login/reset_password.dart';
 import '../view/login/service_policy_screen.dart';
 import '../view/notification_screen.dart';
@@ -48,6 +49,7 @@ class AppPages {
   static final pages = [
     GetPage(name: Routes.homepath, page: () => SplashScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.loginPath, page: () => LoginScreen(), transition: Transition.noTransition),
+    GetPage(name: Routes.reAuthPath, page: () => ReAuthScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), transition: Transition.noTransition),
     GetPage(name: Routes.tabBookCasePath, page: () => HomeScreen(1), transition: Transition.noTransition),
     GetPage(name: Routes.communityListPath, page: () => HomeScreen(2), transition: Transition.noTransition),

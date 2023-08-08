@@ -228,8 +228,7 @@ GestureDetector buildPostListItem(
       margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
       // left: FetchPixels.getPixelWidth(10),
       // right: FetchPixels.getPixelWidth(10)),
-      padding:
-          EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(20)),
+      padding: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(6), horizontal: FetchPixels.getPixelWidth(20)),
       decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [

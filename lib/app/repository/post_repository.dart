@@ -1,12 +1,15 @@
 import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
 import '../models/model_post.dart';
 import '../models/model_post_request.dart';
+import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
+import '../view/dialog/error_dialog.dart';
 import '../view/profile/member_post_type.dart';
 
 class PostRepository {
@@ -33,9 +36,10 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return [];
       }
     }
 
@@ -46,7 +50,7 @@ class PostRepository {
         .toList();
   }
 
-  Future<ModelPost> get({required String postId}) async {
+  Future<ModelPost?> get({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
@@ -58,16 +62,17 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
     return ModelPost.fromJson(response.data['body']);
   }
 
-  Future<ModelPost> add({required ModelPostRequest modelPostRequest}) async {
+  Future<ModelPost?> add({required ModelPostRequest modelPostRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.post(
@@ -80,16 +85,17 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
     return ModelPost.fromJson(response.data['body']);
   }
 
-  put({required String postId, required ModelPostRequest modelPostRequest}) async {
+  Future<bool> put({required String postId, required ModelPostRequest modelPostRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.put(
@@ -102,14 +108,16 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+    return true;
   }
 
-  delete({required String postId}) async {
+  Future<bool> delete({required String postId}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.delete(
@@ -121,11 +129,14 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return false;
       }
     }
+
+    return true;
   }
 
   Future<List<ModelPost>> getPostListByMemberPostType(
@@ -146,9 +157,10 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return [];
       }
     }
 
@@ -160,7 +172,7 @@ class PostRepository {
   }
 
   ///태그조회
-  Future<ModelPostTag> getPostTag({required String tag, required PagingRequest pagingRequest}) async {
+  Future<ModelPostTag?> getPostTag({required String tag, required PagingRequest pagingRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
@@ -176,9 +188,10 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
@@ -186,7 +199,7 @@ class PostRepository {
   }
 
   ///북태그조회
-  Future<ModelPostTag> getPostBookTag({required int bookId, required PagingRequest pagingRequest}) async {
+  Future<ModelPostTag?> getPostBookTag({required int bookId, required PagingRequest pagingRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
@@ -202,9 +215,10 @@ class PostRepository {
 
     if (response.data['code'] == 'FAIL') {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        throw InvalidMemberException();
+        Get.toNamed(Routes.reAuthPath);
       } else {
-        throw Exception(response.data['body']['errorCode']);
+        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+        return null;
       }
     }
 
