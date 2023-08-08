@@ -46,11 +46,13 @@ class BookExperienceBottomSheetController extends GetxController {
   void onInit() async {
     super.onInit();
     init();
-
     memoTypeTextEditing.addListener(_titleListener);
   }
 
   void _titleListener() {
+    if (memoTypeTextEditing.text == mybook.comment) {
+      return;
+    }
     print("text : ${memoTypeTextEditing.text}");
     mybook.comment = memoTypeTextEditing.text;
     _mybook.refresh();

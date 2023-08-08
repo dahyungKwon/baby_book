@@ -12,7 +12,7 @@ import 'book_case_list_screen.dart';
 Widget buildBookCaseLayout(BuildContext context, BookCaseController controller) {
   return Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         buildToolbar(context, controller),
-        getVerSpace(FetchPixels.getPixelHeight(25)),
+        getVerSpace(FetchPixels.getPixelHeight(15)),
         pageViewer(controller)
       ]));
 }

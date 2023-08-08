@@ -445,7 +445,8 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("한줄 메모" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("한줄 메모 (${controller.memoTypeTextEditing.text.length} / 15)" ?? "", 14, Colors.black38, 1,
+                  fontWeight: FontWeight.w600),
               // getVerSpace(10),
             ],
           )),
@@ -454,17 +455,18 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: getDefaultTextFiledWithLabel2(context, "한줄메모를 입력해주세요.", Colors.black45.withOpacity(0.3),
+              child: getDefaultTextFiledWithLabel2(context, "한줄 메모를 입력해주세요.", Colors.black45.withOpacity(0.3),
                   controller.memoTypeTextEditing, Colors.grey, FetchPixels.getPixelHeight(20), FontWeight.w400,
                   function: () {},
                   isEnable: false,
                   withprefix: false,
                   minLines: true,
-                  height: FetchPixels.getPixelHeight(50),
+                  // height: FetchPixels.getPixelHeight(50),
                   alignmentGeometry: Alignment.center,
                   boxColor: backGroundColor,
                   myFocusNode: memoFocusNode,
-                  autofocus: false)),
+                  autofocus: false,
+                  maxLength: 15)),
         ],
       )
     ]);

@@ -27,13 +27,13 @@ class TabCommunity extends GetView<TabCommunityController> {
         resizeToAvoidBottomInset: false,
         backgroundColor: backGroundColor,
         body: Column(
-          children: [tabBar(edgeInsets), getVerSpace(FetchPixels.getPixelHeight(25)), pageViewer()],
+          children: [tabBar(edgeInsets), getVerSpace(FetchPixels.getPixelHeight(15)), pageViewer()],
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: FloatingActionButton(
             child: Icon(Icons.add),
-            backgroundColor: Color(0xFF4B4B4B),
+            backgroundColor: secondMainColor,
             onPressed: () => Get.toNamed("${Routes.communityAddPath}?postType=${controller.selectedPostType().code}"),
           ),
         ));

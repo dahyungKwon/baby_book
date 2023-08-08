@@ -224,11 +224,13 @@ GestureDetector buildPostListItem(
       function();
     },
     child: Container(
-      height: FetchPixels.getPixelHeight(180),
+      height: FetchPixels.getPixelHeight(160),
       margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
       // left: FetchPixels.getPixelWidth(10),
       // right: FetchPixels.getPixelWidth(10)),
-      padding: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(6), horizontal: FetchPixels.getPixelWidth(20)),
+      padding: EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(6), horizontal: FetchPixels.getPixelWidth(25)),
+      // decoration: const BoxDecoration(
+      //     color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
       decoration: const BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -632,7 +634,8 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
     bool? autofocus,
     required Color boxColor,
     BoxDecoration? boxDecoration,
-    Function? editingComplete}) {
+    Function? editingComplete,
+    int? maxLength}) {
   myFocusNode ??= FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {
@@ -682,6 +685,7 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
                           child: TextField(
                             enabled: enableEditing,
                             maxLines: (minLines) ? null : 1,
+                            maxLength: maxLength,
                             controller: textEditingController,
                             obscuringCharacter: "*",
                             autofocus: autofocus ?? false,
@@ -703,6 +707,7 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
                                 contentPadding: EdgeInsets.only(
                                     top: FetchPixels.getPixelWidth(12), bottom: FetchPixels.getPixelWidth(12)),
                                 border: InputBorder.none,
+                                counterText: '',
                                 hintText: hint,
                                 hintStyle: TextStyle(
                                   color: hintColor,
