@@ -1,10 +1,12 @@
 import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
@@ -43,13 +45,117 @@ class SearchScreen extends GetView<SearchScreenController> {
               child: Obx(() => Column(
                     children: [
                       buildToolbar(context),
-                      // getVerSpace(FetchPixels.getPixelHeight(10)),
-                      // controller.publisherList.length > 0 ? getEmptyWidget(context) : getSearchList(),
                       controller.loading
                           ? const Expanded(child: ListSkeleton())
-                          : controller.bookList.length > 0
-                              ? Expanded(child: draw())
-                              : getEmptyWidget(context)
+                          : Expanded(
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                  // Container(height: 1.h, color: Color(0xFFF5F6F8)),
+                                  // Container(height: 1.h, color: Color(0xFFF5F6F8)),
+                                  if (controller.publisherList.length > 0) ...[
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                          left: FetchPixels.getPixelHeight(15),
+                                          top: FetchPixels.getPixelHeight(15),
+                                          bottom: FetchPixels.getPixelHeight(10)),
+                                      // height: 2.h,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          getCustomFont(
+                                            "출판사 검색 결과",
+                                            16,
+                                            Colors.black,
+                                            1,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          GestureDetector(
+                                              onTap: () {
+                                                Get.toNamed(Routes.publisherListPath,
+                                                    parameters: {"keyword": controller.keyword});
+                                              },
+                                              child: Container(
+                                                  width: FetchPixels.getPixelHeight(100),
+                                                  height: FetchPixels.getPixelHeight(30),
+                                                  // color: Colors.black12,
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      getCustomFont(
+                                                        "더보기",
+                                                        14,
+                                                        Colors.black,
+                                                        1,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                      getSvgImage("arrow_right.svg",
+                                                          width: FetchPixels.getPixelHeight(16),
+                                                          height: FetchPixels.getPixelHeight(16)),
+                                                      getHorSpace(FetchPixels.getPixelHeight(15))
+                                                    ],
+                                                  )))
+                                        ],
+                                      ),
+                                    ),
+                                    Wrap(
+                                        direction: Axis.vertical,
+                                        // 정렬 방향
+                                        alignment: WrapAlignment.start,
+                                        children: controller.publisherList
+                                            .map<Widget>((publisher) => GestureDetector(
+                                                onTap: () {
+                                                  Get.toNamed(Routes.publisherPath, parameters: {
+                                                    'publisherId': publisher.publisherId.toString(),
+                                                    'publisherName': publisher.publisherName
+                                                  });
+                                                },
+                                                child: Container(
+                                                    width: 100.w,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border(
+                                                            bottom: BorderSide(color: Colors.black26, width: 0.5))),
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: FetchPixels.getPixelHeight(10),
+                                                        horizontal: FetchPixels.getPixelHeight(15)),
+                                                    child: Row(
+                                                      children: [
+                                                        ExtendedImage.network(
+                                                          publisher.publisherLogoUrl ?? "",
+                                                          width: FetchPixels.getPixelHeight(25),
+                                                          height: FetchPixels.getPixelHeight(25),
+                                                          fit: BoxFit.fitHeight,
+                                                          cache: true,
+                                                          loadStateChanged: (ExtendedImageState state) {
+                                                            switch (state.extendedImageLoadState) {
+                                                              case LoadState.loading:
+                                                                return Image.asset("assets/images/book_placeholder.png",
+                                                                    fit: BoxFit.fill);
+                                                              case LoadState.completed:
+                                                                break;
+                                                              case LoadState.failed:
+                                                                return Image.asset("assets/images/book_placeholder.png",
+                                                                    fit: BoxFit.fill);
+                                                            }
+                                                          },
+                                                        ),
+                                                        getHorSpace(FetchPixels.getPixelWidth(18)),
+                                                        getCustomFont(publisher.publisherName, 16, Colors.black, 1,
+                                                            fontWeight: FontWeight.w400, textAlign: TextAlign.center),
+                                                      ],
+                                                    ))))
+                                            .toList()),
+                                    Container(height: 1.h, color: Color(0xFFF5F6F8)),
+                                  ],
+
+                                  if (controller.bookList.length > 0) ...[
+                                    Expanded(child: drawBookSearchResult())
+                                  ] else ...[
+                                    if (controller.firstSearched) ...[getEmptyWidget(context)]
+                                  ]
+                                ]))
                     ],
                   )),
             ),
@@ -171,7 +277,7 @@ class SearchScreen extends GetView<SearchScreenController> {
     );
   }
 
-  SmartRefresher draw() {
+  SmartRefresher drawBookSearchResult() {
     return SmartRefresher(
         enablePullDown: false,
         enablePullUp: true,
@@ -235,6 +341,7 @@ class SearchScreen extends GetView<SearchScreenController> {
 
   Expanded getEmptyWidget(BuildContext context) {
     return Expanded(
+        child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,7 +349,7 @@ class SearchScreen extends GetView<SearchScreenController> {
           getCustomFont("검색 결과가 없습니다.", 18, Colors.black, 1, fontWeight: FontWeight.w400, textAlign: TextAlign.center),
         ],
       ),
-    );
+    ));
   }
 
   keywordKeyboardDown(BuildContext context) {

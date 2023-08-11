@@ -3,26 +3,25 @@ import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
-import '../models/model_book_response.dart';
 import '../models/model_member.dart';
+import '../models/model_publisher.dart';
 import '../repository/member_repository.dart';
 import '../repository/paging_request.dart';
 
-class PublisherController extends GetxController {
+class PublisherListController extends GetxController {
   final SearchRepository searchRepository;
-  final int publisherId;
-  final String publisherName;
+  final String keyword;
 
-  PublisherController({required this.searchRepository, required this.publisherId, required this.publisherName}) {
+  PublisherListController({required this.searchRepository, required this.keyword}) {
     assert(searchRepository != null);
   }
 
-  ///book
-  final _bookList = <ModelBookResponse>[].obs;
+  ///publisher
+  final _publisherList = <ModelPublisher>[].obs;
 
-  get bookList => _bookList.value;
+  get publisherList => _publisherList.value;
 
-  set bookList(value) => _bookList.value = value;
+  set publisherList(value) => _publisherList.value = value;
 
   ///loading
   final _loading = true.obs;
@@ -51,7 +50,7 @@ class PublisherController extends GetxController {
   ///pull to refresh 시 사용
   getAllForPullToRefresh() async {
     loading = true;
-    List<ModelBookResponse> list = await _request(PagingRequest.createDefault());
+    List<ModelPublisher> list = await _request(PagingRequest.createDefault());
 
     ///리스트 초기화
     _initList(list);
@@ -63,29 +62,29 @@ class PublisherController extends GetxController {
   }
 
   ///next page 요청 시 사용
-  Future<List<ModelBookResponse>> getAllForLoading(PagingRequest pagingRequest) async {
-    List<ModelBookResponse> list = await _request(pagingRequest);
+  Future<List<ModelPublisher>> getAllForLoading(PagingRequest pagingRequest) async {
+    List<ModelPublisher> list = await _request(pagingRequest);
 
     ///데이터 추가
     _addAll(list);
     return list;
   }
 
-  Future<List<ModelBookResponse>> _request(PagingRequest pagingRequest) async {
+  Future<List<ModelPublisher>> _request(PagingRequest pagingRequest) async {
     /// no cache & 저장만함
-    return await searchRepository.getBookListForPublisherId(publisherId: publisherId, pagingRequest: pagingRequest);
+    return await searchRepository.getPublisherListForPublisherName(keyword: keyword, pagingRequest: pagingRequest);
   }
 
   void initCache() {
-    bookList.clear();
+    _publisherList.clear();
   }
 
-  void _initList(List<ModelBookResponse> list) {
-    bookList.clear();
-    bookList.addAll(list);
+  void _initList(List<ModelPublisher> list) {
+    _publisherList.clear();
+    _publisherList.addAll(list);
   }
 
-  void _addAll(List<ModelBookResponse> list) {
-    bookList.addAll(list);
+  void _addAll(List<ModelPublisher> list) {
+    _publisherList.addAll(list);
   }
 }

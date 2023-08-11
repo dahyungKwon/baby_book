@@ -20,6 +20,7 @@ abstract class Routes {
 
   ///출판사
   static const publisherPath = "/PublisherScreen";
+  static const publisherListPath = "/PublisherListScreen";
 
   ///책장
   static const tabBookCasePath = "/TabBookCase";

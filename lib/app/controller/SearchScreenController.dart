@@ -37,6 +37,13 @@ class SearchScreenController extends GetxController {
 
   set loading(value) => _loading.value = value;
 
+  ///첫번째 검색을 시작하였는지 여부, 검색창 하단에 문구 노출 용도
+  final _firstSearched = false.obs;
+
+  get firstSearched => _firstSearched.value;
+
+  set firstSearched(value) => _firstSearched.value = value;
+
   late ModelMember member;
 
   String keyword = "";
@@ -104,6 +111,8 @@ class SearchScreenController extends GetxController {
   search(String keyword, PagingRequest pagingRequest) async {
     loading = true;
 
+    firstSearched = true;
+
     this.keyword = keyword;
 
     clearSearchResult();
@@ -115,6 +124,11 @@ class SearchScreenController extends GetxController {
     bookList = await searchRepository.getBookListForBookName(keyword: keyword, pagingRequest: pagingRequest);
     publisherList = await searchRepository.getPublisherListForPublisherName(
         keyword: keyword, pagingRequest: PagingRequest.createDefault());
+
+    /// 3개만 노출하기 위함
+    if (publisherList.length > 3) {
+      publisherList = publisherList.sublist(0, 3);
+    }
 
     ///사용자경험 위해 0.2초 딜레이
     Future.delayed(const Duration(milliseconds: 500), () {
