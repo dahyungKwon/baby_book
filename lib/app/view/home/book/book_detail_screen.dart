@@ -385,8 +385,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
               getVerSpace(FetchPixels.getPixelHeight(30)),
               Column(
                 children: [
-                  getCustomFont(controller.book.modelPublisher.publisherName ?? "", 16, textColor, 1,
-                      fontWeight: FontWeight.w400),
+                  GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.publisherPath, parameters: {
+                          'publisherId': controller.book.modelPublisher.publisherId.toString(),
+                          'publisherName': controller.book.modelPublisher.publisherName
+                        });
+                      },
+                      child: getCustomFont(controller.book.modelPublisher.publisherName ?? "", 16, textColor, 1,
+                          fontWeight: FontWeight.w400)),
                   getVerSpace(FetchPixels.getPixelHeight(5)),
                   getCustomFont(controller.book.modelBook.name ?? "", 24, Colors.black, 1, fontWeight: FontWeight.w700),
 

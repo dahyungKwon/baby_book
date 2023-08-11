@@ -28,7 +28,7 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
   set myBookCase(value) => _myBookCase.value = value;
 
   ///loading
-  final _loading = false.obs;
+  final _loading = true.obs;
 
   get loading => _loading.value;
 

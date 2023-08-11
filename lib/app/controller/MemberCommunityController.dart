@@ -30,7 +30,7 @@ class MemberCommunityController extends GetxController with GetSingleTickerProvi
   }
 
   //loading
-  final _loading = false.obs;
+  final _loading = true.obs;
 
   get loading => _loading.value;
 

@@ -24,7 +24,7 @@ class CommunityAddController extends GetxController {
   final PostImageRepository postImageRepository;
 
   //loading
-  final _loading = false.obs;
+  final _loading = true.obs;
 
   get loading => _loading.value;
 
@@ -92,6 +92,9 @@ class CommunityAddController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    loading = false;
+
+    ///로딩은 수정시에만 필요
   }
 
   void _titleListener() {
@@ -336,7 +339,9 @@ class CommunityAddController extends GetxController {
       }
     }
 
-    loading = false;
+    Future.delayed(const Duration(milliseconds: 500), () {
+      loading = false;
+    });
   }
 
   Future<XFile> getImageXFileByUrl(String url) async {

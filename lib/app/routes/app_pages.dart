@@ -33,6 +33,7 @@ import '../view/notification_screen.dart';
 import '../view/profile/edit_profile_screen.dart';
 import '../view/profile/profile_screen.dart';
 import '../view/profile/setting_screen.dart';
+import '../view/publisher/publisher_screen.dart';
 import '../view/search/search_screen.dart';
 import '../view/setting/help_screen.dart';
 import '../view/setting/privacy_screen.dart';
@@ -64,6 +65,7 @@ class AppPages {
     GetPage(name: Routes.bookCommunityPath, page: () => BookCommunityScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.bookCasePath, page: () => BookCaseScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.bookMemberPath, page: () => BookMemberScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.publisherPath, page: () => PublisherScreen(), transition: Transition.cupertino),
 
     // GetPage(name: Routes.bookCaseDetailPath, page: () => BookDetailScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.joinPath, page: () => JoinScreen(), transition: Transition.noTransition),

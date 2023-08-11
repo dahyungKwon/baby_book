@@ -48,7 +48,7 @@ class EditProfileController extends GetxController {
   set selectedBabyList(value) => _selectedBabyList.value = value;
 
   //loading
-  final _loading = false.obs;
+  final _loading = true.obs;
 
   get loading => _loading.value;
 
