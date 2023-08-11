@@ -84,7 +84,7 @@ class TabHome extends GetView<TabHomeController> {
                           withSufix: true,
                           suffiximage: "down_arrow.svg",
                           enableEditing: false)),
-                  const Row(
+                  Row(
                     children: [
                       // getSimpleImageButton(
                       //     "notification.svg",
@@ -96,10 +96,10 @@ class TabHome extends GetView<TabHomeController> {
                       //   Get.toNamed(Routes.searchPath);
                       // }),
                       // getHorSpace(FetchPixels.getPixelWidth(10)),
-                      // getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                      //     Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-                      //   Get.toNamed(Routes.searchPath);
-                      // }),
+                      getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                          Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                        Get.toNamed(Routes.searchPath);
+                      }),
                     ],
                   ),
                 ],

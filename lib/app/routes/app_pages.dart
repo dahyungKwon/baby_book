@@ -74,7 +74,8 @@ class AppPages {
     GetPage(name: Routes.profilePath, page: () => ProfileScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.editProfilePath, page: () => EditProfileScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen(), transition: Transition.cupertino),
-    GetPage(name: Routes.settingPath, page: () => SettingScreen(), transition: Transition.cupertino), //현재 안씀
+    GetPage(name: Routes.settingPath, page: () => SettingScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.searchPath, page: () => SearchScreen(), transition: Transition.cupertino),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
 
     GetPage(name: Routes.introPath, page: () => IntroScreen()), //현재 안씀
@@ -96,7 +97,7 @@ class AppPages {
     GetPage(name: Routes.cardPath, page: () => CardScreen()), //현재 안씀
 
     GetPage(name: Routes.notificationPath, page: () => NotificationScreen()), //현재 안씀
-    GetPage(name: Routes.searchPath, page: () => SearchScreen()), //현재 안씀
+
     GetPage(name: Routes.bookingPath, page: () => BookingDetail()), //현재 안씀
     GetPage(name: Routes.helpPath, page: () => HelpScreen()), //현재 안씀
     GetPage(name: Routes.privacyPath, page: () => PrivacyScreen()), //현재 안씀

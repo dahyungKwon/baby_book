@@ -17,7 +17,7 @@ GestureDetector buildBookListItem(
       function();
     },
     child: Container(
-      height: FetchPixels.getPixelHeight(100),
+      height: FetchPixels.getPixelHeight(110),
       margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
       padding:
           EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(20)),

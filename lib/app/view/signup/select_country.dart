@@ -24,10 +24,8 @@ class _SelectCountryState extends State<SelectCountry> {
 
   onItemChanged(String value) {
     setState(() {
-      newCountryList = DataFile.countryList
-          .where((string) =>
-              string.name!.toLowerCase().contains(value.toLowerCase()))
-          .toList();
+      newCountryList =
+          DataFile.countryList.where((string) => string.name!.toLowerCase().contains(value.toLowerCase())).toList();
     });
   }
 
@@ -49,7 +47,7 @@ class _SelectCountryState extends State<SelectCountry> {
                 getVerSpace(FetchPixels.getPixelHeight(26)),
                 buildCountryWidget(context),
                 getVerSpace(FetchPixels.getPixelHeight(18)),
-                buildSearchWidget(context),
+                // buildSearchWidget(context),
                 getVerSpace(FetchPixels.getPixelHeight(30)),
                 buildCountryList()
               ],
@@ -62,20 +60,19 @@ class _SelectCountryState extends State<SelectCountry> {
         });
   }
 
-  Widget buildSearchWidget(BuildContext context) {
-    return getPaddingWidget(
-      EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
-      getSearchWidget(context, searchController, () {}, onItemChanged,
-          withPrefix: true),
-    );
-  }
+  // Widget buildSearchWidget(BuildContext context) {
+  //   return getPaddingWidget(
+  //     EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+  //     // getSearchWidget(context, searchController, () {}, onItemChanged,
+  //     //     withPrefix: true),
+  //   );
+  // }
 
   Expanded buildCountryList() {
     return Expanded(
       flex: 1,
       child: ListView.builder(
-        padding:
-            EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
+        padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
         scrollDirection: Axis.vertical,
         itemCount: newCountryList.length,
         itemBuilder: (context, index) {
@@ -90,31 +87,22 @@ class _SelectCountryState extends State<SelectCountry> {
             child: Container(
               margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(20)),
               height: FetchPixels.getPixelHeight(56),
-              padding: EdgeInsets.symmetric(
-                  horizontal: FetchPixels.getPixelWidth(16)),
+              padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(16)),
               decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0.0, 4.0)),
+                    BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
                   ],
-                  borderRadius:
-                      BorderRadius.circular(FetchPixels.getPixelHeight(15))),
+                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(15))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       getAssetImage(
-                          modelCountry.image ?? '',
-                          FetchPixels.getPixelWidth(40),
-                          FetchPixels.getPixelHeight(28)),
+                          modelCountry.image ?? '', FetchPixels.getPixelWidth(40), FetchPixels.getPixelHeight(28)),
                       getHorSpace(FetchPixels.getPixelWidth(12)),
-                      getCustomFont(
-                          modelCountry.name ?? "", 14, Colors.black, 1,
-                          fontWeight: FontWeight.w900),
+                      getCustomFont(modelCountry.name ?? "", 14, Colors.black, 1, fontWeight: FontWeight.w900),
                     ],
                   ),
                   Row(
@@ -142,12 +130,7 @@ class _SelectCountryState extends State<SelectCountry> {
       EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
       gettoolbarMenu(context, "back.svg", () {
         finishView();
-      },
-          istext: true,
-          title: "Select Country",
-          weight: FontWeight.w900,
-          fontsize: 24,
-          textColor: Colors.black),
+      }, istext: true, title: "Select Country", weight: FontWeight.w900, fontsize: 24, textColor: Colors.black),
     );
   }
 }

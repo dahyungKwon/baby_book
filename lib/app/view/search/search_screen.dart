@@ -1,23 +1,34 @@
 import 'package:baby_book/app/data/data_file.dart';
+import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
+import '../../../base/skeleton.dart';
 import '../../../base/widget_utils.dart';
+import '../../controller/SearchScreenController.dart';
+import '../../models/model_book_response.dart';
+import '../../models/model_member.dart';
+import '../../repository/search_repository.dart';
+import '../../routes/app_pages.dart';
+import '../home/book/book_list.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class SearchScreen extends GetView<SearchScreenController> {
+  late RefreshController refreshController;
+  int pageNumber = 1;
+  bool searched = false;
+  FocusNode keywordFocusNode = FocusNode();
 
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
+  SearchScreen({super.key}) {
+    Get.put(SearchScreenController(searchRepository: SearchRepository()));
+    refreshController = RefreshController(initialRefresh: false);
+  }
 
-class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
-  List<String> searchLists = DataFile.searchList;
-  List<String> popularSearchLists = DataFile.popularSearchList;
-  int? select;
 
   @override
   Widget build(BuildContext context) {
@@ -28,154 +39,213 @@ class _SearchScreenState extends State<SearchScreen> {
           backgroundColor: backGroundColor,
           body: SafeArea(
             child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: FetchPixels.getPixelWidth(20)),
-              child: Column(
-                children: [
-                  getVerSpace(FetchPixels.getPixelHeight(20)),
-                  gettoolbarMenu(context, "back.svg", () {
-                    Constant.backToPrev(context);
-                  },
-                      istext: true,
-                      title: "Search",
-                      weight: FontWeight.w900,
-                      fontsize: 24,
-                      textColor: Colors.black),
-                  getVerSpace(FetchPixels.getPixelHeight(30)),
-                  getTopSearchWidget(context),
-                  (searchLists.isEmpty)
-                      ? getEmptyWidget(context)
-                      : getSearchList()
-                ],
-              ),
+              // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15)),
+              child: Obx(() => Column(
+                    children: [
+                      buildToolbar(context),
+                      // getVerSpace(FetchPixels.getPixelHeight(10)),
+                      // controller.publisherList.length > 0 ? getEmptyWidget(context) : getSearchList(),
+                      controller.loading
+                          ? const Expanded(child: ListSkeleton())
+                          : controller.bookList.length > 0
+                              ? Expanded(child: draw())
+                              : getEmptyWidget(context)
+                    ],
+                  )),
             ),
           ),
         ),
         onWillPop: () async {
-          Constant.backToPrev(context);
+          Get.back();
           return false;
         });
   }
 
-  Expanded getSearchList() {
-    return Expanded(
-      flex: 1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget buildToolbar(BuildContext context) {
+    return Container(
+        // width: FetchPixels.getPixelHeight(50),
+        // height: FetchPixels.getPixelHeight(50),
+        decoration:
+            BoxDecoration(color: Colors.white, border: Border(bottom: BorderSide(color: Colors.black26, width: 1.0))),
+        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        // color: Colors.white,
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+              Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+            Get.back();
+          }),
+          Expanded(child: getTopSearchWidget(context)),
+        ]));
+  }
+
+  Widget getTopSearchWidget(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(15), top: FetchPixels.getPixelHeight(0)),
+        child: getSearchWidget(context, searchController, () {}, (value) {
+          // if (searched) {
+          //   // controller.clearSearchResult();
+          //   searched = false;
+          // }
+        }, onSubmit: (submit) {
+          // searched = true;
+          search();
+        }, clickSearch: () {
+          // searched = true;
+          search();
+          keywordKeyboardDown(context);
+        }, focusNode: keywordFocusNode));
+  }
+
+  search() {
+    ///첫 검색임으로 paging의 경우 디폴트로 잡혀서 조회 시작
+    initPageNumber();
+    controller.search(searchController.text, PagingRequest.createDefault());
+  }
+
+  Widget getSearchWidget(BuildContext context, TextEditingController searchController, Function filterClick,
+      ValueChanged<String> onChanged,
+      {bool withPrefix = true, ValueChanged<String>? onSubmit, Function? clickSearch, FocusNode? focusNode}) {
+    double height = FetchPixels.getPixelHeight(60);
+
+    final mqData = MediaQuery.of(context);
+    final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+
+    double iconSize = FetchPixels.getPixelHeight(26);
+
+    return Container(
+      width: double.infinity,
+      height: height,
+      alignment: Alignment.centerLeft,
+      child: Row(
         children: [
-          getVerSpace(FetchPixels.getPixelHeight(21)),
-          ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: searchLists.length,
-            primary: true,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(20)),
-                child: Row(
-                  children: [
-                    getSvgImage("refresh.svg",
-                        height: FetchPixels.getPixelHeight(24),
-                        width: FetchPixels.getPixelHeight(24)),
-                    getHorSpace(FetchPixels.getPixelWidth(10)),
-                    getCustomFont(searchLists[index], 16, Colors.black, 1,
-                        fontWeight: FontWeight.w400)
-                  ],
-                ),
-              );
-            },
-          ),
-          getDivider(dividerColor, 0, 1),
-          getVerSpace(FetchPixels.getPixelHeight(20)),
-          getCustomFont(
-            "Popular Searches",
-            16,
-            Colors.black,
-            1,
-            fontWeight: FontWeight.w900,
-          ),
-          getVerSpace(FetchPixels.getPixelHeight(20)),
-          Wrap(
-            children: [
-              for (final i
-                  in List.generate(popularSearchLists.length, (i) => i))
-                getPaddingWidget(
-                  EdgeInsets.only(
-                      right: FetchPixels.getPixelWidth(11),
-                      bottom: FetchPixels.getPixelHeight(10)),
-                  GestureDetector(
+          // getHorSpace(FetchPixels.getPixelWidth(16)),
+
+          getHorSpace(FetchPixels.getPixelWidth(18)),
+          Expanded(
+            flex: 1,
+            child: MediaQuery(
+                data: mqDataNew,
+                child: IntrinsicHeight(
+                  child: TextField(
                     onTap: () {
-                      setState(() {
-                        select = i;
-                        searchController.text = popularSearchLists[i];
-                      });
+                      filterClick();
                     },
-                    child: Container(
-                      height: FetchPixels.getPixelHeight(38),
-                      decoration: BoxDecoration(
-                          color: select == i ? blueColor : backGroundColor,
-                          borderRadius: BorderRadius.circular(
-                              FetchPixels.getPixelHeight(12)),
-                          border: select == i
-                              ? null
-                              : Border.all(
-                                  color: const Color(0xFFDEE0E6), width: 1)),
-                      child: Chip(
-                        padding: EdgeInsets.symmetric(
-                            vertical: FetchPixels.getPixelHeight(7)),
-                        backgroundColor:
-                            select == i ? blueColor : Colors.transparent,
-                        label: Container(
-                          child: getCustomFont(popularSearchLists[i], 16,
-                              select == i ? Colors.white : Colors.black, 1,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              FetchPixels.getPixelHeight(12)),
-                        ),
-                      ),
-                    ),
+                    controller: searchController,
+                    onChanged: onChanged,
+                    decoration: const InputDecoration(
+                        isDense: true,
+                        hintText: "검색어를 입력해주세요.",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                            fontFamily: Constant.fontsFamily,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black26)),
+                    style: const TextStyle(
+                        fontFamily: Constant.fontsFamily,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                    textAlign: TextAlign.start,
+                    maxLines: 1,
+                    onSubmitted: onSubmit,
+                    autofocus: true,
+                    focusNode: focusNode,
                   ),
-                ),
-            ],
-          )
+                )),
+          ),
+          GestureDetector(
+              onTap: () {
+                if (clickSearch != null) {
+                  clickSearch();
+                }
+              },
+              child: Container(
+                  width: FetchPixels.getPixelHeight(50),
+                  height: FetchPixels.getPixelHeight(50),
+                  child: Center(child: getSvgImageWithSize(context, "search.svg", iconSize, iconSize)))),
+
+          getHorSpace(FetchPixels.getPixelWidth(0)),
         ],
       ),
     );
+  }
+
+  SmartRefresher draw() {
+    return SmartRefresher(
+        enablePullDown: false,
+        enablePullUp: true,
+        header: const MaterialClassicHeader(
+          color: Colors.black,
+        ),
+        footer: const ClassicFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            loadingText: "Loading...",
+            idleText: "Loading...",
+            canLoadingText: "Loading..."),
+        controller: refreshController,
+        // onRefresh: onRefresh,
+        onLoading: onLoading,
+        child: buildBookList(controller.bookList, controller.member));
+  }
+
+  void onRefresh() async {
+    await controller.getAllForPullToRefresh();
+    initPageNumber(); //순서중요
+
+    await Future.delayed(Duration(milliseconds: 500));
+
+    refreshController.refreshCompleted();
+  }
+
+  void onLoading() async {
+    List<ModelBookResponse>? list = await controller.getAllForLoading(PagingRequest.create(pageNumber + 1));
+    if (list != null && list.isNotEmpty) {
+      plusPageNumber();
+    }
+
+    await Future.delayed(Duration(milliseconds: 500));
+    refreshController.loadComplete();
+  }
+
+  void initPageNumber() {
+    pageNumber = 1;
+  }
+
+  void plusPageNumber() {
+    pageNumber++;
+  }
+
+  ListView buildBookList(List<ModelBookResponse> bookList, ModelMember member) {
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        // shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: bookList.length,
+        itemBuilder: (context, index) {
+          ModelBookResponse modelBookResponse = bookList[index];
+          return buildBookListItem(modelBookResponse, context, index, () {
+            Get.toNamed(Routes.bookDetailPath, parameters: {
+              'bookSetId': modelBookResponse.modelBook.id.toString(),
+              'babyId': member.selectedBabyId ?? ""
+            });
+          });
+        });
   }
 
   Expanded getEmptyWidget(BuildContext context) {
     return Expanded(
-      flex: 1,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            height: FetchPixels.getPixelHeight(108),
-            width: FetchPixels.getPixelHeight(108),
-            decoration: BoxDecoration(
-              image: getDecorationAssetImage(context, "search_screen.png"),
-            ),
-          ),
-          getVerSpace(FetchPixels.getPixelHeight(40)),
-          getCustomFont("No Searches", 22, Colors.black, 1,
-              fontWeight: FontWeight.w900, textAlign: TextAlign.center),
-          getVerSpace(FetchPixels.getPixelHeight(10)),
-          getCustomFont("You have no recent searches.", 16, Colors.black, 1,
-              fontWeight: FontWeight.w400, textAlign: TextAlign.center)
+          getCustomFont("검색 결과가 없습니다.", 18, Colors.black, 1, fontWeight: FontWeight.w400, textAlign: TextAlign.center),
         ],
       ),
     );
   }
 
-  Widget getTopSearchWidget(BuildContext context) {
-    return getSearchWidget(context, searchController, () {}, (value) {},
-        onSubmit: (submit) {
-      if (!searchLists.contains(submit)) {
-        searchLists.add(submit);
-      }
-    });
+  keywordKeyboardDown(BuildContext context) {
+    FocusScope.of(context).unfocus();
   }
 }
