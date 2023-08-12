@@ -43,6 +43,8 @@ GestureDetector buildBookListItem(
                   width: FetchPixels.getPixelHeight(80),
                   height: FetchPixels.getPixelHeight(80),
                   fit: BoxFit.fitHeight,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(9)),
                   cache: true,
                   loadStateChanged: (ExtendedImageState state) {
                     switch (state.extendedImageLoadState) {
