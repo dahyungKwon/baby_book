@@ -163,4 +163,9 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   Future<bool> removeBook(HoldType holdType, ModelMyBookResponse book) async {
     return await myBookRepository.delete(myBookId: book.myBook.myBookId);
   }
+
+  updateMyBook(int index, ModelMyBookResponse book) {
+    _myBookResponseList[index].myBook = book.myBook;
+    _myBookResponseList.refresh();
+  }
 }

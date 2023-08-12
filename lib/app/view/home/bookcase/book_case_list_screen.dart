@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_my_book_response.dart';
 import 'package:baby_book/app/repository/baby_repository.dart';
@@ -120,12 +122,14 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
           itemCount: controller.myBookResponseList.length,
           itemBuilder: (context, index) {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
-            return buildBookCaseItem(context, edgeInsets, modelMyBookResponse, index, () {
+            return buildBookCaseItem(context, edgeInsets, modelMyBookResponse, index, () async {
               if (controller.myBookCase) {
-                Get.toNamed(Routes.bookDetailPath, parameters: {
+                ModelMyBookResponse result = await Get.toNamed(Routes.bookDetailPath, parameters: {
                   'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
                   'babyId': modelMyBookResponse.myBook.babyId
                 });
+
+                controller.updateMyBook(index, result);
               }
             }, () {});
           },
@@ -238,7 +242,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                     children: [
                       getCustomFont(
                         modelMyBookResponse.myBook.holdType.desc,
-                        11,
+                        13,
                         modelMyBookResponse.myBook.holdType.color,
                         1,
                         fontWeight: FontWeight.w500,
@@ -246,7 +250,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                       // getHorSpace(FetchPixels.getPixelHeight(3)),
                     ],
                   ),
-                  getVerSpace(FetchPixels.getPixelHeight(3)),
+                  getVerSpace(FetchPixels.getPixelHeight(5)),
                   getCustomFont(modelMyBookResponse.modelBookResponse.modelBook.name ?? "", 18, Colors.black, 1,
                       fontWeight: FontWeight.w500),
                   getVerSpace(FetchPixels.getPixelHeight(10)),
@@ -305,8 +309,8 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("기대평점", 11, Colors.black45, 1, fontWeight: FontWeight.w500),
-              getVerSpace(FetchPixels.getPixelHeight(5)),
+              // getCustomFont("기대평점", 11, Colors.black45, 1, fontWeight: FontWeight.w500),
+              // getVerSpace(FetchPixels.getPixelHeight(5)),
               modelMyBookResponse.myBook.tempReviewRating == null || modelMyBookResponse.myBook.tempReviewRating! == 0
                   ? Container()
                   : RatingBar.builder(
@@ -315,7 +319,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                       direction: Axis.horizontal,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemSize: 12,
+                      itemSize: 16,
                       ignoreGestures: true,
                       itemPadding: EdgeInsets.symmetric(horizontal: 0),
                       itemBuilder: (context, _) => Icon(
@@ -334,11 +338,34 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              modelMyBookResponse.myBook.usedType == UsedType.none
-                  ? Container()
-                  : getCustomFont("${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
-                      fontWeight: FontWeight.w600),
-              getVerSpace(FetchPixels.getPixelHeight(5)),
+              // modelMyBookResponse.myBook.usedType == UsedType.none
+              //     ? Container()
+              //     : getCustomFont("${modelMyBookResponse.myBook.usedType.desc}구매", 11, Colors.black87, 1,
+              //         fontWeight: FontWeight.w600),
+              // getVerSpace(FetchPixels.getPixelHeight(5)),
+
+              if (modelMyBookResponse.myBook.reviewRating != null &&
+                  modelMyBookResponse.myBook.reviewRating! > 0.0) ...[
+                RatingBar.builder(
+                  initialRating: modelMyBookResponse.myBook.reviewRating!.toDouble(),
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 16,
+                  ignoreGestures: true,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star_rounded,
+                    color: Colors.amber,
+                  ),
+                  unratedColor: Colors.amber.withAlpha(40),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                ),
+                getVerSpace(FetchPixels.getPixelHeight(10))
+              ],
               modelMyBookResponse.myBook.inMonth == 0
                   ? Container()
                   : Column(children: [
@@ -347,9 +374,9 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                           modelMyBookResponse.myBook.inMonth != 0
                               ? Row(
                                   children: [
-                                    getCustomFont("시작", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
-                                    getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 11, Colors.black87, 1,
-                                        fontWeight: FontWeight.w600),
+                                    getCustomFont("시작", 12, secondMainColor, 1, fontWeight: FontWeight.w500),
+                                    getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 12, Colors.black87, 1,
+                                        fontWeight: FontWeight.w500),
                                   ],
                                 )
                               : Container(),
@@ -357,9 +384,9 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                                   modelMyBookResponse.myBook.outMonth != 0
                               ? Row(
                                   children: [
-                                    getCustomFont("   종료", 11, secondMainColor, 1, fontWeight: FontWeight.w600),
-                                    getCustomFont(" ${modelMyBookResponse.myBook.outMonth}개월", 11, Colors.black87, 1,
-                                        fontWeight: FontWeight.w600)
+                                    getCustomFont("   종료", 12, secondMainColor, 1, fontWeight: FontWeight.w500),
+                                    getCustomFont(" ${modelMyBookResponse.myBook.outMonth}개월", 12, Colors.black87, 1,
+                                        fontWeight: FontWeight.w500)
                                   ],
                                 )
                               : Container(),
@@ -367,27 +394,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                       ),
                       // getVerSpace(FetchPixels.getPixelHeight(7)),
                     ]),
-              getVerSpace(FetchPixels.getPixelHeight(5)),
-              modelMyBookResponse.myBook.reviewRating == null || modelMyBookResponse.myBook.reviewRating! == 0
-                  ? Container()
-                  : RatingBar.builder(
-                      initialRating: modelMyBookResponse.myBook.reviewRating!.toDouble(),
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: 12,
-                      ignoreGestures: true,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star_rounded,
-                        color: Colors.amber,
-                      ),
-                      unratedColor: Colors.amber.withAlpha(40),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
+
               // getVerSpace(FetchPixels.getPixelHeight(5)),
             ]);
       } else {

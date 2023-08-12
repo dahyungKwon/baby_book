@@ -46,8 +46,6 @@ class BookDetailScreen extends GetView<BookDetailController> {
   late final String? babyId;
   late final String? uniqueTag;
 
-  late YoutubePlayerController youtubeController;
-  bool? isDetailMenu;
   late bool sharedMode;
   var f = NumberFormat('###,###,###,###');
 
@@ -65,32 +63,14 @@ class BookDetailScreen extends GetView<BookDetailController> {
             bookSetId: bookSetId!,
             babyId: babyId),
         tag: uniqueTag);
-    initYoutubeController();
     sharedMode = Get.parameters['sharedType'] != null;
   }
 
   @override
   String? get tag => uniqueTag;
 
-  initYoutubeController() {
-    youtubeController = YoutubePlayerController(
-      initialVideoId: "KuGPpecYc28",
-      flags: const YoutubePlayerFlags(
-        mute: false,
-        autoPlay: false,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHD: false,
-        enableCaption: true,
-        hideControls: false,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    isDetailMenu = isDetailMenu ?? true;
     FetchPixels(context);
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
@@ -100,7 +80,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
             print("AppSchemeImpl BookDetailScreen sharedMode :$sharedMode get off");
             Get.off(() => HomeScreen(0));
           } else {
-            Get.back();
+            Get.back(result: controller.myBookResponse);
           }
           return false;
         },
