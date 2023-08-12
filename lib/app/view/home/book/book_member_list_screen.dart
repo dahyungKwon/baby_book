@@ -226,10 +226,10 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
       children: [
         // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
         // getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("글이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+        getCustomFont("읽고 있는 사람이 없습니다.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
-          "관련된 커뮤니티 글이 없습니다.",
+          "책을 읽고 있으면 책장에 담아주세요.",
           16,
           Colors.black45,
           1,
