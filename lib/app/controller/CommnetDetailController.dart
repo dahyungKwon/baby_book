@@ -18,6 +18,7 @@ class CommentDetailController extends GetxController {
 
   String postId;
   String commentId;
+  String title;
 
   //loading
   final _loading = true.obs;
@@ -49,7 +50,8 @@ class CommentDetailController extends GetxController {
 
   ModelCommentResponse? selectedComment;
 
-  CommentDetailController({required this.commentRepository, required this.postId, required this.commentId}) {
+  CommentDetailController(
+      {required this.commentRepository, required this.postId, required this.commentId, required this.title}) {
     assert(commentRepository != null);
 
     commentController.addListener(_titleListener);

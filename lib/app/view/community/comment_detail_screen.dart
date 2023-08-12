@@ -22,14 +22,18 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
   FocusNode commentFocusNode = FocusNode();
   late final String? postId;
   late final String? commentId;
+  late final String? title;
   late final String? uniqueTag;
 
   CommentDetailScreen({super.key}) {
     postId = Get.parameters['postId']!;
     commentId = Get.parameters['commentId']!;
+    title = Get.parameters['title']!;
     uniqueTag = getUuid();
     // Get.delete<CommentDetailController>();
-    Get.put(CommentDetailController(commentRepository: CommentRepository(), postId: postId!, commentId: commentId!),
+    Get.put(
+        CommentDetailController(
+            commentRepository: CommentRepository(), postId: postId!, commentId: commentId!, title: title!),
         tag: uniqueTag);
   }
 
@@ -89,13 +93,21 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
         padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
         color: Colors.white,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
               await Get.find<CommunityDetailController>().getComment();
               Get.back();
             }),
+            getCustomFont(
+              controller.title,
+              18,
+              Colors.black,
+              1,
+              fontWeight: FontWeight.w600,
+            ),
           ],
         ));
   }
