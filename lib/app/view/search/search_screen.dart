@@ -1,5 +1,5 @@
-import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
+import 'package:baby_book/app/view/search/search_type.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/skeleton.dart';
 import '../../../base/widget_utils.dart';
+import '../../controller/CommunityTagAddController.dart';
 import '../../controller/SearchScreenController.dart';
 import '../../models/model_book_response.dart';
 import '../../models/model_member.dart';
@@ -24,13 +25,14 @@ class SearchScreen extends GetView<SearchScreenController> {
   int pageNumber = 1;
   bool searched = false;
   FocusNode keywordFocusNode = FocusNode();
+  SearchType searchType = SearchType.none;
 
   SearchScreen({super.key}) {
-    Get.put(SearchScreenController(searchRepository: SearchRepository()));
+    searchType = SearchType.findByCode(Get.parameters['searchType']);
+    Get.put(SearchScreenController(
+        searchRepository: SearchRepository(), searchType: searchType, keyword: Get.parameters['keyword']));
     refreshController = RefreshController(initialRefresh: false);
   }
-
-  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                                           GestureDetector(
                                               onTap: () {
                                                 Get.toNamed(Routes.publisherListPath,
-                                                    parameters: {"keyword": controller.keyword});
+                                                    parameters: {"keyword": controller.keyword!});
                                               },
                                               child: Container(
                                                   width: FetchPixels.getPixelHeight(100),
@@ -187,7 +189,7 @@ class SearchScreen extends GetView<SearchScreenController> {
   Widget getTopSearchWidget(BuildContext context) {
     return Container(
         padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(15), top: FetchPixels.getPixelHeight(0)),
-        child: getSearchWidget(context, searchController, () {}, (value) {
+        child: getSearchWidget(context, controller.searchController, () {}, (value) {
           // if (searched) {
           //   // controller.clearSearchResult();
           //   searched = false;
@@ -199,18 +201,22 @@ class SearchScreen extends GetView<SearchScreenController> {
           // searched = true;
           search();
           keywordKeyboardDown(context);
-        }, focusNode: keywordFocusNode));
+        }, focusNode: keywordFocusNode, isAutoFocus: controller.searchType != SearchType.community));
   }
 
   search() {
     ///첫 검색임으로 paging의 경우 디폴트로 잡혀서 조회 시작
     initPageNumber();
-    controller.search(searchController.text, PagingRequest.createDefault());
+    controller.search(controller.searchController.text, PagingRequest.createDefault());
   }
 
   Widget getSearchWidget(BuildContext context, TextEditingController searchController, Function filterClick,
       ValueChanged<String> onChanged,
-      {bool withPrefix = true, ValueChanged<String>? onSubmit, Function? clickSearch, FocusNode? focusNode}) {
+      {bool withPrefix = true,
+      ValueChanged<String>? onSubmit,
+      Function? clickSearch,
+      FocusNode? focusNode,
+      bool? isAutoFocus}) {
     double height = FetchPixels.getPixelHeight(60);
 
     final mqData = MediaQuery.of(context);
@@ -255,7 +261,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                     textAlign: TextAlign.start,
                     maxLines: 1,
                     onSubmitted: onSubmit,
-                    autofocus: true,
+                    autofocus: isAutoFocus ?? false,
                     focusNode: focusNode,
                   ),
                 )),
@@ -331,10 +337,15 @@ class SearchScreen extends GetView<SearchScreenController> {
         itemBuilder: (context, index) {
           ModelBookResponse modelBookResponse = bookList[index];
           return buildBookListItem(modelBookResponse, context, index, () {
-            Get.toNamed(Routes.bookDetailPath, parameters: {
-              'bookSetId': modelBookResponse.modelBook.id.toString(),
-              'babyId': member.selectedBabyId ?? ""
-            });
+            if (searchType == SearchType.community) {
+              ///CommunityTagAddController에 데이터 넣는식이 되야함
+              Get.back(result: modelBookResponse);
+            } else {
+              Get.toNamed(Routes.bookDetailPath, parameters: {
+                'bookSetId': modelBookResponse.modelBook.id.toString(),
+                'babyId': member.selectedBabyId ?? ""
+              });
+            }
           });
         });
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:baby_book/app/controller/CommunityAddController.dart';
 import 'package:baby_book/app/models/model_post.dart';
+import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
 import 'package:baby_book/app/view/dialog/link_dialog.dart';
@@ -13,6 +14,7 @@ import 'package:sizer/sizer.dart';
 import '../../../base/color_data.dart';
 import '../../../base/skeleton.dart';
 import '../../../base/widget_utils.dart';
+import '../../models/model_book_response.dart';
 import '../../repository/post_image_repository.dart';
 import '../../repository/post_repository.dart';
 import '../dialog/tag_dialog.dart';
@@ -25,7 +27,10 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
 
   CommunityAddScreen({super.key}) {
     Get.delete<CommunityAddController>();
-    Get.put(CommunityAddController(postRepository: PostRepository(), postImageRepository: PostImageRepository()));
+    Get.put(CommunityAddController(
+        postRepository: PostRepository(),
+        postImageRepository: PostImageRepository(),
+        bookRepository: BookRepository()));
     String? postId = Get.parameters['postId'];
     if (postId != null) {
       controller.initModifyMode(postId!);
@@ -159,8 +164,8 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
   GestureDetector selectedTagList() {
     return GestureDetector(
         onTap: () {
-          if (controller.selectedTagList.length > 0) {
-            Get.dialog(TagDialog(controller.selectedTagList));
+          if (controller.selectedBookTagList.length > 0) {
+            openBookTagDialog();
           }
         },
         child: Wrap(
@@ -172,7 +177,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
             // 상하(좌우) 공간
             runSpacing: 5,
             // 좌우(상하) 공간
-            children: controller.selectedTagList
+            children: controller.selectedBookTagList
                 .map<Widget>((e) => Container(
                     decoration: const BoxDecoration(
                       color: Color(0xFFF5F6F8),
@@ -180,7 +185,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
                     ),
                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                    child: Text("#$e", style: TextStyle(fontSize: 15, color: Colors.blueAccent))))
+                    child: Text("#${e.modelBook.name}", style: TextStyle(fontSize: 15, color: Colors.blueAccent))))
                 .toList()));
   }
 
@@ -319,7 +324,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
                 if (selectedTabIndex == 0) {
                   controller.pickImage();
                 } else if (selectedTabIndex == 1) {
-                  Get.dialog(TagDialog(controller.selectedTagList));
+                  openBookTagDialog();
                 } else if (selectedTabIndex == 2) {
                   Get.dialog(LinkDialog(controller.selectedLinkList));
                 } else {
@@ -344,5 +349,10 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
             ),
           );
         })));
+  }
+
+  openBookTagDialog() async {
+    List<ModelBookResponse> bookTagList = await Get.dialog(TagDialog(controller.selectedBookTagList));
+    controller.initBookTagList(bookTagList);
   }
 }

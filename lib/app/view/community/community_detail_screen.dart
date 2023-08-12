@@ -1,5 +1,6 @@
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
+import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_feedback_repository.dart';
 import 'package:baby_book/app/view/community/comment_bottom_sheet.dart';
@@ -46,6 +47,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             postRepository: PostRepository(),
             commentRepository: CommentRepository(),
             postFeedbackRepository: PostFeedbackRepository(),
+            bookRepository: BookRepository(),
             postId: postId!),
         tag: uniqueTag);
     print("AppSchemeImpl CommunityDetailScreen sharedType : ${Get.parameters['sharedType']}");
@@ -286,7 +288,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             getVerSpace(FetchPixels.getPixelHeight(20)),
             selectedLinkList(modelPost),
             getVerSpace(FetchPixels.getPixelHeight(20)),
-            selectedTagList(modelPost),
+            selectedBookTagList(modelPost),
             getVerSpace(FetchPixels.getPixelHeight(20)),
             selectedImageList(modelPost),
             getVerSpace(FetchPixels.getPixelHeight(30)),
@@ -393,7 +395,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     );
   }
 
-  Wrap selectedTagList(ModelPost modelPost) {
+  Wrap selectedBookTagList(ModelPost modelPost) {
     return Wrap(
         direction: Axis.horizontal,
         // 정렬 방향
@@ -403,10 +405,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         // 상하(좌우) 공간
         runSpacing: 5,
         // 좌우(상하) 공간
-        children: modelPost.postTagList
+        children: controller.selectedBookTagList
             .map<Widget>((e) => GestureDetector(
                 onTap: () {
-                  print("click tag $e");
+                  Get.toNamed(Routes.bookDetailPath, parameters: {
+                    'bookSetId': e.modelBook.id.toString(),
+                    'babyId': controller.member.selectedBabyId ?? ""
+                  });
                 },
                 child: Container(
                     decoration: const BoxDecoration(
@@ -415,7 +420,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                     ),
                     margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
                     padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-                    child: Text("#$e", style: TextStyle(fontSize: 15, color: Colors.blueAccent)))))
+                    child: Text("#${e.modelBook.name}", style: TextStyle(fontSize: 15, color: Colors.blueAccent)))))
             .toList());
   }
 

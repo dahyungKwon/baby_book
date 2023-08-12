@@ -6,8 +6,12 @@ import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
 import '../exception/exception_invalid_member.dart';
+import '../models/model_book_response.dart';
 import '../models/model_comment_response.dart';
+import '../models/model_member.dart';
 import '../models/model_post.dart';
+import '../repository/book_repository.dart';
+import '../repository/member_repository.dart';
 import '../repository/post_feedback_repository.dart';
 import '../routes/app_pages.dart';
 import '../view/dialog/error_dialog.dart';
@@ -16,6 +20,7 @@ class CommunityDetailController extends GetxController {
   final PostRepository postRepository;
   final CommentRepository commentRepository;
   final PostFeedbackRepository postFeedbackRepository;
+  final BookRepository bookRepository;
 
   TextEditingController commentController = TextEditingController();
 
@@ -73,16 +78,27 @@ class CommunityDetailController extends GetxController {
 
   set liked(value) => _liked.value = value;
 
+  ///선택된 책태그 리스트
+  final _selectedBookTagList = <ModelBookResponse>[].obs;
+
+  get selectedBookTagList => _selectedBookTagList.value;
+
+  set selectedBookTagList(value) => _selectedBookTagList.value = value;
+
   ModelCommentResponse? selectedComment;
+
+  late ModelMember member;
 
   CommunityDetailController(
       {required this.postRepository,
       required this.commentRepository,
       required this.postFeedbackRepository,
+      required this.bookRepository,
       required this.postId}) {
     assert(postRepository != null);
     assert(commentRepository != null);
     assert(postFeedbackRepository != null);
+    assert(bookRepository != null);
 
     commentController.addListener(_titleListener);
     init();
@@ -91,6 +107,9 @@ class CommunityDetailController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
+    String? memberId = await PrefData.getMemberId();
+    member = await MemberRepository.getMember(memberId: memberId!);
     // init();
   }
 
@@ -114,6 +133,11 @@ class CommunityDetailController extends GetxController {
     await getPost();
 
     await getComment();
+
+    for (int i = 0; i < post.bookIdTagList.length; i++) {
+      ModelBookResponse bookResponse = await bookRepository.get(bookSetId: post.bookIdTagList[i]);
+      selectedBookTagList.add(bookResponse);
+    }
 
     var memberId = await PrefData.getMemberId();
     if (memberId == post.memberId) {

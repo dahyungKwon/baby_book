@@ -1,7 +1,9 @@
 import 'package:baby_book/app/controller/TabCommunityController.dart';
+import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/models/model_post_file.dart';
 import 'package:baby_book/app/models/model_post_request.dart';
+import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,6 +24,7 @@ import 'CommunityListController.dart';
 class CommunityAddController extends GetxController {
   final PostRepository postRepository;
   final PostImageRepository postImageRepository;
+  final BookRepository bookRepository;
 
   //loading
   final _loading = true.obs;
@@ -43,12 +46,12 @@ class CommunityAddController extends GetxController {
 
   set postType(value) => _postType.value = value;
 
-  ///선택된 태그 리스트
-  final _selectedTagList = <String>[].obs;
+  ///선택된 책태그 리스트
+  final _selectedBookTagList = <ModelBookResponse>[].obs;
 
-  get selectedTagList => _selectedTagList.value;
+  get selectedBookTagList => _selectedBookTagList.value;
 
-  set selectedTagList(value) => _selectedTagList.value = value;
+  set selectedBookTagList(value) => _selectedBookTagList.value = value;
 
   ///선택된 링크 리스트
   final _selectedLinkList = <String>[].obs;
@@ -82,8 +85,14 @@ class CommunityAddController extends GetxController {
 
   set modifyMode(value) => _modifyMode.value = value;
 
-  CommunityAddController({required this.postRepository, required this.postImageRepository}) {
+  CommunityAddController({
+    required this.postRepository,
+    required this.postImageRepository,
+    required this.bookRepository,
+  }) {
     assert(postRepository != null);
+    assert(postImageRepository != null);
+    assert(bookRepository != null);
 
     titleController.addListener(_titleListener);
     contentsController.addListener(_contentsListener);
@@ -178,9 +187,12 @@ class CommunityAddController extends GetxController {
           memberId: memberId!,
           title: titleController.text,
           contents: contentsController.text,
-          postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
-          postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
-          postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
+          // postTag1: selectedTagList.length > 0 ? selectedTagList[0] : null,
+          // postTag2: selectedTagList.length > 1 ? selectedTagList[1] : null,
+          // postTag3: selectedTagList.length > 2 ? selectedTagList[2] : null,
+          bookIdTag1: selectedBookTagList.length > 0 ? selectedBookTagList[0].modelBook.id : null,
+          bookIdTag2: selectedBookTagList.length > 1 ? selectedBookTagList[1].modelBook.id : null,
+          bookIdTag3: selectedBookTagList.length > 2 ? selectedBookTagList[2].modelBook.id : null,
           externalLink: selectedLinkList.length > 0 ? selectedLinkList[0] : null);
 
       String selectedPostId = "";
@@ -292,8 +304,8 @@ class CommunityAddController extends GetxController {
     _selectedImageList.refresh();
   }
 
-  refreshSelectedTagList() {
-    _selectedTagList.refresh();
+  refreshSelectedBookTagList() {
+    _selectedBookTagList.refresh();
   }
 
   refreshSelectedLinkList() {
@@ -323,9 +335,14 @@ class CommunityAddController extends GetxController {
       selectedLinkList.clear();
       selectedLinkList.add(post.externalLink);
     }
-    if (post.postTagList.isNotEmpty) {
-      selectedTagList.clear();
-      selectedTagList.addAll(post.postTagList);
+    // if (post.postTagList.isNotEmpty) {
+    //   selectedTagList.clear();
+    //   selectedTagList.addAll(post.postTagList);
+    // }
+
+    if (post.bookIdTagList.isNotEmpty) {
+      selectedBookTagList.clear();
+      selectedBookTagList.addAll(post.bookIdTagList.map((bookId) => bookRepository.get(bookSetId: bookId)).toList());
     }
 
     if (post.postFileList.isNotEmpty) {
@@ -348,5 +365,11 @@ class CommunityAddController extends GetxController {
     var file = await DefaultCacheManager().getSingleFile(url);
     XFile result = XFile(file.path);
     return result;
+  }
+
+  initBookTagList(List<ModelBookResponse> bookTagList) {
+    selectedBookTagList.clear();
+    selectedBookTagList.addAll(bookTagList);
+    _selectedBookTagList.refresh();
   }
 }

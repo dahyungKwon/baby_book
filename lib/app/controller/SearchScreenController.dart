@@ -1,6 +1,7 @@
 import 'package:baby_book/app/models/model_publisher.dart';
 import 'package:baby_book/app/repository/search_repository.dart';
 import 'package:baby_book/app/view/home/book/category_type.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
@@ -8,12 +9,25 @@ import '../models/model_book_response.dart';
 import '../models/model_member.dart';
 import '../repository/member_repository.dart';
 import '../repository/paging_request.dart';
+import '../view/search/search_type.dart';
 
 class SearchScreenController extends GetxController {
   final SearchRepository searchRepository;
+  final SearchType searchType;
+  String? keyword;
+  TextEditingController searchController = TextEditingController();
 
-  SearchScreenController({required this.searchRepository}) {
+  SearchScreenController({required this.searchRepository, required this.searchType, required this.keyword}) {
     assert(searchRepository != null);
+    if (searchType == SearchType.community) {
+      loading = true;
+      if (keyword != null && keyword!.isNotEmpty) {
+        searchController.text = keyword!;
+        search(keyword!, PagingRequest.createDefault());
+      }
+    } else {
+      loading = false;
+    }
   }
 
   ///publisher 3개만 노출될 예정
@@ -46,8 +60,6 @@ class SearchScreenController extends GetxController {
 
   late ModelMember member;
 
-  String keyword = "";
-
   @override
   void onInit() async {
     super.onInit();
@@ -55,7 +67,6 @@ class SearchScreenController extends GetxController {
     String? memberId = await PrefData.getMemberId();
     member = await MemberRepository.getMember(memberId: memberId!);
 
-    loading = false;
     // getAllForInit(CategoryType.all);
   }
 
@@ -88,11 +99,11 @@ class SearchScreenController extends GetxController {
   }
 
   Future<List<ModelBookResponse>> _request(PagingRequest pagingRequest) async {
-    if (keyword == null || keyword.isEmpty) {
+    if (keyword == null || keyword!.isEmpty) {
       /// keyword없으면 호출 안함
       return [];
     }
-    return await searchRepository.getBookListForBookName(keyword: keyword, pagingRequest: pagingRequest);
+    return await searchRepository.getBookListForBookName(keyword: keyword!, pagingRequest: pagingRequest);
   }
 
   void initCache() {
@@ -122,12 +133,14 @@ class SearchScreenController extends GetxController {
     }
 
     bookList = await searchRepository.getBookListForBookName(keyword: keyword, pagingRequest: pagingRequest);
-    publisherList = await searchRepository.getPublisherListForPublisherName(
-        keyword: keyword, pagingRequest: PagingRequest.createDefault());
+    if (searchType != SearchType.community) {
+      publisherList = await searchRepository.getPublisherListForPublisherName(
+          keyword: keyword, pagingRequest: PagingRequest.createDefault());
 
-    /// 3개만 노출하기 위함
-    if (publisherList.length > 3) {
-      publisherList = publisherList.sublist(0, 3);
+      /// 3개만 노출하기 위함
+      if (publisherList.length > 3) {
+        publisherList = publisherList.sublist(0, 3);
+      }
     }
 
     ///사용자경험 위해 0.2초 딜레이

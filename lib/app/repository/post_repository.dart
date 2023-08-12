@@ -172,6 +172,7 @@ class PostRepository {
   }
 
   ///태그조회
+  ///현재 안씀
   Future<ModelPostTag?> getPostTag({required String tag, required PagingRequest pagingRequest}) async {
     var accessToken = await PrefData.getAccessToken();
 
@@ -203,7 +204,7 @@ class PostRepository {
     var accessToken = await PrefData.getAccessToken();
 
     final response = await dio.get(
-      '/posts/books/$bookId',
+      '/posts/book-tags/$bookId',
       queryParameters: {
         'pageSize': pagingRequest.pageSize,
         'pageNumber': pagingRequest.pageNumber,

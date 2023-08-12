@@ -19,10 +19,16 @@ class ModelPost {
   DateTime createdAt;
   DateTime? updatedAt;
 
+  /// 아직사용안함
   String? postTag1;
   String? postTag2;
   String? postTag3;
   List<String> postTagList = [];
+
+  int? bookIdTag1;
+  int? bookIdTag2;
+  int? bookIdTag3;
+  List<int> bookIdTagList = [];
 
   bool liked = false;
   bool disliked = false;
@@ -51,6 +57,9 @@ class ModelPost {
       this.postTag1,
       this.postTag2,
       this.postTag3,
+      this.bookIdTag1,
+      this.bookIdTag2,
+      this.bookIdTag3,
       this.liked = false,
       this.disliked = false,
       this.bookmark = false,
@@ -59,6 +68,7 @@ class ModelPost {
       this.timeDiffForUi,
       this.postFileList = const []}) {
     postTagList = initPostTagList(postTag1, postTag2, postTag3);
+    bookIdTagList = initBookTagList(bookIdTag1, bookIdTag2, bookIdTag3);
   }
 
   static ModelPost createModelPostForObsInit() {
@@ -90,6 +100,10 @@ class ModelPost {
         'postTag2': postTag2,
         'postTag3': postTag3,
         'postTagList': postTagList,
+        'bookIdTag1': bookIdTag1,
+        'bookIdTag2': bookIdTag2,
+        'bookIdTag3': bookIdTag3,
+        'bookIdTagList': bookIdTagList,
         'liked': liked,
         'disliked': disliked,
         'bookmark': bookmark,
@@ -118,6 +132,10 @@ class ModelPost {
         postTag2 = json['postTag2'],
         postTag3 = json['postTag3'],
         postTagList = initPostTagList(json['postTag1'], json['postTag2'], json['postTag3']),
+        bookIdTag1 = json['bookIdTag1'],
+        bookIdTag2 = json['bookIdTag2'],
+        bookIdTag3 = json['bookIdTag3'],
+        bookIdTagList = initBookTagList(json['bookIdTag1'], json['bookIdTag2'], json['bookIdTag3']),
         liked = json['liked'] ?? false,
         disliked = json['disliked'] ?? false,
         bookmark = json['bookmark'] ?? false,
@@ -147,6 +165,11 @@ class ModelPost {
     postTag3 = selectedPost.postTag3;
     postTagList = initPostTagList(postTag1, postTag2, postTag3);
 
+    bookIdTag1 = selectedPost.bookIdTag1;
+    bookIdTag2 = selectedPost.bookIdTag2;
+    bookIdTag3 = selectedPost.bookIdTag3;
+    bookIdTagList = initBookTagList(bookIdTag1, bookIdTag2, bookIdTag3);
+
     liked = selectedPost.liked;
     disliked = selectedPost.disliked;
     bookmark = selectedPost.bookmark;
@@ -169,6 +192,24 @@ class ModelPost {
 
     if (postTag3 != null && postTag3 != "") {
       list.add(postTag3!);
+    }
+
+    return list;
+  }
+
+  static List<int> initBookTagList(int? bookIdTag1, int? bookIdTag2, int? bookIdTag3) {
+    List<int> list = [];
+
+    if (bookIdTag1 != null) {
+      list.add(bookIdTag1!);
+    }
+
+    if (bookIdTag2 != null) {
+      list.add(bookIdTag2!);
+    }
+
+    if (bookIdTag3 != null) {
+      list.add(bookIdTag3!);
     }
 
     return list;

@@ -1,4 +1,5 @@
 import 'package:baby_book/app/controller/CommunityTagAddController.dart';
+import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
@@ -8,27 +9,31 @@ import 'package:get/get.dart';
 
 import '../../../base/color_data.dart';
 import '../../controller/CommunityAddController.dart';
+import '../../models/model_book.dart';
+import '../../routes/app_pages.dart';
+import '../search/search_type.dart';
 import 'error_dialog.dart';
 
 class TagDialog extends GetView<CommunityTagAddController> {
-  TagDialog(List<String> selectedTagList, {Key? key}) : super(key: key) {
+  TagDialog(List<ModelBookResponse> selectedBookTagList, {Key? key}) : super(key: key) {
     Get.put(CommunityTagAddController());
     controller.tagController.text = "";
-    controller.selectedTagList = <String>[];
-    controller.selectedTagList.addAll(selectedTagList);
+    controller.selectedBookTagList = <ModelBookResponse>[];
+    controller.selectedBookTagList.addAll(selectedBookTagList);
   }
 
   SizedBox selectedTagList() {
     return SizedBox(
-        height: 120,
+        height: FetchPixels.getPixelHeight(160),
         child: ListView.builder(
           padding: EdgeInsets.zero,
-          itemCount: controller.selectedTagList.length,
+          itemCount: controller.selectedBookTagList.length,
           itemBuilder: (context, index) {
-            String tag = controller.selectedTagList[index];
+            ModelBookResponse bookResponse = controller.selectedBookTagList[index];
+            ModelBook book = bookResponse.modelBook;
             return GestureDetector(
                 onTap: () {
-                  controller.removeTag(index);
+                  controller.removeBookTag(index);
                 },
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -41,20 +46,23 @@ class TagDialog extends GetView<CommunityTagAddController> {
                               Radius.circular(15.0),
                             ),
                           ),
-                          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
                           child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "#$tag",
-                                  style: TextStyle(fontSize: 15),
-                                ),
+                                Container(
+                                    width: FetchPixels.getPixelWidth(210),
+                                    child: Text(
+                                      "#${book.name}",
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 15, overflow: TextOverflow.ellipsis),
+                                    )),
                                 getHorSpace(FetchPixels.getPixelHeight(10)),
                                 getSvgImage("close_outline.svg", width: 15, height: 15),
                               ])),
-                      getVerSpace(FetchPixels.getPixelHeight(10))
+                      getVerSpace(FetchPixels.getPixelHeight(16))
                     ]));
           },
         ));
@@ -86,11 +94,11 @@ class TagDialog extends GetView<CommunityTagAddController> {
                           Expanded(
                               child: getDefaultTextFiledWithLabel2(
                             context,
-                            "태그를 입력해주세요.",
+                            "태그할 책이름을 입력해주세요.",
                             Colors.black45.withOpacity(0.3),
                             controller.tagController,
                             Colors.grey,
-                            FetchPixels.getPixelHeight(15),
+                            FetchPixels.getPixelHeight(14),
                             FontWeight.w400,
                             function: () {},
                             isEnable: false,
@@ -101,8 +109,9 @@ class TagDialog extends GetView<CommunityTagAddController> {
                             boxColor: Color(0xFFF5F6F8),
                           )),
                           getHorSpace(FetchPixels.getPixelHeight(5)),
-                          getButton(context, Color(0xFFF5F6F8), "추가", Colors.black, () {
-                            controller.addTag();
+                          getButton(context, Color(0xFFF5F6F8), "검색", Colors.black, () {
+                            controller.searchBook();
+                            // controller.addTag();
                           }, 15,
                               weight: FontWeight.w500,
                               buttonWidth: FetchPixels.getPixelHeight(50),
@@ -125,9 +134,11 @@ class TagDialog extends GetView<CommunityTagAddController> {
                               borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(8))),
                           getHorSpace(FetchPixels.getPixelHeight(20)),
                           getButton(context, Colors.transparent, "완료", Colors.black, () {
-                            Get.find<CommunityAddController>().selectedTagList = <String>[];
-                            Get.find<CommunityAddController>().selectedTagList.addAll(controller.selectedTagList);
-                            Get.back();
+                            // Get.find<CommunityAddController>().selectedBookTagList = <String>[];
+                            // Get.find<CommunityAddController>()
+                            //     .selectedBookTagList
+                            //     .addAll(controller.selectedBookTagList);
+                            Get.back(result: controller.selectedBookTagList);
                           }, 15,
                               weight: FontWeight.w500,
                               buttonWidth: FetchPixels.getPixelHeight(60),
