@@ -64,6 +64,9 @@ dependencies:
   uuid: ^3.0.7
   flutter_rating_bar: ^4.0.1
   fluttertoast: ^8.2.2
+  firebase_analytics: ^10.4.4
+  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
 
 dev_dependencies:
   flutter_test:

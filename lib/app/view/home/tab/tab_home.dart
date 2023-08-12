@@ -11,6 +11,7 @@ import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -67,8 +68,12 @@ class TabHome extends GetView<TabHomeController> {
                                 isScrollControlled: true,
                                 builder: (_) => AgeGroupBottomSheet(
                                     selectedAgeGroup: ModelAgeGroup.ageGroupList[controller.selectedAgeGroupId!]))
-                            .then((selectedAgeGroup) {
+                            .then((selectedAgeGroup) async {
                           if (selectedAgeGroup != null) {
+                            await FirebaseAnalytics.instance.logScreenView(
+                                screenName: "home_ageChangeBtn_${selectedAgeGroup.title}_screenName",
+                                screenClass: "home_ageChangeBtn_${selectedAgeGroup.title}_screenClass");
+
                             ///age를 바꾸면 캐시 다 날리고, 선택된 카테고리로 재조회
                             initPageNumber();
                             controller.selectedAgeGroupId = selectedAgeGroup.groupId;
@@ -97,7 +102,9 @@ class TabHome extends GetView<TabHomeController> {
                       // }),
                       // getHorSpace(FetchPixels.getPixelWidth(10)),
                       getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                          Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
+                          Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+                        await FirebaseAnalytics.instance.logScreenView(
+                            screenName: "home_searchBtn_screenName", screenClass: "home_searchBtn_screenClass");
                         Get.toNamed(Routes.searchPath);
                       }),
                     ],
@@ -119,6 +126,10 @@ class TabHome extends GetView<TabHomeController> {
                   CategoryType categoryType = categoryLists[index];
                   return GestureDetector(
                     onTap: () async {
+                      await FirebaseAnalytics.instance.logScreenView(
+                          screenName: "home_categoryChangeBtn_${categoryType.code}_screenName",
+                          screenClass: "home_categoryChangeBtn_${categoryType.code}_screenClass");
+
                       ///책 타입 변경하면 새로 조회 (캐시 있으면 캐시 보여줌)
                       initPageNumber();
                       controller.selectedCategoryIdx = index;
@@ -184,6 +195,9 @@ class TabHome extends GetView<TabHomeController> {
   }
 
   void onRefresh() async {
+    await FirebaseAnalytics.instance
+        .logScreenView(screenName: "home_refreshBookList_screenName", screenClass: "home_refreshBookList_screenClass");
+
     await controller.getAllForPullToRefresh();
     initPageNumber(); //순서중요
 
@@ -193,6 +207,11 @@ class TabHome extends GetView<TabHomeController> {
   }
 
   void onLoading() async {
+    await FirebaseAnalytics.instance.logScreenView(
+      screenName: "home_onLoadingBooklist_${pageNumber}_screenName",
+      screenClass: "home_onLoadingBooklist_${pageNumber}_screenName",
+    );
+
     List<ModelBookResponse>? list = await controller.getAllForLoading(PagingRequest.create(pageNumber + 1));
     if (list != null && list.isNotEmpty) {
       plusPageNumber();
@@ -230,7 +249,11 @@ class TabHome extends GetView<TabHomeController> {
         itemCount: bookList.length,
         itemBuilder: (context, index) {
           ModelBookResponse modelBookResponse = bookList[index];
-          return buildBookListItem(modelBookResponse, context, index, () {
+          return buildBookListItem(modelBookResponse, context, index, () async {
+            await FirebaseAnalytics.instance.logScreenView(
+                screenName: "home_click_book_${modelBookResponse.modelBook.id}_screenName",
+                screenClass: "home_click_book_${modelBookResponse.modelBook.id}_screenClass");
+
             Get.toNamed(Routes.bookDetailPath, parameters: {
               'bookSetId': modelBookResponse.modelBook.id.toString(),
               'babyId': member.selectedBabyId ?? ""
@@ -255,7 +278,10 @@ class TabHome extends GetView<TabHomeController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "책 추천 하러가기", Colors.black87, () {
+        getButton(context, backGroundColor, "책 추천 하러가기", Colors.black87, () async {
+          await FirebaseAnalytics.instance.logScreenView(
+              screenName: "home_recommendBook_screenName", screenClass: "home_recommendBook_screenClass");
+
           // Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
         }, 18,
             weight: FontWeight.w600,

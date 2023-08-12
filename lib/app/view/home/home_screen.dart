@@ -6,6 +6,7 @@ import 'package:baby_book/app/view/home/tab/tab_schedule.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,9 @@ class HomeScreen extends GetView<HomeScreenController> {
     "person_selected.svg"
   ];
   List<String> bottomBarStringList = ["홈", "책장", "커뮤니티", "프로필"];
+
+  ///구글 애널리틱스 용
+  List<String> bottomBarStringEnList = ["home", "bookcase", "community", "profile"];
 
   List<Widget> tabList = [
     TabHome(),
@@ -62,7 +66,11 @@ class HomeScreen extends GetView<HomeScreenController> {
                   return Expanded(
                     flex: 1,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await FirebaseAnalytics.instance.logScreenView(
+                            screenName: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenName",
+                            screenClass: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenClass");
+
                         controller.tabIndex = selectedTabIndex;
                       },
                       child: Center(
@@ -107,7 +115,7 @@ class HomeScreen extends GetView<HomeScreenController> {
                 }))))));
   }
 
-  Future<bool> onWillPop() {
+  Future<bool> onWillPop() async {
     DateTime now = DateTime.now();
 
     if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
@@ -117,6 +125,10 @@ class HomeScreen extends GetView<HomeScreenController> {
       Fluttertoast.showToast(msg: msg);
       return Future.value(false);
     }
+
+    await FirebaseAnalytics.instance.logScreenView(
+        screenName: "home_backbtn_${bottomBarStringEnList[controller.tabIndex]}_screenName",
+        screenClass: "home_backbtn_${bottomBarStringEnList[controller.tabIndex]}_screenClass");
 
     Constant.closeApp();
     return Future.value(true);
