@@ -635,102 +635,100 @@ Widget getDefaultTextFiledWithLabel2(BuildContext context, String hint, Color hi
     required Color boxColor,
     BoxDecoration? boxDecoration,
     Function? editingComplete,
-    int? maxLength}) {
+    int? maxLength,
+    TextAlign? textAlign}) {
   myFocusNode ??= FocusNode();
   return StatefulBuilder(
     builder: (context, setState) {
-      final mqData = MediaQuery.of(context);
-      final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
+      // final mqData = MediaQuery.of(context);
+      // final mqDataNew = mqData.copyWith(textScaleFactor: FetchPixels.getTextScale());
 
       return AbsorbPointer(
-          absorbing: isEnable,
-          child: GestureDetector(
-            onTap: () {
-              myFocusNode!.requestFocus();
-              function();
-            },
-            child: Container(
+        absorbing: isEnable,
+        child: GestureDetector(
+          onTap: () {
+            myFocusNode!.requestFocus();
+            function();
+          },
+          child: Container(
               height: height,
+              // color: Colors.blueAccent,
               // margin: margin,
               alignment: alignmentGeometry,
               decoration: boxDecoration ?? BoxDecoration(color: boxColor),
               child: Focus(
-                  onFocusChange: (hasFocus) {
-                    if (hasFocus) {
-                      setState(() {
-                        myFocusNode!.canRequestFocus = true;
-                      });
-                    } else {
-                      setState(() {
-                        myFocusNode!.canRequestFocus = false;
-                      });
-                    }
-                  },
-                  child: MediaQuery(
-                    data: mqDataNew,
-                    child: Row(
-                      children: [
-                        (!withprefix)
-                            ? getHorSpace(FetchPixels.getPixelWidth(16))
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    top: FetchPixels.getPixelWidth(12),
-                                    bottom: FetchPixels.getPixelWidth(12),
-                                    right: FetchPixels.getPixelWidth(12),
-                                    left: FetchPixels.getPixelWidth(18)),
-                                child: getSvgImage(image!,
-                                    height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
-                              ),
-                        Expanded(
-                          child: TextField(
-                            enabled: enableEditing,
-                            maxLines: (minLines) ? null : 1,
-                            maxLength: maxLength,
-                            controller: textEditingController,
-                            obscuringCharacter: "*",
-                            autofocus: autofocus ?? false,
-                            focusNode: myFocusNode,
-                            obscureText: isPass,
-                            showCursor: true,
-                            onEditingComplete: () {
-                              if (editingComplete != null) {
-                                editingComplete();
-                              }
-                            },
-                            // cursorColor: Colors.black87,
-                            style: TextStyle(
-                              color: Colors.black,
+                onFocusChange: (hasFocus) {
+                  if (hasFocus) {
+                    setState(() {
+                      myFocusNode!.canRequestFocus = true;
+                    });
+                  } else {
+                    setState(() {
+                      myFocusNode!.canRequestFocus = false;
+                    });
+                  }
+                },
+                child: Row(
+                  children: [
+                    (!withprefix)
+                        ? getHorSpace(FetchPixels.getPixelWidth(16))
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                right: FetchPixels.getPixelWidth(6), left: FetchPixels.getPixelWidth(20)),
+                            child: getSvgImage(image!,
+                                height: FetchPixels.getPixelHeight(20), width: FetchPixels.getPixelHeight(20)),
+                          ),
+                    Expanded(
+                      child: TextField(
+                        textAlign: textAlign ?? TextAlign.start,
+                        enabled: enableEditing,
+                        maxLines: (minLines) ? null : 1,
+                        maxLength: maxLength,
+                        controller: textEditingController,
+                        obscuringCharacter: "*",
+                        autofocus: autofocus ?? false,
+                        focusNode: myFocusNode,
+                        obscureText: isPass,
+                        showCursor: true,
+                        onEditingComplete: () {
+                          if (editingComplete != null) {
+                            editingComplete();
+                          }
+                        },
+                        // cursorColor: Colors.black87,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: fontWeight,
+                          fontSize: fontSize,
+                        ),
+                        decoration: InputDecoration(
+                            // contentPadding: EdgeInsets.only(
+                            //     top: FetchPixels.getPixelWidth(12), bottom: FetchPixels.getPixelWidth(12)),
+                            border: InputBorder.none,
+                            counterText: '',
+                            hintText: hint,
+                            hintStyle: TextStyle(
+                              color: hintColor,
                               fontWeight: fontWeight,
                               fontSize: fontSize,
-                            ),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                    top: FetchPixels.getPixelWidth(12), bottom: FetchPixels.getPixelWidth(12)),
-                                border: InputBorder.none,
-                                counterText: '',
-                                hintText: hint,
-                                hintStyle: TextStyle(
-                                  color: hintColor,
-                                  fontWeight: fontWeight,
-                                  fontSize: fontSize,
-                                )),
-                          ),
-                        ),
-                        (!withSufix)
-                            ? getHorSpace(FetchPixels.getPixelWidth(16))
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    right: FetchPixels.getPixelWidth(18), left: FetchPixels.getPixelWidth(12)),
-                                child: InkWell(
-                                  child: getSvgImage(suffiximage!,
-                                      height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
-                                ),
-                              ),
-                      ],
+                            )),
+                      ),
                     ),
-                  )),
-            ),
-          ));
+                    (!withSufix)
+                        ? getHorSpace(FetchPixels.getPixelWidth(16))
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                right: FetchPixels.getPixelWidth(18), left: FetchPixels.getPixelWidth(5)),
+                            child: InkWell(
+                              child: getSvgImage(suffiximage!,
+                                  height: FetchPixels.getPixelHeight(24), width: FetchPixels.getPixelHeight(24)),
+                            ),
+                          ),
+                  ],
+                ),
+              )),
+        ),
+      );
     },
   );
 }

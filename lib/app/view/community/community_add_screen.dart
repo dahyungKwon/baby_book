@@ -103,7 +103,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               minLines: true,
               height: FetchPixels.getPixelHeight(50),
               withSufix: true,
-              suffiximage: "down_arrow.svg",
+              suffiximage: "down_arrow_gray.svg",
               enableEditing: false),
           getVerSpace(FetchPixels.getPixelHeight(0)),
           getDefaultTextFiledWithLabel2(context, "제목을 입력해주세요.", Colors.black45.withOpacity(0.3),

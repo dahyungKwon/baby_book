@@ -44,6 +44,7 @@ class TabHome extends GetView<TabHomeController> {
     );
 
     return Obx(() => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getVerSpace(FetchPixels.getPixelHeight(10)),
             getPaddingWidget(
@@ -52,7 +53,7 @@ class TabHome extends GetView<TabHomeController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                      width: FetchPixels.getPixelWidth(165),
+                      width: FetchPixels.getPixelWidth(170),
                       height: FetchPixels.getPixelHeight(50),
                       child: getDefaultTextFiledWithLabel2(
                           context,
@@ -114,6 +115,7 @@ class TabHome extends GetView<TabHomeController> {
             ),
             getVerSpace(FetchPixels.getPixelHeight(10)),
             SizedBox(
+              // width: 70.w,
               height: FetchPixels.getPixelHeight(40),
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15)),
@@ -166,13 +168,58 @@ class TabHome extends GetView<TabHomeController> {
                 }),
               ),
             ),
-            getVerSpace(FetchPixels.getPixelHeight(10)),
+            getVerSpace(FetchPixels.getPixelHeight(5)),
+            sortFilter(context),
+            // getDefaultTextFiledWithLabel2(
+            //     context,
+            //     controller.selectedBookListSortType.desc,
+            //     const Color(0xFF666666),
+            //     controller.bookListSortTextEditingController,
+            //     const Color(0xFF666666),
+            //     14,
+            //     boxColor: backGroundColor,
+            //     FontWeight.w500, function: () {
+            //   controller.showBookListSortTypeBottomSheet(context);
+            // },
+            //     isEnable: false,
+            //     withprefix: true,
+            //     image: "sort.svg",
+            //     minLines: true,
+            //     height: FetchPixels.getPixelHeight(22),
+            //     withSufix: false,
+            //     // suffiximage: "sort.svg",
+            //     enableEditing: false,
+            //     textAlign: TextAlign.left),
+            // getVerSpace(FetchPixels.getPixelHeight(10)),
             controller.loading
                 ? const Expanded(child: ListSkeleton())
                 : controller.bookList.length < 1
                     ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
                     : Expanded(child: draw())
           ],
+        ));
+  }
+
+  Widget sortFilter(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          controller.showBookListSortTypeBottomSheet(context);
+        },
+        child: Container(
+          // color: Colors.blueAccent,
+          // margin: EdgeInsets.symmetric(vertical: FetchPixels.getPixelWidth(10)),
+          padding:
+              EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15), vertical: FetchPixels.getPixelWidth(10)),
+
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              getSvgImage("sort.svg", height: FetchPixels.getPixelHeight(18), width: FetchPixels.getPixelHeight(18)),
+              getHorSpace(FetchPixels.getPixelHeight(5)),
+              getCustomFont(controller.selectedBookListSortType.desc, 12, Color(0xFF666666), 1,
+                  fontWeight: FontWeight.w500),
+            ],
+          ),
         ));
   }
 
@@ -191,7 +238,7 @@ class TabHome extends GetView<TabHomeController> {
         controller: refreshController,
         onRefresh: onRefresh,
         onLoading: onLoading,
-        child: allBookingList(controller.bookList, controller.member));
+        child: buildBookList(controller.bookList, controller.member));
   }
 
   void onRefresh() async {
@@ -241,7 +288,7 @@ class TabHome extends GetView<TabHomeController> {
     print("plusPageNumber.... end...pageNumber...$pageNumber...${controller.selectedCategoryType.code}");
   }
 
-  ListView allBookingList(List<ModelBookResponse> bookList, ModelMember member) {
+  ListView buildBookList(List<ModelBookResponse> bookList, ModelMember member) {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         // shrinkWrap: true,

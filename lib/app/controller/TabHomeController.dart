@@ -4,6 +4,7 @@ import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/routes/app_pages.dart';
 import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:baby_book/base/pref_data.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,8 @@ import '../models/model_age_group.dart';
 import '../models/model_book_response.dart';
 import '../repository/book_repository.dart';
 import '../repository/paging_request.dart';
+import '../view/home/tab/book_list_sort_type.dart';
+import '../view/home/tab/book_list_sort_type_bottom_sheet.dart';
 
 class TabHomeController extends GetxController {
   final BookRepository bookListRepository;
@@ -51,9 +54,17 @@ class TabHomeController extends GetxController {
 
   set selectedCategoryIdx(value) => _selectedCategoryIdx.value = value;
 
+  ///책 리스트 소팅방법 , 인기순 디폴트
+  final _selectedBookListSortType = BookListSortType.hot.obs;
+
+  get selectedBookListSortType => _selectedBookListSortType.value;
+
+  set selectedBookListSortType(value) => _selectedBookListSortType.value = value;
+
   CategoryType selectedCategoryType = CategoryType.all;
 
   TextEditingController ageGroupTextEditingController = TextEditingController();
+  TextEditingController bookListSortTextEditingController = TextEditingController();
 
   late ModelMember member;
 
@@ -138,5 +149,16 @@ class TabHomeController extends GetxController {
     _bookList.addAll(list);
 
     // _postList.refresh(); 이방법도 존재하나 obx사용을 위해 사용하지 않고 스터디를 위해 해당 코드 남겨둠
+  }
+
+  showBookListSortTypeBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => BookListSortTypeBottomSheet(bookListSortType: selectedBookListSortType!)).then((sortType) {
+      if (sortType != null) {
+        selectedBookListSortType = sortType;
+      }
+    });
   }
 }
