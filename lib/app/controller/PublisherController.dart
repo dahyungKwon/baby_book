@@ -77,15 +77,15 @@ class PublisherController extends GetxController {
   }
 
   void initCache() {
-    bookList.clear();
+    _bookList.clear();
   }
 
   void _initList(List<ModelBookResponse> list) {
-    bookList.clear();
-    bookList.addAll(list);
+    _bookList.clear();
+    _bookList.addAll(list);
   }
 
   void _addAll(List<ModelBookResponse> list) {
-    bookList.addAll(list);
+    _bookList.addAll(list);
   }
 }
