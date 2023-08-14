@@ -94,7 +94,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
-              await Get.find<CommunityDetailController>().getComment();
+              // await Get.find<CommunityDetailController>().getComment();
               Get.back();
             }),
             getCustomFont(

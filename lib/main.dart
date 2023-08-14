@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.homepath,
+        initialRoute: Routes.splashPath,
         getPages: AppPages.pages,
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,

@@ -24,6 +24,7 @@ class ReAuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("ReAuthScreen in");
+    String? referrer = Get.parameters["referrer"];
     Timer(const Duration(seconds: 1), () async {
       if (!await isLogin()) {
         Get.offAllNamed(Routes.loginPath);
@@ -33,8 +34,12 @@ class ReAuthScreen extends StatelessWidget {
       }
       if (await PrefData.needRefreshAuth()) {
         reAuth();
-      } else {
+      }
+
+      if (referrer != null && referrer == Routes.splashPath) {
         Get.offAllNamed(Routes.homescreenPath);
+      } else {
+        reAuth();
       }
     });
 
@@ -48,6 +53,7 @@ class ReAuthScreen extends StatelessWidget {
         ),
         onWillPop: () async {
           Get.offAllNamed(Routes.loginPath);
+
           return false;
         });
   }

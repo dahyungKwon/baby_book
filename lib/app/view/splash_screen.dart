@@ -78,7 +78,7 @@ class SplashScreen extends StatelessWidget {
         Get.offAllNamed(Routes.joinPath);
       }
       if (await PrefData.needRefreshAuth()) {
-        Get.offAllNamed(Routes.reAuthPath);
+        Get.offAllNamed(Routes.reAuthPath, parameters: {"referrer": Routes.splashPath});
       } else {
         Get.offAllNamed(Routes.homescreenPath);
       }

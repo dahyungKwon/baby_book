@@ -2,6 +2,7 @@ part of './app_pages.dart';
 
 abstract class Routes {
   ///전체
+  static const splashPath = "/SplashScreen";
   static const loginPath = "/LoginScreen";
   static const reAuthPath = "/ReAuthScreen";
   static const joinPath = "/JoinScreen";
@@ -42,7 +43,7 @@ abstract class Routes {
   static const searchPath = "/SearchScreen";
 
   ///사용안함
-  static const homepath = "/";
+  // static const homepath = "/";
   static const introPath = "/IntroScreen";
   static const forgotPath = "/ForgotPassword";
   static const resetPath = "/ResetPassword";

@@ -49,7 +49,8 @@ part './app_routes.dart';
 
 class AppPages {
   static final pages = [
-    GetPage(name: Routes.homepath, page: () => SplashScreen(), transition: Transition.noTransition),
+    // GetPage(name: Routes.homepath, page: () => SplashScreen(), transition: Transition.noTransition),
+    GetPage(name: Routes.splashPath, page: () => SplashScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.loginPath, page: () => LoginScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.reAuthPath, page: () => ReAuthScreen(), transition: Transition.noTransition),
     GetPage(name: Routes.homescreenPath, page: () => HomeScreen(0), transition: Transition.noTransition),
