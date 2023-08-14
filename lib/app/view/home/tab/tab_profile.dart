@@ -10,6 +10,7 @@ import '../../profile/profile_layout.dart';
 
 class TabProfile extends GetView<ProfileController> {
   TabProfile({super.key}) {
+    Get.delete<ProfileController>();
     Get.put(ProfileController(
         memberRepository: MemberRepository(), babyRepository: BabyRepository(), targetMemberId: null));
   }

@@ -265,7 +265,7 @@ class EditProfileController extends GetxController {
 
     Get.find<ProfileController>().updateProfile(member, selectedBabyList);
 
-    Get.toNamed(Routes.homescreenPath);
+    Get.offNamed(Routes.homescreenPath);
   }
 
   openModifyBabyDialog(int index) {
