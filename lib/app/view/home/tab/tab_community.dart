@@ -83,7 +83,7 @@ class TabCommunity extends GetView<TabCommunityController> {
             //For Selected tab
             tabs: List.generate(controller.tabsList.length, (index) {
               return Tab(
-                height: 20.0,
+                height: FetchPixels.getPixelHeight(25),
                 child: Container(
                     alignment: Alignment.center,
                     child: Column(

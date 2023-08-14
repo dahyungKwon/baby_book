@@ -121,7 +121,8 @@ class TabHomeController extends GetxController {
     return await bookListRepository.getBookList(
         ageGroup: ModelAgeGroup.getAgeGroup(selectedAgeGroupId),
         categoryType: selectedCategoryType,
-        pagingRequest: pagingRequest);
+        pagingRequest: pagingRequest,
+        bookListSortType: selectedBookListSortType);
   }
 
   void initCache() {
@@ -158,6 +159,7 @@ class TabHomeController extends GetxController {
         builder: (_) => BookListSortTypeBottomSheet(bookListSortType: selectedBookListSortType!)).then((sortType) {
       if (sortType != null) {
         selectedBookListSortType = sortType;
+        initCache();
       }
     });
   }

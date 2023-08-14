@@ -2,6 +2,7 @@ import 'package:baby_book/app/models/model_age_group.dart';
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/app/view/home/book/category_type.dart';
+import 'package:baby_book/app/view/home/tab/book_list_sort_type.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
@@ -20,9 +21,10 @@ class BookRepository {
   Future<List<ModelBookResponse>> getBookList(
       {required ModelAgeGroup ageGroup, //일단 1개만 받도록
       required CategoryType categoryType, //일단 1개만 받도록
-      required PagingRequest pagingRequest}) async {
+      required PagingRequest pagingRequest,
+      required BookListSortType bookListSortType}) async {
     var accessToken = await PrefData.getAccessToken();
-
+    // pageSize=15&pageNumber=1&categoryList=ALL&startMonth=0&endMonth=17&sortType=LIKE
     final response = await dio.get(
       '/bookset',
       queryParameters: {
@@ -31,6 +33,7 @@ class BookRepository {
         'categoryList': categoryType.code, //리스트형태인데 예시 ['MATH,LIFE'], 일단 하나만 보내게 해둠
         'startMonth': ageGroup.minAge,
         'endMonth': ageGroup.maxAge,
+        'sortType': bookListSortType?.code ?? BookListSortType.hot
       },
       options: Options(
         headers: {"at": accessToken},

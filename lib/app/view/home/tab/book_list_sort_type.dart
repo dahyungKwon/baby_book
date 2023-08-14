@@ -1,6 +1,6 @@
 enum BookListSortType {
   hot("HOT", "인기순"),
-  like("Like", "좋아요순");
+  like("LIKE", "좋아요순");
 
   final String code;
   final String desc;

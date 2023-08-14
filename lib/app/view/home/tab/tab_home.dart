@@ -23,6 +23,7 @@ import '../../../models/model_book_response.dart';
 import '../../../models/model_member.dart';
 import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
+import 'book_list_sort_type_bottom_sheet.dart';
 
 class TabHome extends GetView<TabHomeController> {
   TextEditingController searchController = TextEditingController();
@@ -116,7 +117,7 @@ class TabHome extends GetView<TabHomeController> {
             getVerSpace(FetchPixels.getPixelHeight(10)),
             SizedBox(
               // width: 70.w,
-              height: FetchPixels.getPixelHeight(40),
+              height: FetchPixels.getPixelHeight(45),
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15)),
                 scrollDirection: Axis.horizontal,
@@ -203,10 +204,20 @@ class TabHome extends GetView<TabHomeController> {
   Widget sortFilter(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          controller.showBookListSortTypeBottomSheet(context);
+          showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => BookListSortTypeBottomSheet(bookListSortType: controller.selectedBookListSortType!))
+              .then((sortType) {
+            if (sortType != null) {
+              controller.selectedBookListSortType = sortType;
+              controller.initCache();
+              onRefresh();
+            }
+          });
         },
         child: Container(
-          // color: Colors.blueAccent,
+          color: Colors.white,
           // margin: EdgeInsets.symmetric(vertical: FetchPixels.getPixelWidth(10)),
           padding:
               EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15), vertical: FetchPixels.getPixelWidth(10)),

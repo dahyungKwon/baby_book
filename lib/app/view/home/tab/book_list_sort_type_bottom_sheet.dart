@@ -1,9 +1,12 @@
 import 'package:baby_book/app/view/home/tab/book_list_sort_type.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
+import '../../dialog/error_dialog.dart';
 
 class BookListSortTypeBottomSheet extends StatefulWidget {
   final BookListSortType bookListSortType;
@@ -78,20 +81,44 @@ class _BookListSortTypeBottomSheetPicker extends StatelessWidget {
   }
 
   Widget render(BuildContext context, BookListSortType bookListSortType, bool isSelected) {
-    return RadioListTile<BookListSortType>(
-        visualDensity: const VisualDensity(
-          horizontal: VisualDensity.minimumDensity,
-          vertical: VisualDensity.minimumDensity,
-        ),
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        contentPadding: EdgeInsets.zero,
-        title: Text(bookListSortType.desc),
-        value: bookListSortType,
-        activeColor: Colors.black,
-        groupValue: selectedBookListSortType,
-        onChanged: (BookListSortType? bookListSortType) {
-          bookListSortTypeBottomSheetSetter(bookListSortType!);
-          Navigator.pop(context, bookListSortType);
-        });
+    return Row(children: [
+      Expanded(
+          child: RadioListTile<BookListSortType>(
+              visualDensity: const VisualDensity(
+                horizontal: VisualDensity.minimumDensity,
+                vertical: VisualDensity.minimumDensity,
+              ),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              contentPadding: EdgeInsets.zero,
+              title: Row(children: [
+                Text(bookListSortType.desc),
+                if (bookListSortType == BookListSortType.hot) ...[
+                  getHorSpace(FetchPixels.getPixelWidth(6)),
+                  GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        width: FetchPixels.getPixelHeight(30),
+                        height: FetchPixels.getPixelHeight(50),
+                        // color: Colors.blueAccent,
+                        child: getSimpleImageButton(
+                            "alert_noti.svg",
+                            FetchPixels.getPixelHeight(50),
+                            FetchPixels.getPixelHeight(50),
+                            Colors.white,
+                            FetchPixels.getPixelHeight(23),
+                            FetchPixels.getPixelHeight(23), () async {
+                          Get.dialog(ErrorDialog("대형 포털사 검색순위를 기반으로 생성된 인기순 입니다."));
+                        }),
+                      ))
+                ]
+              ]),
+              value: bookListSortType,
+              activeColor: Colors.black,
+              groupValue: selectedBookListSortType,
+              onChanged: (BookListSortType? bookListSortType) {
+                bookListSortTypeBottomSheetSetter(bookListSortType!);
+                Navigator.pop(context, bookListSortType);
+              })),
+    ]);
   }
 }
