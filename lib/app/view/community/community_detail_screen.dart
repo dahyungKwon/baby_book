@@ -68,9 +68,9 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
               controller.exitModifyCommentMode();
               Get.back();
-              Future.delayed(const Duration(milliseconds: 500), () {
-                commentKeyboardDown(context);
-              });
+              // Future.delayed(const Duration(milliseconds: 500), () {
+              //   commentKeyboardDown(context);
+              // });
             }));
           } else if (sharedMode) {
             print("AppSchemeImpl sharedMode :$sharedMode get off");
@@ -118,9 +118,9 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
                   controller.exitModifyCommentMode();
                   Get.back();
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    commentKeyboardDown(context);
-                  });
+                  // Future.delayed(const Duration(milliseconds: 500), () {
+                  //   commentKeyboardDown(context);
+                  // });
                 }));
               } else if (sharedMode) {
                 print("AppSchemeImpl sharedMode :$sharedMode get off");
