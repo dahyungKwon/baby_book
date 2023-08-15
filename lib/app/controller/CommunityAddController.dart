@@ -8,6 +8,7 @@ import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -179,6 +180,8 @@ class CommunityAddController extends GetxController {
   }
 
   void requestAdd() async {
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+
     var memberId = await PrefData.getMemberId();
     try {
       ModelPostRequest request = ModelPostRequest(
@@ -199,6 +202,7 @@ class CommunityAddController extends GetxController {
         bool result = await postRepository.put(postId: modifyPostId!, modelPostRequest: request);
         if (!result) {
           ///네트워크 에러
+          EasyLoading.dismiss();
           return;
         }
         selectedPostId = modifyPostId!;
@@ -206,6 +210,7 @@ class CommunityAddController extends GetxController {
         ModelPost? post = await postRepository.add(modelPostRequest: request);
         if (post == null) {
           ///네트워크 에러
+          EasyLoading.dismiss();
           return;
         }
         selectedPostId = post.postId;
@@ -229,11 +234,14 @@ class CommunityAddController extends GetxController {
       } else {
         Get.back(result: true);
       }
+      EasyLoading.dismiss();
     } on InvalidMemberException catch (e) {
       print(e);
+      EasyLoading.dismiss();
       Get.toNamed(Routes.reAuthPath);
     } catch (e) {
       print(e);
+      EasyLoading.dismiss();
       Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: $e"));
     }
   }
