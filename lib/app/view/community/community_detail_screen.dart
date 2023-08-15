@@ -155,7 +155,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    builder: (_) => PostDetailBottomSheet(controller.post, controller.myPost)).then((menu) {
+                    builder: (_) => PostDetailBottomSheet(controller.post, controller.myPost)).then((menu) async {
                   if (menu != null) {
                     switch (menu) {
                       case "공유하기":
@@ -166,7 +166,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                         }
                       case "수정하기":
                         {
-                          Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+                          bool result =
+                              await Get.toNamed(Routes.communityAddPath, parameters: {"postId": controller.postId});
+                          if (result) {
+                            controller.init();
+                          }
                           break;
                         }
                       case "삭제하기":

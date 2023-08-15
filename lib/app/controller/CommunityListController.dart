@@ -2,9 +2,7 @@ import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:get/get.dart';
 
-import '../exception/exception_invalid_member.dart';
 import '../models/model_post.dart';
-import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
 
 class CommunityListController extends GetxController {

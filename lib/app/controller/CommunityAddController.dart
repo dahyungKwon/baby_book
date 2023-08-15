@@ -18,7 +18,6 @@ import '../repository/post_image_repository.dart';
 import '../routes/app_pages.dart';
 import '../view/community/post_type.dart';
 import '../view/dialog/error_dialog.dart';
-import 'CommunityDetailController.dart';
 import 'CommunityListController.dart';
 
 class CommunityAddController extends GetxController {
@@ -164,13 +163,11 @@ class CommunityAddController extends GetxController {
     );
 
     if (result) {
-      if (modifyMode) {
-        await Get.find<CommunityDetailController>().init();
-      } else {
+      if (!modifyMode) {
         await Get.find<CommunityListController>().getAllForPullToRefresh(postType);
         await Get.find<TabCommunityController>().changePosition(postType);
       }
-      Get.back();
+      Get.back(result: true);
       //   Get.snackbar('', '등록 되었습니다.',
       //       colorText: Colors.white,
       //       backgroundColor: Color(0xFF4B4B4B),

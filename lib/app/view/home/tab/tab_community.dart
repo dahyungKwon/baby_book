@@ -32,10 +32,12 @@ class TabCommunity extends GetView<TabCommunityController> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: FloatingActionButton(
-            child: Icon(Icons.add),
-            backgroundColor: secondMainColor,
-            onPressed: () => Get.toNamed("${Routes.communityAddPath}?postType=${controller.selectedPostType().code}"),
-          ),
+              child: Icon(Icons.add),
+              backgroundColor: secondMainColor,
+              onPressed: () async {
+                bool result = await Get.toNamed(Routes.communityAddPath,
+                    parameters: {"postType": controller.selectedPostType().code});
+              }),
         ));
   }
 

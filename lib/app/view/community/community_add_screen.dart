@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:baby_book/app/controller/CommunityAddController.dart';
-import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';

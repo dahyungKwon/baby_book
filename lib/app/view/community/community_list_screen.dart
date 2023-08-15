@@ -127,8 +127,8 @@ class CommunityListScreen extends GetView<CommunityListController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () {
-          Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
+        getButton(context, backGroundColor, "글쓰러가기", Colors.black87, () async {
+          bool result = await Get.toNamed(Routes.communityAddPath, parameters: {"postType": postType.code});
         }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
