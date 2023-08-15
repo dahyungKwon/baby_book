@@ -165,7 +165,12 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   }
 
   updateMyBook(int index, ModelMyBookResponse book) {
-    _myBookResponseList[index].myBook = book.myBook;
+    if (book.myBook.holdType == HoldType.none) {
+      _myBookResponseList.removeAt(index);
+    } else {
+      _myBookResponseList[index].myBook = book.myBook;
+    }
+
     _myBookResponseList.refresh();
   }
 }
