@@ -1,21 +1,15 @@
-import 'package:baby_book/app/data/data_file.dart';
 import 'package:baby_book/app/models/model_age_group.dart';
-import 'package:baby_book/app/models/model_book.dart';
-import 'package:baby_book/app/models/model_category.dart';
-import 'package:baby_book/app/models/model_popular_service.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 
 import 'package:baby_book/app/view/home/book/age_group_bottom_sheet.dart';
 import 'package:baby_book/app/view/home/book/book_list.dart';
 import 'package:baby_book/app/view/home/book/category_type.dart';
 import 'package:baby_book/base/color_data.dart';
-import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:sizer/sizer.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/TabHomeController.dart';

@@ -1,19 +1,12 @@
 import 'dart:async';
 
-import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
-import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/skeleton.dart';
-import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-
-import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';

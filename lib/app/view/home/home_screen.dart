@@ -2,7 +2,6 @@ import 'package:baby_book/app/view/home/tab/tab_book_case.dart';
 import 'package:baby_book/app/view/home/tab/tab_community.dart';
 import 'package:baby_book/app/view/home/tab/tab_home.dart';
 import 'package:baby_book/app/view/home/tab/tab_profile.dart';
-import 'package:baby_book/app/view/home/tab/tab_schedule.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';

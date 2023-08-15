@@ -150,7 +150,7 @@ Widget _communityWritingButton(BuildContext context, ModelMember member, bool my
 
 Widget _bookReportButton(BuildContext context) {
   return getButtonWithIcon(context, Colors.white, "신규책 제보", Colors.black, () {
-    Get.toNamed(Routes.myAddressPath);
+    // Get.toNamed(Routes.myAddressPath);
   }, 16,
       weight: FontWeight.w400,
       buttonHeight: FetchPixels.getPixelHeight(60),

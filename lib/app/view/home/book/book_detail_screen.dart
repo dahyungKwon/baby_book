@@ -1,7 +1,6 @@
 import 'package:baby_book/app/controller/BookDetailController.dart';
 import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_post.dart';
-import 'package:baby_book/app/models/model_post_tag.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:baby_book/app/view/home/book/book_experience_bottom_sheet.dart';
@@ -17,27 +16,20 @@ import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../../base/pref_data.dart';
 import '../../../../base/skeleton.dart';
 import '../../../../base/uuid_util.dart';
-import '../../../controller/BookDetailController.dart';
-import '../../../controller/BookExperienceBottomSheetController.dart';
-import '../../../models/model_book_state.dart';
 import '../../../models/model_comment_response.dart';
 import '../../../models/model_kakao_link_template.dart';
-import '../../../models/model_my_book_response.dart';
 import '../../../repository/book_repository.dart';
 import '../../../repository/comment_repository.dart';
 import '../../../routes/app_pages.dart';
-import '../../community/comment_bottom_sheet.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../home_screen.dart';
 import 'HoldType.dart';
-import 'ReviewType.dart';
 import 'UsedType.dart';
 import 'book_detail_bottom_sheet.dart';
 

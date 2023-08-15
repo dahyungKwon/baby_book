@@ -26,6 +26,7 @@ abstract class Routes {
   ///책장
   static const tabBookCasePath = "/TabBookCase";
   static const bookCasePath = "/BookCaseScreen";
+
   // static const bookCaseDetailPath = "/BookCaseDetailScreen";
 
   ///커뮤니티
@@ -41,32 +42,4 @@ abstract class Routes {
 
   ///검색
   static const searchPath = "/SearchScreen";
-
-  ///사용안함
-  // static const homepath = "/";
-  static const introPath = "/IntroScreen";
-  static const forgotPath = "/ForgotPassword";
-  static const resetPath = "/ResetPassword";
-  static const signUpPath = "/SignUpScreen";
-  static const selectCountryPath = "/SelectCountry";
-  static const verifyPath = "/VerifyScreen";
-  static const categoryPath = "/CategoryScreen";
-  static const detailPath = "/DetailScreen";
-  static const cartPath = "/CartScreen";
-  static const addressPath = "/AddressScreen";
-  static const dateTimePath = "/DateTimeScreen";
-  static const paymentPath = "/PaymentScreen";
-  static const orderDetailPath = "/OrderDetail";
-
-  static const myAddressPath = "/MyAddressScreen";
-  static const editAddressPath = "/EditAddressScreen";
-  static const cardPath = "/CardScreen";
-  // static const settingPath = "/SettingScreen";
-  static const notificationPath = "/NotificationScreen";
-
-  static const bookingPath = "/BookingDetail";
-  static const helpPath = "/HelpScreen";
-  static const privacyPath = "/PrivacyScreen";
-  static const securityPath = "/SecurityScreen";
-  static const termOfServicePath = "/TermOfServiceScreen";
 }

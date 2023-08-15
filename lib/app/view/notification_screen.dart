@@ -1,5 +1,3 @@
-import 'package:baby_book/app/data/data_file.dart';
-import 'package:baby_book/app/models/model_notification.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +13,7 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List<ModelNotification> notificationLists = DataFile.notificationList;
+  // List<ModelNotification> notificationLists = DataFile.notificationList;
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +24,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
           backgroundColor: backGroundColor,
           body: SafeArea(
             child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: FetchPixels.getPixelWidth(20)),
+              padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(20)),
               child: Column(
                 children: [
                   getVerSpace(FetchPixels.getPixelHeight(20)),
                   buildSearchWidget(context),
-                  notificationLists.isEmpty
-                      ? nullListView(context)
-                      : notificationList()
+                  // notificationLists.isEmpty
+                  //     ? nullListView(context)
+                  //     : notificationList()
                 ],
               ),
             ),
@@ -49,107 +46,102 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget buildSearchWidget(BuildContext context) {
     return gettoolbarMenu(context, "back.svg", () {
       Constant.backToPrev(context);
-    },
-        istext: true,
-        title: "Notifications",
-        weight: FontWeight.w900,
-        fontsize: 24,
-        textColor: Colors.black);
+    }, istext: true, title: "Notifications", weight: FontWeight.w900, fontsize: 24, textColor: Colors.black);
   }
 
-  Expanded notificationList() {
-    return Expanded(
-      flex: 1,
-      child: ListView.builder(
-        padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(30)),
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        primary: true,
-        itemCount: notificationLists.length,
-        itemBuilder: (context, index) {
-          ModelNotification modelNotification = notificationLists[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              index == 0 || index == 2
-                  ? getCustomFont(
-                      modelNotification.date ?? '',
-                      16,
-                      Colors.black,
-                      1,
-                      fontWeight: FontWeight.w400,
-                    )
-                  : Container(),
-              getVerSpace(FetchPixels.getPixelHeight(20)),
-              Container(
-                margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(20)),
-                padding: EdgeInsets.only(
-                    top: FetchPixels.getPixelHeight(20),
-                    bottom: FetchPixels.getPixelHeight(20),
-                    right: FetchPixels.getPixelWidth(20),
-                    left: FetchPixels.getPixelWidth(20)),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.circular(FetchPixels.getPixelHeight(12)),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0.0, 4.0)),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: FetchPixels.getPixelHeight(50),
-                      width: FetchPixels.getPixelHeight(50),
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFE4ECFF),
-                          borderRadius: BorderRadius.circular(
-                              FetchPixels.getPixelHeight(12))),
-                      padding: EdgeInsets.all(FetchPixels.getPixelHeight(13)),
-                      child: getSvgImage("clock.svg"),
-                    ),
-                    getHorSpace(FetchPixels.getPixelWidth(14)),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              getCustomFont(
-                                modelNotification.name ?? "",
-                                16,
-                                Colors.black,
-                                1,
-                                fontWeight: FontWeight.w900,
-                              ),
-                              getCustomFont(modelNotification.time ?? "", 14,
-                                  textColor, 1,
-                                  fontWeight: FontWeight.w400)
-                            ],
-                          ),
-                          getVerSpace(FetchPixels.getPixelHeight(7)),
-                          getCustomFont(
-                            modelNotification.description ?? "",
-                            16,
-                            Colors.black,
-                            2,
-                            fontWeight: FontWeight.w400,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+  // Expanded notificationList() {
+  //   return Expanded(
+  //     flex: 1,
+  //     child: ListView.builder(
+  //       padding: EdgeInsets.only(top: FetchPixels.getPixelHeight(30)),
+  //       physics: const BouncingScrollPhysics(),
+  //       shrinkWrap: true,
+  //       primary: true,
+  //       itemCount: notificationLists.length,
+  //       itemBuilder: (context, index) {
+  //         ModelNotification modelNotification = notificationLists[index];
+  //         return Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             index == 0 || index == 2
+  //                 ? getCustomFont(
+  //                     modelNotification.date ?? '',
+  //                     16,
+  //                     Colors.black,
+  //                     1,
+  //                     fontWeight: FontWeight.w400,
+  //                   )
+  //                 : Container(),
+  //             getVerSpace(FetchPixels.getPixelHeight(20)),
+  //             Container(
+  //               margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(20)),
+  //               padding: EdgeInsets.only(
+  //                   top: FetchPixels.getPixelHeight(20),
+  //                   bottom: FetchPixels.getPixelHeight(20),
+  //                   right: FetchPixels.getPixelWidth(20),
+  //                   left: FetchPixels.getPixelWidth(20)),
+  //               decoration: BoxDecoration(
+  //                 color: Colors.white,
+  //                 borderRadius:
+  //                     BorderRadius.circular(FetchPixels.getPixelHeight(12)),
+  //                 boxShadow: const [
+  //                   BoxShadow(
+  //                       color: Colors.black12,
+  //                       blurRadius: 10,
+  //                       offset: Offset(0.0, 4.0)),
+  //                 ],
+  //               ),
+  //               child: Row(
+  //                 children: [
+  //                   Container(
+  //                     height: FetchPixels.getPixelHeight(50),
+  //                     width: FetchPixels.getPixelHeight(50),
+  //                     decoration: BoxDecoration(
+  //                         color: const Color(0xFFE4ECFF),
+  //                         borderRadius: BorderRadius.circular(
+  //                             FetchPixels.getPixelHeight(12))),
+  //                     padding: EdgeInsets.all(FetchPixels.getPixelHeight(13)),
+  //                     child: getSvgImage("clock.svg"),
+  //                   ),
+  //                   getHorSpace(FetchPixels.getPixelWidth(14)),
+  //                   Expanded(
+  //                     child: Column(
+  //                       children: [
+  //                         Row(
+  //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                           children: [
+  //                             getCustomFont(
+  //                               modelNotification.name ?? "",
+  //                               16,
+  //                               Colors.black,
+  //                               1,
+  //                               fontWeight: FontWeight.w900,
+  //                             ),
+  //                             getCustomFont(modelNotification.time ?? "", 14,
+  //                                 textColor, 1,
+  //                                 fontWeight: FontWeight.w400)
+  //                           ],
+  //                         ),
+  //                         getVerSpace(FetchPixels.getPixelHeight(7)),
+  //                         getCustomFont(
+  //                           modelNotification.description ?? "",
+  //                           16,
+  //                           Colors.black,
+  //                           2,
+  //                           fontWeight: FontWeight.w400,
+  //                         )
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   Expanded nullListView(BuildContext context) {
     return Expanded(
@@ -165,8 +157,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("No Notifications Yet!", 20, Colors.black, 1,
-            fontWeight: FontWeight.w900),
+        getCustomFont("No Notifications Yet!", 20, Colors.black, 1, fontWeight: FontWeight.w900),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
           "We’ll notify you when something arrives.",
