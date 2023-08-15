@@ -330,10 +330,10 @@ class TabHome extends GetView<TabHomeController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "책 추천 하러가기", Colors.black87, () async {
+        getButton(context, backGroundColor, "책 제보 하러가기", Colors.black87, () async {
           await FirebaseAnalytics.instance.logScreenView(
               screenName: "home_recommendBook_screenName", screenClass: "home_recommendBook_screenClass");
-
+          Get.toNamed(Routes.reportNewBookAddPath);
           // Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
         }, 18,
             weight: FontWeight.w600,

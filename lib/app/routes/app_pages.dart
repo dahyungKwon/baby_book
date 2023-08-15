@@ -19,6 +19,7 @@ import '../view/profile/profile_screen.dart';
 import '../view/profile/setting_screen.dart';
 import '../view/publisher/publisher_list_screen.dart';
 import '../view/publisher/publisher_screen.dart';
+import '../view/report/report_new_book_add_screen.dart';
 import '../view/search/search_screen.dart';
 import '../view/splash_screen.dart';
 
@@ -55,6 +56,7 @@ class AppPages {
     GetPage(name: Routes.memberCommunityPath, page: () => MemberCommunityScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.settingPath, page: () => SettingScreen(), transition: Transition.cupertino),
     GetPage(name: Routes.searchPath, page: () => SearchScreen(), transition: Transition.cupertino),
+    GetPage(name: Routes.reportNewBookAddPath, page: () => ReportNewBookAddScreen(), transition: Transition.cupertino),
     // GetPage(name: Routes.communityModifyPath, page: () => communityModifyScreen(0)),
   ];
 }

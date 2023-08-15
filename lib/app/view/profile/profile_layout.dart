@@ -26,8 +26,8 @@ Widget buildProfileLayout(BuildContext context, bool loading, ModelMember member
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     _communityWritingButton(context, member, myProfile),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
-                    // bookReportButton(context),
-                    // getVerSpace(FetchPixels.getPixelHeight(20)),
+                    _bookReportButton(context, myProfile),
+                    getVerSpace(FetchPixels.getPixelHeight(20)),
                     // settingButton(context),
                     getVerSpace(FetchPixels.getPixelHeight(30)),
                     _logoutButton(context, myProfile)
@@ -148,20 +148,22 @@ Widget _communityWritingButton(BuildContext context, ModelMember member, bool my
       suffixImage: "arrow_right.svg");
 }
 
-Widget _bookReportButton(BuildContext context) {
-  return getButtonWithIcon(context, Colors.white, "신규책 제보", Colors.black, () {
-    // Get.toNamed(Routes.myAddressPath);
-  }, 16,
-      weight: FontWeight.w400,
-      buttonHeight: FetchPixels.getPixelHeight(60),
-      borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
-      boxShadow: [
-        const BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0.0, 4.0)),
-      ],
-      prefixIcon: true,
-      prefixImage: "new_book_report.svg",
-      sufixIcon: true,
-      suffixImage: "arrow_right.svg");
+Widget _bookReportButton(BuildContext context, bool myProfile) {
+  return myProfile
+      ? getButtonWithIcon(context, Colors.white, "신규책 제보", Colors.black, () {
+          Get.toNamed(Routes.reportNewBookAddPath);
+        }, 16,
+          weight: FontWeight.w400,
+          buttonHeight: FetchPixels.getPixelHeight(60),
+          borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(12)),
+          boxShadow: [
+            const BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 0.0)),
+          ],
+          prefixIcon: true,
+          prefixImage: "new_book_report.svg",
+          sufixIcon: true,
+          suffixImage: "arrow_right.svg")
+      : Container();
 }
 
 Widget _logoutButton(BuildContext context, bool myProfile) {

@@ -75,6 +75,8 @@ class CommunityAddController extends GetxController {
   ///이미지 - 파일 모델로 변경
   List<ModelPostFile> _modifyPostFileList = [];
   List<XFile> _networkImageList = [];
+
+  /// 수정용 ID
   String? modifyPostId;
 
   ///modify mode 체크

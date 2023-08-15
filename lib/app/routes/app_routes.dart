@@ -42,4 +42,7 @@ abstract class Routes {
 
   ///검색
   static const searchPath = "/SearchScreen";
+
+  ///책제보 추가
+  static const reportNewBookAddPath = "/ReportNewBookAddScreen";
 }

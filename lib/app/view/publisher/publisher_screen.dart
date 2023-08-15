@@ -154,8 +154,8 @@ class PublisherScreen extends GetView<PublisherController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
-        getButton(context, backGroundColor, "책 추천 하러가기", Colors.black87, () {
-          // Get.toNamed("${Routes.communityAddPath}?postType=${postType.code}");
+        getButton(context, backGroundColor, "책 제보 하러가기", Colors.black87, () {
+          Get.toNamed(Routes.reportNewBookAddPath);
         }, 18,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(60),
