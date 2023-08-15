@@ -50,6 +50,8 @@ class CommentDetailController extends GetxController {
 
   ModelCommentResponse? selectedComment;
 
+  bool changed = false;
+
   CommentDetailController(
       {required this.commentRepository, required this.postId, required this.commentId, required this.title}) {
     assert(commentRepository != null);
@@ -108,6 +110,8 @@ class CommentDetailController extends GetxController {
             duration: const Duration(milliseconds: 700), curve: Curves.ease);
       });
 
+      changed = true;
+
       return true;
     } else {
       EasyLoading.dismiss();
@@ -136,6 +140,8 @@ class CommentDetailController extends GetxController {
       // getComment();
       exitModifyCommentMode();
 
+      changed = true;
+
       EasyLoading.dismiss();
       return true;
     } else {
@@ -146,7 +152,12 @@ class CommentDetailController extends GetxController {
   }
 
   Future<bool> removeComment(String commentId) async {
-    return await commentRepository.delete(commentId: commentId);
+    bool result = await commentRepository.delete(commentId: commentId);
+    if (result) {
+      changed = true;
+    }
+
+    return result;
   }
 
   Future<bool> executeModifyCommentMode(ModelCommentResponse comment) async {

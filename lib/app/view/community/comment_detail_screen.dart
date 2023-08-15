@@ -40,6 +40,20 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
   @override
   String? get tag => uniqueTag;
 
+  backBtn(BuildContext context) async {
+    if (controller.modifyCommentMode) {
+      await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
+        controller.exitModifyCommentMode();
+        Get.back(result: controller.changed);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          commentKeyboardDown(context);
+        });
+      }));
+    } else {
+      Get.back(result: controller.changed);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
@@ -48,22 +62,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
-          if (controller.modifyCommentMode) {
-            await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
-              controller.exitModifyCommentMode();
-              Get.back();
-              Future.delayed(const Duration(milliseconds: 500), () {
-                commentKeyboardDown(context);
-              });
-            }));
-          } else {
-            try {
-              await Get.find<CommunityDetailController>().getComment();
-            } catch (e) {
-              print(e);
-            }
-            Get.back();
-          }
+          backBtn(context);
           return false;
         },
         child: Obx(() => Scaffold(
@@ -98,8 +97,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
-              await Get.find<CommunityDetailController>().getComment();
-              Get.back();
+              backBtn(context);
             }),
             getCustomFont(
               controller.title,

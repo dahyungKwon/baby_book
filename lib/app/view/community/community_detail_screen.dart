@@ -535,18 +535,17 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
               fontWeight: FontWeight.w400),
           getHorSpace(FetchPixels.getPixelHeight(10)),
           getSimpleTextButton("답글 쓰기", 12, Colors.black54, commentMenuBtnColor, FontWeight.w400,
-              FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
-            comment.comment.commentParentId != null
-                ? Get.toNamed(Routes.commentDetailPath, parameters: {
-                    "postId": controller.postId,
-                    "commentId": comment.comment.commentParentId!,
-                    "title": controller.post.title
-                  })
-                : Get.toNamed(Routes.commentDetailPath, parameters: {
-                    "postId": controller.postId,
-                    "commentId": comment.comment.commentId!,
-                    "title": controller.post.title
-                  });
+              FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () async {
+            bool changed = await Get.toNamed(Routes.commentDetailPath, parameters: {
+              "postId": controller.postId,
+              "commentId": comment.comment.commentParentId != null
+                  ? comment.comment.commentParentId!
+                  : comment.comment.commentId!,
+              "title": controller.post.title
+            });
+            if (changed) {
+              controller.getComment();
+            }
           })
         ]),
         comment.deleted || !comment.myComment
