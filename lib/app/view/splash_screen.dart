@@ -11,15 +11,13 @@ import '../routes/app_pages.dart';
 import 'package:appscheme/appscheme.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  SplashScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    //app scheme
-    checkAppScheme();
+    print("AppSchemeImpl SplashScreen build");
 
-    //멤버 상태 체크
-    checkMemberStatus();
+    init();
 
     FetchPixels(context);
     return WillPopScope(
@@ -37,40 +35,53 @@ class SplashScreen extends StatelessWidget {
         });
   }
 
-  checkAppScheme() {
+  init() async {
     AppSchemeImpl appScheme = AppSchemeImpl.getInstance()!!;
-    appScheme.getInitScheme().then((value) {
-      if (value != null) {
-        print("AppSchemeImpl Init  ${value.dataString}");
-        String? sharedType = value.query!["sharedType"];
+    SchemeEntity? schemeEntity = await appScheme.getInitScheme();
+    if (schemeEntity == null) {
+      ///멤버 체크
+      checkMemberStatus();
+      return;
+    }
 
-        print("AppSchemeImpl sharedType : $sharedType");
-        if (sharedType != null) {
-          switch (sharedType) {
-            case "BOOK":
-              {
-                String? bookSetId = value.query!["bookSetId"];
-                print("AppSchemeImpl bookSetId : $bookSetId");
-                Get.offAllNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
-                break;
-              }
-            case "COMMUNITY":
-              {
-                String? postId = value.query!["postId"];
-                Get.offAllNamed(Routes.communityDetailPath,
-                    parameters: {'sharedType': sharedType, 'postId': postId!, 'tag': 'share'});
-                break;
-              }
+    print("AppSchemeImpl Init  ${schemeEntity.dataString}");
+
+    String? sharedType = schemeEntity.query!["sharedType"];
+
+    print("AppSchemeImpl sharedType : $sharedType");
+    if (sharedType == null) {
+      ///멤버체크
+      checkMemberStatus();
+    } else {
+      ///앱스킴체크
+      checkAppScheme(sharedType, schemeEntity);
+    }
+  }
+
+  checkAppScheme(String sharedType, SchemeEntity schemeEntity) async {
+    Timer(const Duration(seconds: 1), () async {
+      switch (sharedType) {
+        case "BOOK":
+          {
+            String? bookSetId = schemeEntity.query!["bookSetId"];
+            print("AppSchemeImpl bookSetId : $bookSetId");
+            Get.offAllNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType, 'bookSetId': bookSetId!});
+            break;
           }
-
-          return;
-        }
+        case "COMMUNITY":
+          {
+            String? postId = schemeEntity.query!["postId"];
+            Get.offAllNamed(Routes.communityDetailPath,
+                parameters: {'sharedType': sharedType, 'postId': postId!, 'tag': 'share'});
+            break;
+          }
       }
     });
   }
 
-  checkMemberStatus() {
+  checkMemberStatus() async {
     Timer(const Duration(seconds: 1), () async {
+      print("AppSchemeImpl SplashScreen checkMemberStatus");
       if (!await isLogin()) {
         Get.offAllNamed(Routes.loginPath);
       }
@@ -80,6 +91,7 @@ class SplashScreen extends StatelessWidget {
       if (await PrefData.needRefreshAuth()) {
         Get.offAllNamed(Routes.reAuthPath, parameters: {"referrer": Routes.splashPath});
       } else {
+        print("AppSchemeImpl SplashScreen go home");
         Get.offAllNamed(Routes.homescreenPath);
       }
     });

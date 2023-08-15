@@ -1,8 +1,10 @@
 import 'package:baby_book/app/models/model_book_response.dart';
+import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/models/model_my_book_member_response.dart';
 import 'package:baby_book/app/repository/book_repository.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
+import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:baby_book/base/pref_data.dart';
@@ -21,7 +23,7 @@ class BookDetailController extends GetxController {
   final CommentRepository commentRepository;
   final PostRepository postRepository;
   final int bookSetId;
-  final String? babyId;
+  late String? babyId;
   ScrollController scrollController = ScrollController();
   late String? bookSetCommentId;
   late ModelMyBookMemberResponse bookMember;
@@ -128,6 +130,13 @@ class BookDetailController extends GetxController {
 
   init() async {
     loading = true;
+
+    String? memberId = await PrefData.getMemberId();
+    ModelMember member = await MemberRepository.getMember(memberId: memberId!);
+    if (babyId == null) {
+      print("AppSchemeImpl babyId init");
+      babyId = member.selectedBabyId;
+    }
 
     book = await bookRepository.get(bookSetId: bookSetId);
     myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);

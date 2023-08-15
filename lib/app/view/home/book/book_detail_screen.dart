@@ -56,6 +56,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
             babyId: babyId),
         tag: uniqueTag);
     sharedMode = Get.parameters['sharedType'] != null;
+    print("AppSchemeImpl BookDetailScreen : $bookSetId sharedType  : ${Get.parameters['sharedType']}");
   }
 
   @override
@@ -300,12 +301,14 @@ class BookDetailScreen extends GetView<BookDetailController> {
   _share() async {
     bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
 
+    String template =
+        "\"${controller.book.modelPublisher.publisherName} ${controller.book.modelBook.name}\" 책 보신적 있으세요?\n아기곰 책육아에서 책을 확인해보세요.";
     if (isKakaoTalkSharingAvailable) {
       print('카카오톡으로 공유 가능');
       try {
         Uri uri = await ShareClient.instance.shareDefault(
-            template: ModelKakaoLinkTemplate.getTextTemplateForBook("[아기곰 책육아]\n${controller.book.modelBook.name}",
-                ModelKakaoLinkTemplate.sharedTypeBook, controller.bookSetId));
+            template: ModelKakaoLinkTemplate.getTextTemplateForBook(
+                template, ModelKakaoLinkTemplate.sharedTypeBook, controller.bookSetId));
         await ShareClient.instance.launchKakaoTalk(uri);
         print('카카오톡 공유 완료');
       } catch (error) {
@@ -315,8 +318,8 @@ class BookDetailScreen extends GetView<BookDetailController> {
       print('카카오톡 미설치: 웹 공유 기능 사용 권장');
       try {
         Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
-            template: ModelKakaoLinkTemplate.getTextTemplateForBook("[아기곰책육아]\n${controller.book.modelBook.name}",
-                ModelKakaoLinkTemplate.sharedTypeBook, controller.bookSetId));
+            template: ModelKakaoLinkTemplate.getTextTemplateForBook(
+                template, ModelKakaoLinkTemplate.sharedTypeBook, controller.bookSetId));
         await launchBrowserTab(shareUrl, popupOpen: true);
       } catch (error) {
         print('카카오톡 공유 실패 $error');

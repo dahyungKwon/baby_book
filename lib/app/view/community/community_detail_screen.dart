@@ -193,12 +193,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   _share() async {
     bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
 
+    String template = "\"${controller.post.title}\" 글 보신적 있으세요?\n아기곰 책육아에서 글을 확인해보세요.";
     if (isKakaoTalkSharingAvailable) {
       print('카카오톡으로 공유 가능');
       try {
         Uri uri = await ShareClient.instance.shareDefault(
             template: ModelKakaoLinkTemplate.getTextTemplateForPost(
-                "[아기곰 책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
+                template, ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
         await ShareClient.instance.launchKakaoTalk(uri);
         print('카카오톡 공유 완료');
       } catch (error) {
@@ -209,7 +210,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
       try {
         Uri shareUrl = await WebSharerClient.instance.makeDefaultUrl(
             template: ModelKakaoLinkTemplate.getTextTemplateForPost(
-                "[아기곰책육아]\n${controller.post.title}", ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
+                template, ModelKakaoLinkTemplate.sharedTypeCommunity, controller.postId));
         await launchBrowserTab(shareUrl, popupOpen: true);
       } catch (error) {
         print('카카오톡 공유 실패 $error');
