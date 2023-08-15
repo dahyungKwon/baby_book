@@ -39,6 +39,20 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
   @override
   String? get tag => uniqueTag;
 
+  backBtn(BuildContext context) async {
+    if (controller.modifyCommentMode) {
+      await Get.dialog(ReConfirmDialog("코멘트 수정을 종료하시겠습니까?", "네", "아니오", () async {
+        controller.exitModifyCommentMode();
+        Get.back(result: controller.changedComment);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          commentKeyboardDown(context);
+        });
+      }));
+    } else {
+      Get.back(result: controller.changedComment);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
@@ -47,22 +61,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
-          if (controller.modifyCommentMode) {
-            await Get.dialog(ReConfirmDialog("코멘트 수정을 종료하시겠습니까?", "네", "아니오", () async {
-              controller.exitModifyCommentMode();
-              Get.back();
-              Future.delayed(const Duration(milliseconds: 500), () {
-                commentKeyboardDown(context);
-              });
-            }));
-          } else {
-            try {
-              await Get.find<CommunityDetailController>().getComment();
-            } catch (e) {
-              print(e);
-            }
-            Get.back();
-          }
+          backBtn(context);
           return false;
         },
         child: Obx(() => Scaffold(
@@ -94,8 +93,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
-              // await Get.find<CommunityDetailController>().getComment();
-              Get.back();
+              backBtn(context);
             }),
             getCustomFont(
               "${bookName!}",

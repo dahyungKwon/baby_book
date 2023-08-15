@@ -47,6 +47,8 @@ class BookCommentDetailController extends GetxController {
 
   ModelCommentResponse? selectedComment;
 
+  bool changedComment = false;
+
   BookCommentDetailController({required this.commentRepository, required this.commentTargetId}) {
     assert(commentRepository != null);
 
@@ -101,6 +103,8 @@ class BookCommentDetailController extends GetxController {
             duration: const Duration(milliseconds: 700), curve: Curves.ease);
       });
 
+      changedComment = true;
+
       return true;
     } else {
       EasyLoading.dismiss();
@@ -130,6 +134,8 @@ class BookCommentDetailController extends GetxController {
       exitModifyCommentMode();
 
       EasyLoading.dismiss();
+
+      changedComment = true;
       return true;
     } else {
       EasyLoading.dismiss();
@@ -138,7 +144,12 @@ class BookCommentDetailController extends GetxController {
   }
 
   Future<bool> removeComment(String commentId) async {
-    return await commentRepository.delete(commentId: commentId);
+    bool result = await commentRepository.delete(commentId: commentId);
+    if (result) {
+      changedComment = true;
+    }
+
+    return result;
   }
 
   Future<bool> executeModifyCommentMode(ModelCommentResponse comment) async {

@@ -419,12 +419,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
                             ],
                           ))),
                   GestureDetector(
-                      onTap: () {
-                        Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+                      onTap: () async {
+                        bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
                           'commentTargetId': controller.bookSetCommentId!,
                           'bookName': controller.book.modelBook.name,
                           'isCommentFocus': false.toString()
                         });
+                        if (changed) {
+                          controller.requestComment();
+                        }
                       },
                       child: Container(
                           width: FetchPixels.getPixelHeight(100),
@@ -872,13 +875,17 @@ class BookDetailScreen extends GetView<BookDetailController> {
   Widget buildOneComment(BuildContext context, EdgeInsets edgeInsets) {
     return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
       GestureDetector(
-          onTap: () {
+          onTap: () async {
             print("comment tab");
-            Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+            bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
               'commentTargetId': controller.bookSetCommentId!,
               'bookName': controller.book.modelBook.name,
               'isCommentFocus': false.toString()
             });
+
+            if (changed) {
+              controller.requestComment();
+            }
           },
           child: Container(
               margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5), bottom: FetchPixels.getPixelHeight(5)),
@@ -923,12 +930,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
       ] else ...[
         buildComment(context, controller.commentList),
         getVerSpace(FetchPixels.getPixelHeight(20)),
-        getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () {
-          Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+        getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () async {
+          bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
             'commentTargetId': controller.bookSetCommentId!,
             'bookName': controller.book.modelBook.name,
             'isCommentFocus': true.toString()
           });
+          if (changed) {
+            controller.requestComment();
+          }
         }, 14,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(40),
@@ -1025,12 +1035,15 @@ class BookDetailScreen extends GetView<BookDetailController> {
           fontWeight: FontWeight.w400,
         ),
         getVerSpace(FetchPixels.getPixelHeight(10)),
-        getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () {
-          Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+        getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () async {
+          bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
             'commentTargetId': controller.bookSetCommentId!,
             'bookName': controller.book.modelBook.name,
             'isCommentFocus': true.toString()
           });
+          if (changed) {
+            controller.requestComment();
+          }
         }, 14,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(40),

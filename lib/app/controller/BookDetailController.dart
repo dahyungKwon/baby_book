@@ -137,7 +137,7 @@ class BookDetailController extends GetxController {
     like = book.liked;
     likeCount = book.modelBook.likeCount;
 
-    commentList = await commentRepository.get(commentTargetId: "book-$bookSetId");
+    requestComment();
 
     postTag =
         await postRepository.getPostBookTag(bookId: book.modelBook.id, pagingRequest: PagingRequest.createDefault());
@@ -224,5 +224,9 @@ class BookDetailController extends GetxController {
 
     _myBookResponse.refresh();
     _myBook.refresh();
+  }
+
+  requestComment() async {
+    commentList = await commentRepository.get(commentTargetId: "book-$bookSetId");
   }
 }
