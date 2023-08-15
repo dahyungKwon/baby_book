@@ -218,7 +218,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
                   ),
                 ),
                 margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+                padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0), child: Image.file(File(image.path), fit: BoxFit.cover)),
               ),

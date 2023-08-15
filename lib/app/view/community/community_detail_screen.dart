@@ -13,6 +13,7 @@ import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -442,28 +443,41 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             return Stack(children: [
               // getVerSpace(FetchPixels.getPixelHeight(10)),
               Container(
-                constraints: BoxConstraints(
-                  minHeight: 100, //minimum height
-                  minWidth: 100.w, // minimum width
+                  constraints: BoxConstraints(
+                    minHeight: 100, //minimum height
+                    minWidth: 100.w, // minimum width
 
-                  maxHeight: 800,
-                  //maximum height set to 100% of vertical height
+                    maxHeight: 800,
+                    //maximum height set to 100% of vertical height
 
-                  maxWidth: 100.w,
-                  //maximum width set to 100% of width
-                ),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF5F6F8),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(15.0),
+                    maxWidth: 100.w,
+                    //maximum width set to 100% of width
                   ),
-                ),
-                margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
-                child: ClipRRect(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF5F6F8),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15.0),
+                    ),
+                  ),
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(image.postFileUrl, fit: BoxFit.cover)),
-              ),
+                    child: ExtendedImage.network(image.postFileUrl,
+                        // width: FetchPixels.getPixelHeight(double.infinity),
+                        // height: FetchPixels.getPixelHeight(150),
+                        fit: BoxFit.fill,
+                        cache: true, loadStateChanged: (ExtendedImageState state) {
+                      switch (state.extendedImageLoadState) {
+                        case LoadState.loading:
+                          return Image.asset("assets/images/img_placeholder.png", fit: BoxFit.fill);
+                        case LoadState.completed:
+                          break;
+                        case LoadState.failed:
+                          return Image.asset("assets/images/img_placeholder.png", fit: BoxFit.fill);
+                      }
+                    }),
+                  )),
               getVerSpace(FetchPixels.getPixelHeight(5)),
             ]);
           }),

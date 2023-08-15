@@ -349,7 +349,9 @@ class CommunityAddController extends GetxController {
 
     if (post.bookIdTagList.isNotEmpty) {
       selectedBookTagList.clear();
-      selectedBookTagList.addAll(post.bookIdTagList.map((bookId) => bookRepository.get(bookSetId: bookId)).toList());
+      for (int i = 0; i < post.bookIdTagList.length; i++) {
+        selectedBookTagList.add(await bookRepository.get(bookSetId: post.bookIdTagList[i]));
+      }
     }
 
     if (post.postFileList.isNotEmpty) {
