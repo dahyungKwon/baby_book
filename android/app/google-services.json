@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1081779194095:android:e0c2ed0e8b75e94d99b31a",
+        "mobilesdk_app_id": "1:1081779194095:android:b4ef05a7c25bdc9c99b31a",
         "android_client_info": {
-          "package_name": "com.example.baby_book"
+          "package_name": "com.babybear.readbook"
         }
       },
       "oauth_client": [
@@ -31,10 +31,46 @@
               "client_type": 3
             },
             {
-              "client_id": "1081779194095-s9l63u08osv4ver7plf0mn2dhavr1q7v.apps.googleusercontent.com",
+              "client_id": "1081779194095-linunb7mms27la2m2t86b1iklld7038s.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.babyBook"
+                "bundle_id": "com.babybear.readbook"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081779194095:android:e0c2ed0e8b75e94d99b31a",
+        "android_client_info": {
+          "package_name": "com.babybear.readbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081779194095-0avb110kpcslkt13t4m61be0st5st50g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnZ_N50g0iF8pAiKNcSY049d8rrQTHE-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081779194095-0avb110kpcslkt13t4m61be0st5st50g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1081779194095-linunb7mms27la2m2t86b1iklld7038s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.babybear.readbook"
               }
             }
           ]

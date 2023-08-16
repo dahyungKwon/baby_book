@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAnZ_N50g0iF8pAiKNcSY049d8rrQTHE-c',
-    appId: '1:1081779194095:android:e0c2ed0e8b75e94d99b31a',
+    appId: '1:1081779194095:android:b4ef05a7c25bdc9c99b31a',
     messagingSenderId: '1081779194095',
     projectId: 'babybear-readbook',
     storageBucket: 'babybear-readbook.appspot.com',
@@ -63,21 +63,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC60FKZlz0rZTkrskDmfXQlcgE8Llk2wQY',
-    appId: '1:1081779194095:ios:d7b15e6df9e1d34f99b31a',
+    appId: '1:1081779194095:ios:f1476caf7d18a0fe99b31a',
     messagingSenderId: '1081779194095',
     projectId: 'babybear-readbook',
     storageBucket: 'babybear-readbook.appspot.com',
-    iosClientId: '1081779194095-s9l63u08osv4ver7plf0mn2dhavr1q7v.apps.googleusercontent.com',
-    iosBundleId: 'com.example.babyBook',
+    iosClientId: '1081779194095-linunb7mms27la2m2t86b1iklld7038s.apps.googleusercontent.com',
+    iosBundleId: 'com.babybear.readbook',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyC60FKZlz0rZTkrskDmfXQlcgE8Llk2wQY',
-    appId: '1:1081779194095:ios:d7b15e6df9e1d34f99b31a',
+    appId: '1:1081779194095:ios:f1476caf7d18a0fe99b31a',
     messagingSenderId: '1081779194095',
     projectId: 'babybear-readbook',
     storageBucket: 'babybear-readbook.appspot.com',
-    iosClientId: '1081779194095-s9l63u08osv4ver7plf0mn2dhavr1q7v.apps.googleusercontent.com',
-    iosBundleId: 'com.example.babyBook',
+    iosClientId: '1081779194095-linunb7mms27la2m2t86b1iklld7038s.apps.googleusercontent.com',
+    iosBundleId: 'com.babybear.readbook',
   );
 }

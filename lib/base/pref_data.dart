@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefData {
-  static String prefName = "com.example.baby_book";
+  static String prefName = "com.babybear.readbook";
 
   static String introAvailable = "${prefName}isIntroAvailable";
   static String isLoggedIn = "${prefName}isLoggedIn";
