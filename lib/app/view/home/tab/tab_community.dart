@@ -35,8 +35,7 @@ class TabCommunity extends GetView<TabCommunityController> {
               child: Icon(Icons.add),
               backgroundColor: secondMainColor,
               onPressed: () async {
-                bool result = await Get.toNamed(Routes.communityAddPath,
-                    parameters: {"postType": controller.selectedPostType().code});
+                Get.toNamed(Routes.communityAddPath, parameters: {"postType": controller.selectedPostType().code});
               }),
         ));
   }
