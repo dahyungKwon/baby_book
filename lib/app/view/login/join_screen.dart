@@ -91,6 +91,7 @@ class JoinScreen extends GetView<JoinController> {
     return Expanded(
         flex: 1,
         child: Container(
+            height: FetchPixels.getPixelHeight(200),
             padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(10)),
             child: ListView(primary: true, shrinkWrap: true, children: [
               getVerSpace(15),
@@ -114,9 +115,11 @@ class JoinScreen extends GetView<JoinController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("사용하실 닉네임을 입력해주세요." ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+              getCustomFont("사용하실 닉네임을 입력해주세요." ?? "", FetchPixels.getPixelHeight(20), Colors.black, 1,
+                  fontWeight: FontWeight.w600),
               getVerSpace(10),
-              getCustomFont("닉네임은 커뮤니티나 책장등에서 사용됩니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
+              getCustomFont("닉네임은 커뮤니티나 책장등에서 사용됩니다." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 1,
+                  fontWeight: FontWeight.w400),
               getVerSpace(30),
             ],
           )),
@@ -137,7 +140,7 @@ class JoinScreen extends GetView<JoinController> {
             isEnable: false,
             withprefix: false,
             minLines: true,
-            height: FetchPixels.getPixelHeight(50),
+            height: FetchPixels.getPixelHeight(100),
             alignmentGeometry: Alignment.center,
             boxColor: backGroundColor,
             myFocusNode: nickNameFocusNode,
@@ -149,7 +152,7 @@ class JoinScreen extends GetView<JoinController> {
               : controller.canCheckNickName
                   ? getSimpleTextButton(
                       "중복체크",
-                      16,
+                      FetchPixels.getPixelHeight(16),
                       controller.canCheckNickName ? secondMainColor : Colors.grey.shade400,
                       Colors.white,
                       FontWeight.w500,
@@ -174,9 +177,11 @@ class JoinScreen extends GetView<JoinController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("성별을 선택해주세요." ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+              getCustomFont("성별을 선택해주세요." ?? "", FetchPixels.getPixelHeight(20), Colors.black, 1,
+                  fontWeight: FontWeight.w600),
               getVerSpace(10),
-              getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
+              getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 1,
+                  fontWeight: FontWeight.w400),
               getVerSpace(30),
             ],
           )),
@@ -208,9 +213,10 @@ class JoinScreen extends GetView<JoinController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("아기곰을 추가해주세요." ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+              getCustomFont("아기곰을 추가해주세요." ?? "", FetchPixels.getPixelHeight(20), Colors.black, 1,
+                  fontWeight: FontWeight.w600),
               getVerSpace(10),
-              getCustomFont("대표 아기곰은 한명만 선정가능하고, 추후 변경 가능합니다." ?? "", 13, Colors.black38, 2,
+              getCustomFont("대표 아기곰은 한명만 선정가능하고, 추후 변경 가능합니다." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 2,
                   fontWeight: FontWeight.w400),
               getVerSpace(30),
             ],
@@ -251,9 +257,11 @@ class JoinScreen extends GetView<JoinController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("약관 동의 해주세요." ?? "", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+              getCustomFont("약관 동의 해주세요." ?? "", FetchPixels.getPixelHeight(20), Colors.black, 1,
+                  fontWeight: FontWeight.w600),
               getVerSpace(10),
-              getCustomFont("약관을 꼭 확인하시고 동의해주세요." ?? "", 13, Colors.black38, 2, fontWeight: FontWeight.w400),
+              getCustomFont("약관을 꼭 확인하시고 동의해주세요." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 2,
+                  fontWeight: FontWeight.w400),
               getVerSpace(30),
             ],
           )),

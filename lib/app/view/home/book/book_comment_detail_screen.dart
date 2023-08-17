@@ -137,7 +137,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
       children: [
         // getSvgImage("clipboard.svg", height: FetchPixels.getPixelHeight(124), width: FetchPixels.getPixelHeight(124)),
         // getVerSpace(FetchPixels.getPixelHeight(40)),
-        getCustomFont("한줄 코멘트를 등록해주세요.", 20, Colors.black, 1, fontWeight: FontWeight.w600),
+        getCustomFont("한줄 코멘트를 등록해주세요.", FetchPixels.getPixelHeight(20), Colors.black, 1, fontWeight: FontWeight.w600),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getCustomFont(
           "여러분의 소중한 경험을 공유해주세요.",
@@ -295,7 +295,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
             isEnable: false,
             withprefix: false,
             minLines: true,
-            height: FetchPixels.getPixelHeight(50),
+            height: FetchPixels.getPixelHeight(60),
             alignmentGeometry: Alignment.center,
             myFocusNode: commentFocusNode,
             autofocus: isCommentFocus ? true : false,

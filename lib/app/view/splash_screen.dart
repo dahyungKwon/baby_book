@@ -84,9 +84,11 @@ class SplashScreen extends StatelessWidget {
       print("AppSchemeImpl SplashScreen checkMemberStatus");
       if (!await isLogin()) {
         Get.offAllNamed(Routes.loginPath);
+        return;
       }
       if (!await isAgreed()) {
         Get.offAllNamed(Routes.joinPath);
+        return;
       }
       if (await PrefData.needRefreshAuth()) {
         Get.offAllNamed(Routes.reAuthPath, parameters: {"referrer": Routes.splashPath});

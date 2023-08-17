@@ -27,7 +27,7 @@ class TabCommunity extends GetView<TabCommunityController> {
         resizeToAvoidBottomInset: false,
         backgroundColor: backGroundColor,
         body: Column(
-          children: [tabBar(edgeInsets), getVerSpace(FetchPixels.getPixelHeight(15)), pageViewer()],
+          children: [tabBar(context), getVerSpace(FetchPixels.getPixelHeight(15)), pageViewer()],
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
@@ -37,6 +37,46 @@ class TabCommunity extends GetView<TabCommunityController> {
               onPressed: () async {
                 Get.toNamed(Routes.communityAddPath, parameters: {"postType": controller.selectedPostType().code});
               }),
+        ));
+  }
+
+  Widget tabBar(BuildContext context) {
+    return Obx(() => getPaddingWidget(
+          EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
+          TabBar(
+            overlayColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+                return Colors.transparent;
+              },
+            ),
+            isScrollable: true,
+            indicatorColor: Colors.transparent,
+            physics: const BouncingScrollPhysics(),
+            controller: controller.tabController,
+            labelPadding: EdgeInsets.fromLTRB(
+                FetchPixels.getPixelHeight(10), FetchPixels.getPixelHeight(25), FetchPixels.getPixelHeight(15), 0),
+            // labelStyle: TextStyle(fontSize: 5),
+            onTap: (index) {
+              print("tabBar onTap index : $index");
+              controller.pageController.jumpToPage(index);
+              controller.position = index;
+            },
+            labelColor: controller.postTypeList[controller.position].color,
+            unselectedLabelColor: Colors.black.withOpacity(0.3),
+            labelStyle: TextStyle(
+                fontSize: FetchPixels.getPixelHeight(18), fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
+            //For Selected tab
+            tabs: List.generate(controller.tabsList.length, (index) {
+              return Tab(
+                height: FetchPixels.getPixelHeight(35),
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [Text(controller.tabsList[index])],
+                    )),
+              );
+            }),
+          ),
         ));
   }
 
@@ -56,43 +96,5 @@ class TabCommunity extends GetView<TabCommunityController> {
         },
       ),
     );
-  }
-
-  Widget tabBar(var edgeInsets) {
-    return Obx(() => getPaddingWidget(
-          edgeInsets,
-          TabBar(
-            overlayColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-                return Colors.transparent;
-              },
-            ),
-            isScrollable: true,
-            indicatorColor: Colors.transparent,
-            physics: const BouncingScrollPhysics(),
-            controller: controller.tabController,
-            labelPadding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
-            // labelStyle: TextStyle(fontSize: 5),
-            onTap: (index) {
-              print("tabBar onTap index : $index");
-              controller.pageController.jumpToPage(index);
-              controller.position = index;
-            },
-            labelColor: controller.postTypeList[controller.position].color,
-            unselectedLabelColor: Colors.black.withOpacity(0.3),
-            labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
-            //For Selected tab
-            tabs: List.generate(controller.tabsList.length, (index) {
-              return Tab(
-                height: FetchPixels.getPixelHeight(25),
-                child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      children: [Text(controller.tabsList[index])],
-                    )),
-              );
-            }),
-          ),
-        ));
   }
 }

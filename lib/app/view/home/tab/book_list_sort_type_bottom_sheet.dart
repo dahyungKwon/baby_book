@@ -29,7 +29,7 @@ class _BookListSortTypeBottomSheetState extends State<BookListSortTypeBottomShee
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 13.h,
+        height: 14.h,
         child: Container(
           color: Colors.white,
           padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),

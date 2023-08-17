@@ -111,7 +111,7 @@ class TabHome extends GetView<TabHomeController> {
             getVerSpace(FetchPixels.getPixelHeight(10)),
             SizedBox(
               // width: 70.w,
-              height: FetchPixels.getPixelHeight(45),
+              height: FetchPixels.getPixelHeight(50),
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(15)),
                 scrollDirection: Axis.horizontal,

@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-/// TabCommunityController를 통해 PostType에 지정한 desc가 tab list로 노출되니 주의하세요!
+/// 주의! 지정된 dcsc, color가 화면에 노출됩니다.
 enum MemberPostType {
-  writer_post("WRITER_POST", "작성글", Color(0xFFDAA520)),
-  writer_comment("WRITER_COMMENT", "작성댓글", Color(0xFF20B2AA)),
+  writer_post("WRITER_POST", "작성글", Colors.black),
+  writer_comment("WRITER_COMMENT", "작성댓글", Colors.black),
   bookmark("BOOKMARK", "북마크", Colors.black),
   etc("ETC", "기타", Colors.black),
   ;

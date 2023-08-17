@@ -41,7 +41,7 @@ class HomeScreen extends GetView<HomeScreenController> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
-    double size = FetchPixels.getPixelHeight(50);
+    double size = FetchPixels.getPixelHeight(60);
     double iconSize = FetchPixels.getPixelHeight(26);
     return WillPopScope(
         onWillPop: onWillPop,

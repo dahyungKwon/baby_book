@@ -134,7 +134,8 @@ Widget _bookCaseButton(BuildContext context, ModelMember member, bool myProfile)
 
 Widget _communityWritingButton(BuildContext context, ModelMember member, bool myProfile) {
   return getButtonWithIcon(context, Colors.white, myProfile ? "작성글 / 작성댓글 / 북마크" : "작성글 / 작성댓글", Colors.black, () {
-    Get.toNamed(Routes.memberCommunityPath, parameters: {'memberId': member.memberId!});
+    Get.toNamed(Routes.memberCommunityPath,
+        parameters: {'memberId': member.memberId!, 'myProfile': myProfile.toString()});
   }, 16,
       weight: FontWeight.w400,
       buttonHeight: FetchPixels.getPixelHeight(60),

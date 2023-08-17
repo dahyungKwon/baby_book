@@ -1,33 +1,20 @@
-import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/profile/member_post_type.dart';
-import 'package:baby_book/base/pref_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../repository/post_repository.dart';
-import '../view/community/community_list_screen.dart';
 import '../view/profile/member_community_list_screen.dart';
 
 class MemberCommunityController extends GetxController with GetSingleTickerProviderStateMixin {
   final PostRepository postRepository;
   String memberId;
-
-  ///나의 프로필인지 여부
-  final _myProfile = false.obs;
-
-  get myProfile => _myProfile.value;
-
-  set myProfile(value) => _myProfile.value = value;
+  bool myProfile;
 
   ///controller
   late PageController pageController = PageController(
     initialPage: position,
   );
-  late TabController tabController;
-
-  MemberCommunityController({required this.postRepository, required this.memberId}) {
-    assert(postRepository != null);
-  }
+  late TabController tabController = TabController(length: 0, vsync: this);
 
   //loading
   final _loading = true.obs;
@@ -39,7 +26,7 @@ class MemberCommunityController extends GetxController with GetSingleTickerProvi
   ///data
   late List<MemberPostType> memberPostTypeList;
   late List<String> tabsList;
-  late List<MemberCommunityListScreen> widgetList;
+  late List<MemberCommunityListScreen> widgetList = [];
 
   ///position
   final _position = 0.obs;
@@ -48,23 +35,24 @@ class MemberCommunityController extends GetxController with GetSingleTickerProvi
 
   set position(value) => _position.value = value;
 
-  @override
-  void onInit() async {
-    super.onInit();
-    loading = true;
-
-    String? myMemberId = await PrefData.getMemberId();
-    if (myMemberId == memberId) {
-      myProfile = true;
+  MemberCommunityController({required this.postRepository, required this.memberId, required this.myProfile}) {
+    assert(postRepository != null);
+    if (myProfile) {
       memberPostTypeList = MemberPostType.findMyProfile();
     } else {
       memberPostTypeList = MemberPostType.findAnotherPeopleProfile();
     }
 
     tabsList = memberPostTypeList.map((e) => e.desc).toList();
-    widgetList = memberPostTypeList.map((e) => MemberCommunityListScreen(memberId, e)).toList();
-
     tabController = TabController(vsync: this, length: tabsList.length);
+    widgetList = memberPostTypeList.map((e) => MemberCommunityListScreen(memberId, e)).toList();
+  }
+
+  @override
+  void onInit() async {
+    super.onInit();
+    loading = true;
+
     widgetList[0].controller.getAllForInit(memberPostTypeList[0]);
 
     ///사용자경험 위해 0.2초 딜레이

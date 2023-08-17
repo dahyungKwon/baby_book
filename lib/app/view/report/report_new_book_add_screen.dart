@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:baby_book/app/repository/report_new_book_repository.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +64,7 @@ class ReportNewBookAddScreen extends GetView<ReportNewBookAddController> {
               isEnable: false,
               withprefix: false,
               minLines: true,
-              height: FetchPixels.getPixelHeight(50),
+              height: FetchPixels.getPixelHeight(70),
               alignmentGeometry: Alignment.center,
               boxColor: backGroundColor,
               myFocusNode: titleFocusNode),

@@ -4,20 +4,21 @@ import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../base/skeleton.dart';
 import '../../../base/uuid_util.dart';
 import '../../controller/MemberCommunityController.dart';
 import '../../repository/post_repository.dart';
 
 class MemberCommunityScreen extends GetView<MemberCommunityController> {
   late final String? memberId;
+  late final bool? myProfile;
   late final String? uniqueTag;
 
   MemberCommunityScreen({super.key}) {
     memberId = Get.parameters["memberId"];
-    uniqueTag = getUuid();
+    myProfile = bool.tryParse(Get.parameters["myProfile"]!);
+    myProfile ??= false;
 
-    Get.put(MemberCommunityController(postRepository: PostRepository(), memberId: memberId!), tag: uniqueTag);
+    uniqueTag = getUuid();
   }
 
   @override
@@ -25,6 +26,10 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.delete<MemberCommunityController>(tag: uniqueTag);
+    Get.put(MemberCommunityController(postRepository: PostRepository(), memberId: memberId!, myProfile: myProfile!),
+        tag: uniqueTag);
+
     FetchPixels(context);
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
@@ -38,22 +43,20 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
             resizeToAvoidBottomInset: false,
             backgroundColor: backGroundColor,
             body: Obx(() => SafeArea(
-                  child: controller.loading
-                      ? const FullSizeSkeleton()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildToolbar(context, edgeInsets),
-                            // getVerSpace(FetchPixels.getPixelHeight(5)),
-                            pageViewer()
-                          ],
-                        ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildToolbar(context, edgeInsets),
+                      getVerSpace(FetchPixels.getPixelHeight(15)),
+                      pageViewer()
+                    ],
+                  ),
                 ))));
   }
 
   Widget buildToolbar(BuildContext context, EdgeInsets edgeInsets) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+        padding: EdgeInsets.fromLTRB(FetchPixels.getPixelHeight(5), FetchPixels.getPixelHeight(10), 0, 0),
         color: Colors.white,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
@@ -84,7 +87,7 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
             indicatorColor: Colors.transparent,
             physics: const BouncingScrollPhysics(),
             controller: controller.tabController,
-            labelPadding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+            labelPadding: EdgeInsets.fromLTRB(0, FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(20), 0),
             // labelStyle: TextStyle(fontSize: 5),
             onTap: (index) {
               print("tabBar onTap index : $index");
@@ -93,11 +96,12 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
             },
             labelColor: controller.memberPostTypeList[controller.position].color,
             unselectedLabelColor: Colors.black.withOpacity(0.3),
-            labelStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
+            labelStyle: TextStyle(
+                fontSize: FetchPixels.getPixelHeight(18), fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
             //For Selected tab
             tabs: List.generate(controller.tabsList.length, (index) {
               return Tab(
-                height: FetchPixels.getPixelHeight(25),
+                height: FetchPixels.getPixelHeight(35),
                 child: Container(
                     alignment: Alignment.center,
                     child: Column(

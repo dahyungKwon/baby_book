@@ -27,7 +27,7 @@ class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 30.h,
+        height: 33.h,
         child: Container(
           color: Colors.white,
           padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),
@@ -40,7 +40,7 @@ class _AgeGroupBottomSheetState extends State<AgeGroupBottomSheet> {
                 getHorSpace(FetchPixels.getPixelHeight(10)),
                 getCustomFont(
                   "아기 나이를 선택해주세요.",
-                  18,
+                  FetchPixels.getPixelHeight(18),
                   Colors.black,
                   1,
                   fontWeight: FontWeight.w500,

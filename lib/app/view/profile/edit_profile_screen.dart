@@ -67,14 +67,14 @@ class EditProfileScreen extends GetView<EditProfileController> {
               }),
               getCustomFont(
                 "프로필 수정",
-                18,
+                FetchPixels.getPixelHeight(18),
                 Colors.black,
                 1,
                 fontWeight: FontWeight.w500,
               ),
             ]),
-            getSimpleTextButton("변경", 18, secondMainColor, Colors.white, FontWeight.w500, FetchPixels.getPixelWidth(75),
-                FetchPixels.getPixelHeight(25), () {
+            getSimpleTextButton("변경", FetchPixels.getPixelHeight(18), secondMainColor, Colors.white, FontWeight.w500,
+                FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () {
               controller.confirm();
             }),
           ],
@@ -105,7 +105,8 @@ class EditProfileScreen extends GetView<EditProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("닉네임" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("닉네임" ?? "", FetchPixels.getPixelHeight(14), Colors.black38, 1,
+                  fontWeight: FontWeight.w600),
               // getVerSpace(10),
             ],
           )),
@@ -126,7 +127,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             isEnable: false,
             withprefix: false,
             minLines: true,
-            height: FetchPixels.getPixelHeight(50),
+            height: FetchPixels.getPixelHeight(60),
             alignmentGeometry: Alignment.center,
             boxColor: backGroundColor,
             myFocusNode: nickNameFocusNode,
@@ -138,7 +139,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
               : controller.canCheckNickName
                   ? getSimpleTextButton(
                       "중복체크",
-                      16,
+                      FetchPixels.getPixelHeight(16),
                       controller.canCheckNickName ? secondMainColor : Colors.grey.shade400,
                       Colors.white,
                       FontWeight.w500,
@@ -163,7 +164,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("성별" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("성별" ?? "", FetchPixels.getPixelHeight(14), Colors.black38, 1, fontWeight: FontWeight.w600),
               // getVerSpace(10),
               // getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
               // getVerSpace(30),
@@ -183,7 +184,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           isEnable: false,
           withprefix: false,
           minLines: true,
-          height: FetchPixels.getPixelHeight(45),
+          height: FetchPixels.getPixelHeight(60),
           withSufix: true,
           suffiximage: controller.gender == GenderType.none ? "down_arrow.svg" : "confirm_mark.svg",
           enableEditing: false)
@@ -197,7 +198,8 @@ class EditProfileScreen extends GetView<EditProfileController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("소개글" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("소개글" ?? "", FetchPixels.getPixelHeight(14), Colors.black38, 1,
+                  fontWeight: FontWeight.w600),
               // getVerSpace(10),
             ],
           )),
@@ -216,7 +218,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
             isEnable: false,
             withprefix: false,
             minLines: true,
-            height: FetchPixels.getPixelHeight(100),
+            height: FetchPixels.getPixelHeight(120),
             alignmentGeometry: Alignment.topLeft,
             boxColor: backGroundColor,
             myFocusNode: contentsFocusNode,

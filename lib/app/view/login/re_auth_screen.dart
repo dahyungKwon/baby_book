@@ -21,12 +21,15 @@ class ReAuthScreen extends StatelessWidget {
     Timer(const Duration(seconds: 1), () async {
       if (!await isLogin()) {
         Get.offAllNamed(Routes.loginPath);
+        return;
       }
       if (!await isAgreed()) {
         Get.offAllNamed(Routes.joinPath);
+        return;
       }
       if (await PrefData.needRefreshAuth()) {
         reAuth();
+        return;
       }
 
       if (referrer != null && referrer == Routes.splashPath) {

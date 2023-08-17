@@ -22,6 +22,9 @@ Widget buildToolbar(BuildContext context, BookCaseController controller) {
       // width: FetchPixels.getPixelHeight(50),
       // height: FetchPixels.getPixelHeight(50),
       // padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+      padding: controller.myBookCase
+          ? EdgeInsets.fromLTRB(0, 0, 0, 0)
+          : EdgeInsets.fromLTRB(FetchPixels.getPixelHeight(5), FetchPixels.getPixelHeight(10), 0, 0),
       color: Colors.white,
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         controller.myBookCase
@@ -54,7 +57,10 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
       indicatorColor: Colors.transparent,
       physics: const BouncingScrollPhysics(),
       controller: controller.tabController,
-      labelPadding: controller.myBookCase ? EdgeInsets.fromLTRB(10, 25, 10, 0) : EdgeInsets.fromLTRB(0, 0, 20, 0),
+      labelPadding: controller.myBookCase
+          ? EdgeInsets.fromLTRB(
+              FetchPixels.getPixelHeight(10), FetchPixels.getPixelHeight(25), FetchPixels.getPixelHeight(15), 0)
+          : EdgeInsets.fromLTRB(0, FetchPixels.getPixelHeight(15), FetchPixels.getPixelHeight(20), 0),
       // labelStyle: TextStyle(fontSize: 5),
       onTap: (index) {
         controller.pageController.jumpToPage(index);
@@ -62,10 +68,11 @@ Widget tabBar(BuildContext context, BookCaseController controller) {
       },
       labelColor: controller.tabsList[controller.position].color,
       unselectedLabelColor: Colors.black.withOpacity(0.3),
-      labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
+      labelStyle: TextStyle(
+          fontSize: FetchPixels.getPixelHeight(18), fontWeight: FontWeight.w600, overflow: TextOverflow.visible),
       tabs: List.generate(controller.tabsList.length, (index) {
         return Tab(
-          height: FetchPixels.getPixelHeight(25),
+          height: FetchPixels.getPixelHeight(35),
           child: Container(
               alignment: Alignment.center,
               child: Column(

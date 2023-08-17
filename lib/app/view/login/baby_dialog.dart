@@ -71,7 +71,7 @@ class BabyDialog extends GetView<BabyDialogController> {
                             withprefix: false,
                             minLines: true,
                             autofocus: true,
-                            height: FetchPixels.getPixelHeight(50),
+                            height: FetchPixels.getPixelHeight(60),
                             alignmentGeometry: Alignment.center,
                             boxColor: Colors.white,
                           )),
