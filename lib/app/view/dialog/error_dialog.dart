@@ -1,5 +1,3 @@
-import 'package:baby_book/app/view/home/home_screen.dart';
-import 'package:baby_book/base/constant.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
