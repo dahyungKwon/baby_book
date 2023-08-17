@@ -54,9 +54,13 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
     FetchPixels(context);
     return WillPopScope(
         child: Listener(
-            behavior: HitTestBehavior.opaque,
-            onPointerDown: (_) {
-              FocusManager.instance.primaryFocus?.unfocus();
+            onPointerUp: (_) {
+              if (Platform.isIOS) {
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                }
+              }
             },
             child: Scaffold(
               resizeToAvoidBottomInset: true,
