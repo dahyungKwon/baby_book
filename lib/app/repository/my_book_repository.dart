@@ -25,62 +25,77 @@ class MyBookRepository {
       required String memberId,
       required String babyId,
       required HoldType holdType}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/mybooks',
-      queryParameters: {
-        "pageSize": pagingRequest.pageSize,
-        "pageNumber": pagingRequest.pageNumber,
-        "memberId": memberId,
-        "babyId": babyId,
-        "holdType": holdType.code
-      },
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/mybooks',
+        queryParameters: {
+          "pageSize": pagingRequest.pageSize,
+          "pageNumber": pagingRequest.pageNumber,
+          "memberId": memberId,
+          "babyId": babyId,
+          "holdType": holdType.code
+        },
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return [];
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return [];
+        }
       }
-    }
 
-    return response.data['body']
-        .map<ModelMyBookResponse>(
-          (item) => ModelMyBookResponse.fromJson(item),
-        )
-        .toList();
+      return response.data['body']
+          .map<ModelMyBookResponse>(
+            (item) => ModelMyBookResponse.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return [];
+    }
   }
 
   Future<ModelMyBookResponse> get({required int bookSetId, String? babyId}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/mybooks/books/$bookSetId',
-      queryParameters: {"babyId": babyId},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/mybooks/books/$bookSetId',
+        queryParameters: {"babyId": babyId},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return ModelMyBookResponse(
+              myBook: ModelMyBook.createForObsInit(), modelBookResponse: ModelBookResponse.createForObsInit());
+        }
+      }
+
+      if (response.data['body'] != null) {
+        return ModelMyBookResponse.fromJson(response.data['body']);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
         return ModelMyBookResponse(
             myBook: ModelMyBook.createForObsInit(), modelBookResponse: ModelBookResponse.createForObsInit());
       }
-    }
-
-    if (response.data['body'] != null) {
-      return ModelMyBookResponse.fromJson(response.data['body']);
-    } else {
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
       return ModelMyBookResponse(
           myBook: ModelMyBook.createForObsInit(), modelBookResponse: ModelBookResponse.createForObsInit());
     }

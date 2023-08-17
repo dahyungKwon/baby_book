@@ -23,37 +23,43 @@ class BookRepository {
       required CategoryType categoryType, //일단 1개만 받도록
       required PagingRequest pagingRequest,
       required BookListSortType bookListSortType}) async {
-    var accessToken = await PrefData.getAccessToken();
-    // pageSize=15&pageNumber=1&categoryList=ALL&startMonth=0&endMonth=17&sortType=LIKE
-    final response = await dio.get(
-      '/bookset',
-      queryParameters: {
-        'pageSize': pagingRequest.pageSize,
-        'pageNumber': pagingRequest.pageNumber,
-        'categoryList': categoryType.code, //리스트형태인데 예시 ['MATH,LIFE'], 일단 하나만 보내게 해둠
-        'startMonth': ageGroup.minAge,
-        'endMonth': ageGroup.maxAge,
-        'sortType': bookListSortType?.code ?? BookListSortType.hot
-      },
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+    try {
+      var accessToken = await PrefData.getAccessToken();
+      // pageSize=15&pageNumber=1&categoryList=ALL&startMonth=0&endMonth=17&sortType=LIKE
+      final response = await dio.get(
+        '/bookset',
+        queryParameters: {
+          'pageSize': pagingRequest.pageSize,
+          'pageNumber': pagingRequest.pageNumber,
+          'categoryList': categoryType.code, //리스트형태인데 예시 ['MATH,LIFE'], 일단 하나만 보내게 해둠
+          'startMonth': ageGroup.minAge,
+          'endMonth': ageGroup.maxAge,
+          'sortType': bookListSortType?.code ?? BookListSortType.hot
+        },
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return [];
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return [];
+        }
       }
-    }
 
-    return response.data['body']
-        .map<ModelBookResponse>(
-          (item) => ModelBookResponse.fromJson(item),
-        )
-        .toList();
+      return response.data['body']
+          .map<ModelBookResponse>(
+            (item) => ModelBookResponse.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return [];
+    }
   }
 
   Future<ModelBookResponse> get({required int bookSetId}) async {
@@ -77,52 +83,65 @@ class BookRepository {
 
       return ModelBookResponse.fromJson(response.data['body']);
     } catch (e) {
+      print(e);
       await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
       return ModelBookResponse.createForObsInit();
     }
   }
 
   Future<bool> like({required int bookSetId}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.post(
-      '/bookset/$bookSetId/like',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.post(
+        '/bookset/$bookSetId/like',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 
   Future<bool> cancelLike({required int bookSetId}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.post(
-      '/bookset/$bookSetId/cancel-like',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.post(
+        '/bookset/$bookSetId/cancel-like',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 }
