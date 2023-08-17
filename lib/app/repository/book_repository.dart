@@ -59,23 +59,27 @@ class BookRepository {
   Future<ModelBookResponse> get({required int bookSetId}) async {
     var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/bookset/$bookSetId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
-
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return ModelBookResponse.createForObsInit();
+    try {
+      final response = await dio.get(
+        '/bookset/$bookSetId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return ModelBookResponse.createForObsInit();
+        }
       }
-    }
 
-    return ModelBookResponse.fromJson(response.data['body']);
+      return ModelBookResponse.fromJson(response.data['body']);
+    } catch (e) {
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return ModelBookResponse.createForObsInit();
+    }
   }
 
   Future<bool> like({required int bookSetId}) async {

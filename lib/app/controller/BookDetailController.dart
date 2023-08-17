@@ -139,12 +139,17 @@ class BookDetailController extends GetxController {
     }
 
     book = await bookRepository.get(bookSetId: bookSetId);
+    if (book.modelBook.id == null) {
+      ///에러 발생, 페이지 오픈 안됨
+      Get.back();
+      return;
+    }
     myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);
     // _book.refresh();
     // _myBookResponse.refresh();
     myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
     like = book.liked;
-    likeCount = book.modelBook.likeCount;
+    likeCount = book.modelBook.likeCount ?? 0;
 
     requestComment();
 

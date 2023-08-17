@@ -43,7 +43,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
   var f = NumberFormat('###,###,###,###');
 
   BookDetailScreen({super.key}) {
-    bookSetId = int.parse(Get.parameters['bookSetId']!);
+    String? bookId = Get.parameters['bookSetId'];
+    if (bookId == null || int.tryParse(bookId) == null) {
+      bookId = "0";
+    }
+
+    bookSetId = int.parse(bookId);
     babyId = Get.parameters['babyId'];
     uniqueTag = getUuid();
 
