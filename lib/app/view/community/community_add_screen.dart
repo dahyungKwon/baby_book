@@ -53,23 +53,28 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
 
     FetchPixels(context);
     return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: backGroundColor,
-          bottomNavigationBar: buildBottom(context),
-          body: SafeArea(
-              child: Obx(
-            () => Container(
-              color: Colors.white,
-              // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
-              child: controller.loading
-                  ? const FullSizeSkeleton()
-                  : Column(
-                      children: [buildToolbar(context), buildExpand(context)],
-                    ),
-            ),
-          )),
-        ),
+        child: Listener(
+            behavior: HitTestBehavior.opaque,
+            onPointerDown: (_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: true,
+              backgroundColor: backGroundColor,
+              bottomNavigationBar: buildBottom(context),
+              body: SafeArea(
+                  child: Obx(
+                () => Container(
+                  color: Colors.white,
+                  // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
+                  child: controller.loading
+                      ? const FullSizeSkeleton()
+                      : Column(
+                          children: [buildToolbar(context), buildExpand(context)],
+                        ),
+                ),
+              )),
+            )),
         onWillPop: () async {
           Get.back();
           return false;
