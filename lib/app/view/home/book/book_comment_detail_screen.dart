@@ -6,6 +6,7 @@ import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
@@ -39,6 +40,8 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
   String? get tag => uniqueTag;
 
   backBtn(BuildContext context) async {
+    EasyLoading.dismiss();
+
     if (controller.modifyCommentMode) {
       await Get.dialog(ReConfirmDialog("코멘트 수정을 종료하시겠습니까?", "네", "아니오", () async {
         controller.exitModifyCommentMode();

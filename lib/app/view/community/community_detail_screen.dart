@@ -15,6 +15,7 @@ import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
@@ -65,6 +66,8 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
+          EasyLoading.dismiss();
+
           if (controller.modifyCommentMode) {
             await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
               controller.exitModifyCommentMode();

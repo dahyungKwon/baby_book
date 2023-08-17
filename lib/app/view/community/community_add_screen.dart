@@ -7,6 +7,7 @@ import 'package:baby_book/app/view/community/post_type_bottom_sheet.dart';
 import 'package:baby_book/app/view/dialog/link_dialog.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
@@ -80,6 +81,7 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
               )),
             )),
         onWillPop: () async {
+          EasyLoading.dismiss();
           Get.back();
           return false;
         });
