@@ -107,7 +107,7 @@ class TagDialog extends GetView<CommunityTagAddController> {
                                 isEnable: false,
                                 withprefix: false,
                                 minLines: true,
-                                height: FetchPixels.getPixelHeight(50),
+                                height: FetchPixels.getPixelHeight(60),
                                 alignmentGeometry: Alignment.center,
                                 boxColor: Color(0xFFF5F6F8),
                               )),

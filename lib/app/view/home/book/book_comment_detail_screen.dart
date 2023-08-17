@@ -279,7 +279,7 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
     double iconSize = FetchPixels.getPixelHeight(26);
 
     return Container(
-        height: FetchPixels.getPixelHeight(55),
+        height: FetchPixels.getPixelHeight(65),
         // color: Colors.white,
         margin: EdgeInsets.only(
             bottom:
