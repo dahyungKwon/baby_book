@@ -130,73 +130,94 @@ class MyBookRepository {
     required String myBookId,
     required ModelMyBookRequest request,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.put(
-      '/mybooks/$myBookId',
-      data: request.toJson(),
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.put(
+        '/mybooks/$myBookId',
+        data: request.toJson(),
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelMyBook.fromJson(response.data['body']);
+      return ModelMyBook.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   Future<bool> delete({
     required String myBookId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.delete(
-      '/mybooks/$myBookId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.delete(
+        '/mybooks/$myBookId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 
   ///해당 책을 몇명이 보고 있는지와 멤버리스트
   Future<ModelMyBookMemberResponse?> getListByBook({required int bookId, required PagingRequest pagingRequest}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/mybooks/books/$bookId/members',
-      queryParameters: {"pageSize": pagingRequest.pageSize, "pageNumber": pagingRequest.pageNumber},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/mybooks/books/$bookId/members',
+        queryParameters: {"pageSize": pagingRequest.pageSize, "pageNumber": pagingRequest.pageNumber},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelMyBookMemberResponse.fromJson(response.data['body']);
+      return ModelMyBookMemberResponse.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 }
