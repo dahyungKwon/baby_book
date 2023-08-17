@@ -107,7 +107,7 @@ class _BookListSortTypeBottomSheetPicker extends StatelessWidget {
                             Colors.white,
                             FetchPixels.getPixelHeight(23),
                             FetchPixels.getPixelHeight(23), () async {
-                          Get.dialog(ErrorDialog("대형 포털사 검색순위를 기반으로 생성된 인기순 입니다."));
+                          Get.dialog(ErrorDialog("인기도의 경우는 대형 포탈사의 검색량, 리뷰데이터 등을 기준으로 평가하여 산정됩니다."));
                         }),
                       ))
                 ]
