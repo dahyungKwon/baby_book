@@ -38,7 +38,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return [];
       }
     }
@@ -64,7 +64,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return null;
       }
     }
@@ -87,7 +87,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return null;
       }
     }
@@ -110,7 +110,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return false;
       }
     }
@@ -131,7 +131,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return false;
       }
     }
@@ -159,7 +159,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return [];
       }
     }
@@ -191,7 +191,7 @@ class PostRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return null;
       }
     }
