@@ -1,5 +1,3 @@
-import 'package:baby_book/app/controller/CommnetDetailController.dart';
-import 'package:baby_book/app/controller/CommunityDetailController.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/view/community/comment_bottom_sheet.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
@@ -18,6 +16,7 @@ import '../../../controller/BookCommnetDetailController.dart';
 import '../../../models/model_comment_response.dart';
 import '../../../routes/app_pages.dart';
 import '../../dialog/error_dialog.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
   FocusNode commentFocusNode = FocusNode();
@@ -279,6 +278,9 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
     return Container(
         height: FetchPixels.getPixelHeight(55),
         // color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+                FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [

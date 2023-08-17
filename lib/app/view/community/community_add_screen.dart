@@ -17,6 +17,7 @@ import '../../models/model_book_response.dart';
 import '../../repository/post_image_repository.dart';
 import '../../repository/post_repository.dart';
 import '../dialog/tag_dialog.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class CommunityAddScreen extends GetView<CommunityAddController> {
@@ -312,6 +313,9 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
     return Container(
         height: FetchPixels.getPixelHeight(55),
         // color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+                FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(

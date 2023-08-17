@@ -32,6 +32,7 @@ import '../home_screen.dart';
 import 'HoldType.dart';
 import 'UsedType.dart';
 import 'book_detail_bottom_sheet.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class BookDetailScreen extends GetView<BookDetailController> {
   late final int? bookSetId;
@@ -89,6 +90,9 @@ class BookDetailScreen extends GetView<BookDetailController> {
                         bottom: FetchPixels.getPixelHeight(8),
                         left: FetchPixels.getPixelWidth(10),
                         right: FetchPixels.getPixelWidth(10)),
+                    margin: EdgeInsets.only(
+                        bottom: FetchPixels.getPixelHeight(
+                            foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
                     decoration: const BoxDecoration(
                         color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
                     child: Container(

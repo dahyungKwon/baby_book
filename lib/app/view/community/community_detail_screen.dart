@@ -29,7 +29,7 @@ import '../../models/model_kakao_link_template.dart';
 import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class CommunityDetailScreen extends GetView<CommunityDetailController> {
   FocusNode commentFocusNode = FocusNode();
@@ -611,6 +611,9 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     return Container(
         height: FetchPixels.getPixelHeight(55),
         // color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+                FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [

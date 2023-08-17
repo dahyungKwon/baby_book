@@ -1,5 +1,4 @@
 import 'package:baby_book/app/controller/CommnetDetailController.dart';
-import 'package:baby_book/app/controller/CommunityDetailController.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/view/community/comment_bottom_sheet.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
@@ -17,6 +16,7 @@ import '../../../base/uuid_util.dart';
 import '../../models/model_comment_response.dart';
 import '../../routes/app_pages.dart';
 import '../dialog/error_dialog.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class CommentDetailScreen extends GetView<CommentDetailController> {
   FocusNode commentFocusNode = FocusNode();
@@ -100,13 +100,14 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
               backBtn(context);
             }),
-            getCustomFont(
+            Expanded(
+                child: getCustomFont(
               controller.title,
               18,
               Colors.black,
               1,
               fontWeight: FontWeight.w600,
-            ),
+            )),
           ],
         ));
   }
@@ -249,6 +250,9 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
     return Container(
         height: FetchPixels.getPixelHeight(55),
         // color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+                FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         decoration: const BoxDecoration(
             color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
