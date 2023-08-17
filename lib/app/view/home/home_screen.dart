@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 import '../../../base/constant.dart';
 import '../../controller/HomeScreenController.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class HomeScreen extends GetView<HomeScreenController> {
   DateTime? currentBackPressTime;
@@ -41,8 +42,6 @@ class HomeScreen extends GetView<HomeScreenController> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
-    double size = FetchPixels.getPixelHeight(60);
-    double iconSize = FetchPixels.getPixelHeight(26);
     return WillPopScope(
         onWillPop: onWillPop,
         child: Obx(() => Scaffold(
@@ -58,6 +57,9 @@ class HomeScreen extends GetView<HomeScreenController> {
             bottomNavigationBar: Container(
                 height: FetchPixels.getPixelHeight(60),
                 // color: Colors.white,
+                margin: EdgeInsets.only(
+                    bottom: FetchPixels.getPixelHeight(
+                        foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
                 decoration: const BoxDecoration(
                     color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
                 child: Row(
@@ -74,8 +76,8 @@ class HomeScreen extends GetView<HomeScreenController> {
                       },
                       child: Center(
                         child: Container(
-                          width: size,
-                          height: size,
+                          width: FetchPixels.getPixelHeight(60),
+                          height: FetchPixels.getPixelHeight(60),
                           // decoration: BoxDecoration(
                           //     color: controller.tabIndex == selectedTabIndex ? Colors.black : Colors.transparent,
                           //     shape: BoxShape.circle),
@@ -88,8 +90,8 @@ class HomeScreen extends GetView<HomeScreenController> {
                                       controller.tabIndex == selectedTabIndex
                                           ? bottomBarSelectedImgList[selectedTabIndex]
                                           : bottomBarNoSelectedImgList[selectedTabIndex],
-                                      width: iconSize,
-                                      height: iconSize),
+                                      width: FetchPixels.getPixelHeight(26),
+                                      height: FetchPixels.getPixelHeight(26)),
                                   getVerSpace(FetchPixels.getPixelHeight(2)),
                                   Text(
                                     bottomBarStringList[selectedTabIndex],
