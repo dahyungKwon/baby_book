@@ -213,6 +213,15 @@ class CommunityDetailController extends GetxController {
   }
 
   Future<bool> addComment() async {
+    if (commentController.text == null || commentController.text.isEmpty) {
+      await Get.dialog(ErrorDialog("댓글을 입력해주세요."));
+      return false;
+    }
+    if (commentController.text.length > 500) {
+      await Get.dialog(ErrorDialog("500자 이하로 입력해주세요."));
+      return false;
+    }
+
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
 
     ModelCommentResponse? response =
@@ -237,7 +246,15 @@ class CommunityDetailController extends GetxController {
 
   Future<bool> modifyComment() async {
     if (selectedComment == null) {
-      Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
+      await Get.dialog(ErrorDialog("선택된 댓글이 없습니다."));
+      return false;
+    }
+    if (commentController.text == null || commentController.text.isEmpty) {
+      await Get.dialog(ErrorDialog("댓글을 입력해주세요."));
+      return false;
+    }
+    if (commentController.text.length > 500) {
+      await Get.dialog(ErrorDialog("500자 이하로 입력해주세요."));
       return false;
     }
 

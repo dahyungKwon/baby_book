@@ -44,7 +44,7 @@ class SettingController extends GetxController with GetSingleTickerProviderState
         await PrefData.setRefreshToken(null);
         await PrefData.setLastLoginDate(null);
 
-        Get.toNamed(Routes.loginPath);
+        Get.offAllNamed(Routes.loginPath);
       }
     }));
   }

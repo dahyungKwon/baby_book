@@ -74,12 +74,20 @@ class ReportNewBookAddController extends GetxController {
 
   Future<bool> add() async {
     if (titleController.text.isEmpty) {
-      Get.dialog(ErrorDialog("책이름을 입력해주세요."));
+      await Get.dialog(ErrorDialog("책이름을 입력해주세요."));
+      return false;
+    }
+    if (titleController.text.length > 100) {
+      await Get.dialog(ErrorDialog("책이름은 100자 이하로 입력해주세요."));
       return false;
     }
 
     if (contentsController.text.isEmpty) {
-      Get.dialog(ErrorDialog("알고 계시는 책 관련 내용을 입력해주세요."));
+      await Get.dialog(ErrorDialog("알고 계시는 책 관련 내용을 입력해주세요."));
+      return false;
+    }
+    if (contentsController.text.length > 3000) {
+      await Get.dialog(ErrorDialog("책 관련 내용은 3000자 이하로 입력 해주세요."));
       return false;
     }
 

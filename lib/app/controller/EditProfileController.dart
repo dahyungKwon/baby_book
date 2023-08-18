@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:baby_book/app/controller/BabyDialogController.dart';
 import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/repository/baby_repository.dart';
@@ -147,7 +145,12 @@ class EditProfileController extends GetxController {
   confirmNickName() async {
     String? nickName = nickNameController.text;
     if (nickName == null || nickName.isBlank!) {
-      Get.dialog(ErrorDialog("닉네임을 입력해주세요."));
+      await Get.dialog(ErrorDialog("닉네임을 입력해주세요."));
+      return;
+    }
+
+    if (nickName.length > 10) {
+      await Get.dialog(ErrorDialog("닉네임은 10자 이하로 입력해주세요."));
       return;
     }
 
@@ -186,27 +189,37 @@ class EditProfileController extends GetxController {
 
   confirm() async {
     if (nickNameController.text == null || nickNameController.text.isEmpty) {
-      Get.dialog(ErrorDialog("닉네임을 입력해주세요."));
+      await Get.dialog(ErrorDialog("닉네임을 입력해주세요."));
+      return;
+    }
+
+    if (nickNameController.text.length > 10) {
+      await Get.dialog(ErrorDialog("닉네임은 10자 이하로 입력해주세요."));
       return;
     }
 
     if (checkedNickName == null || checkedNickName.isEmpty) {
-      Get.dialog(ErrorDialog("닉네임 중복체크를 해주세요."));
+      await Get.dialog(ErrorDialog("닉네임 중복체크를 해주세요."));
       return;
     }
 
     if (gender == null || gender == GenderType.none) {
-      Get.dialog(ErrorDialog("성별을 선택해주세요."));
+      await Get.dialog(ErrorDialog("성별을 선택해주세요."));
       return;
     }
 
     if (selectedBabyList == null || selectedBabyList.isEmpty) {
-      Get.dialog(ErrorDialog("아기곰을 추가해주세요."));
+      await Get.dialog(ErrorDialog("아기곰을 추가해주세요."));
       return;
     }
 
     if (representBabyId == null || representBabyId == "") {
-      Get.dialog(ErrorDialog("대표 아기곰을 선택해주세요."));
+      await Get.dialog(ErrorDialog("대표 아기곰을 선택해주세요."));
+      return;
+    }
+
+    if (contentsController.text.length > 100) {
+      await Get.dialog(ErrorDialog("소개글은 100자 이하로 입력해주세요."));
       return;
     }
 

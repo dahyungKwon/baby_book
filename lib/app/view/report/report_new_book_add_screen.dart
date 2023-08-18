@@ -105,9 +105,8 @@ class ReportNewBookAddScreen extends GetView<ReportNewBookAddController> {
 
                 bool result = await controller.add();
 
-                Get.back(result: result);
-
                 if (result) {
+                  Get.back(result: true);
                   Get.snackbar('', '',
                       colorText: Colors.white,
                       backgroundColor: secondMainColor,

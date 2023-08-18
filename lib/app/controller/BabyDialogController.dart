@@ -91,6 +91,11 @@ class BabyDialogController extends GetxController {
       return;
     }
 
+    if (nameController.text.length > 10) {
+      Get.dialog(ErrorDialog("이름은 10자 이하로 입력해주세요."));
+      return;
+    }
+
     if (gender == null || gender == GenderType.none) {
       Get.dialog(ErrorDialog("아기곰 성별을 선택해주세요."));
       return;

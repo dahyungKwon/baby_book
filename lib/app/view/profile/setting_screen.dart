@@ -8,9 +8,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../base/skeleton.dart';
 import '../../../base/uuid_util.dart';
-import '../../controller/MemberCommunityController.dart';
 import '../../controller/SettingController.dart';
-import '../../repository/post_repository.dart';
 import '../../routes/app_pages.dart';
 
 class SettingScreen extends GetView<SettingController> {
