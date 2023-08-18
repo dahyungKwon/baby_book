@@ -64,9 +64,9 @@ Widget _buildProfile(BuildContext context, ModelMember member, bool myProfile, S
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            getCustomFont(member.nickName ?? "", 18, Colors.black, 1, fontWeight: FontWeight.w500),
+            getCustomFont(member?.nickName ?? "", 18, Colors.black, 1, fontWeight: FontWeight.w500),
             getVerSpace(FetchPixels.getPixelHeight(10)),
-            getCustomFont(member.gender!.adult ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w500),
+            getCustomFont(member?.gender?.adult ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w500),
             getVerSpace(FetchPixels.getPixelHeight(10)),
             _buildBabyList(babyToString),
           ],
@@ -135,7 +135,7 @@ Widget _bookCaseButton(BuildContext context, ModelMember member, bool myProfile)
 Widget _communityWritingButton(BuildContext context, ModelMember member, bool myProfile) {
   return getButtonWithIcon(context, Colors.white, myProfile ? "작성글 / 작성댓글 / 북마크" : "작성글 / 작성댓글", Colors.black, () {
     Get.toNamed(Routes.memberCommunityPath,
-        parameters: {'memberId': member.memberId!, 'myProfile': myProfile.toString()});
+        parameters: {'memberId': member.memberId ?? "", 'myProfile': myProfile.toString()});
   }, 16,
       weight: FontWeight.w400,
       buttonHeight: FetchPixels.getPixelHeight(60),

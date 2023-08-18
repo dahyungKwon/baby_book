@@ -45,8 +45,7 @@ class MyBookRepository {
         if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
           Get.toNamed(Routes.reAuthPath);
         } else {
-          Get.dialog(
-              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
           return [];
         }
       }
@@ -79,8 +78,7 @@ class MyBookRepository {
         if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
           Get.toNamed(Routes.reAuthPath);
         } else {
-          Get.dialog(
-              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
           return ModelMyBookResponse(
               myBook: ModelMyBook.createForObsInit(), modelBookResponse: ModelBookResponse.createForObsInit());
         }
@@ -117,7 +115,7 @@ class MyBookRepository {
       if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
         Get.toNamed(Routes.reAuthPath);
       } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
         return null;
       }
     }
@@ -144,8 +142,7 @@ class MyBookRepository {
         if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
           Get.toNamed(Routes.reAuthPath);
         } else {
-          Get.dialog(
-              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
           return null;
         }
       }
@@ -175,8 +172,7 @@ class MyBookRepository {
         if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
           Get.toNamed(Routes.reAuthPath);
         } else {
-          Get.dialog(
-              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
           return false;
         }
       }
@@ -206,8 +202,7 @@ class MyBookRepository {
         if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
           Get.toNamed(Routes.reAuthPath);
         } else {
-          Get.dialog(
-              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
           return null;
         }
       }

@@ -100,18 +100,19 @@ class SettingScreen extends GetView<SettingController> {
           //   fontWeight: FontWeight.w700,
           // ),
           // getVerSpace(FetchPixels.getPixelHeight(30)),
-          getSimpleTextButton("회원 탈퇴", 18, Colors.black87, Colors.white, FontWeight.w400,
-              FetchPixels.getPixelWidth(250), FetchPixels.getPixelHeight(25), () {
+          getSimpleTextButton(
+              "회원 탈퇴", 18, Colors.black87, Colors.white, FontWeight.w400, 100.w, FetchPixels.getPixelHeight(25), () {
             controller.deleteMember();
           }, alignment: Alignment.centerLeft),
           getVerSpace(FetchPixels.getPixelHeight(30)),
-          getSimpleTextButton("서비스 이용약관", 18, Colors.black87, Colors.white, FontWeight.w400,
-              FetchPixels.getPixelWidth(250), FetchPixels.getPixelHeight(25), () {
+          getSimpleTextButton(
+              "서비스 이용약관", 18, Colors.black87, Colors.white, FontWeight.w400, 100.w, FetchPixels.getPixelHeight(25), () {
             Get.toNamed(Routes.servicePolicyPath);
           }, alignment: Alignment.centerLeft),
           getVerSpace(FetchPixels.getPixelHeight(30)),
-          getSimpleTextButton("개인정보 처리방침", 18, Colors.black87, Colors.white, FontWeight.w400,
-              FetchPixels.getPixelWidth(250), FetchPixels.getPixelHeight(25), () {
+          getSimpleTextButton(
+              "개인정보 처리방침", 18, Colors.black87, Colors.white, FontWeight.w400, 100.w, FetchPixels.getPixelHeight(25),
+              () {
             Get.toNamed(Routes.privacyPolicyPath);
           }, alignment: Alignment.centerLeft)
         ],

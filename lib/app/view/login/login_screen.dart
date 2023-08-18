@@ -27,11 +27,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    isLogin().then((isLogin) async => {
-          //로그인이 되어있는데 들어온 경우 토큰 업데이트하고 다시 메인으로 보냅니다.
-          if (isLogin) {Get.toNamed(Routes.reAuthPath)}
-        });
-
     return WillPopScope(
         child: Scaffold(
           resizeToAvoidBottomInset: false,

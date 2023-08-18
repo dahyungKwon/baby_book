@@ -121,6 +121,9 @@ class EditProfileController extends GetxController {
     targetMemberId ??= await PrefData.getMemberId();
 
     member = await MemberRepository.getMember(memberId: targetMemberId!);
+    if (member.memberId == null) {
+      Get.back();
+    }
     if (targetMemberId! == member.memberId) {
       myProfile = true;
     }

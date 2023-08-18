@@ -64,6 +64,8 @@ class ReAuthScreen extends StatelessWidget {
                   PrefData.setRefreshToken(response.refreshToken!),
                   Get.toNamed(Routes.homescreenPath)
                 }
+              else
+                {Get.dialog(ErrorDialog("토큰 갱신에 실패하였습니다. 재로그인 해주세요.")), Get.offAllNamed(Routes.loginPath)}
             })
         .catchError((e) {
       Get.dialog(ErrorDialog("토큰 갱신에 실패하였습니다. 재로그인 해주세요."));
