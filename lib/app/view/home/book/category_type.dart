@@ -16,6 +16,7 @@ enum CategoryType {
   classic("CLASSIC", "고전/문학", Color(0xFF880033)),
   english("ENGLISH", "영어", Color(0xFFFA8072)),
   art("ART", "예술", Color(0xFFC53D65)),
+  eduthing("EDUTHING", "교구", Color(0xFF1A2772)),
   etc("ETC", "기타", Colors.black),
   none("NONE", "선택안함", Colors.black45);
 

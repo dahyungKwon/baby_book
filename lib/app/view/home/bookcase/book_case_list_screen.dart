@@ -31,13 +31,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class BookCaseListScreen extends GetView<BookCaseListController> {
   late final String? uniqueTag;
+  late final String memberId;
   late HoldType holdType;
   late RefreshController refreshController;
   int pageNumber = 1;
   var f = NumberFormat('###,###,###,###');
 
   BookCaseListScreen({required String? memberId, required this.holdType, super.key}) {
-    uniqueTag = getUuid();
+    uniqueTag = memberId;
     Get.put(
         BookCaseListController(
             myBookRepository: MyBookRepository(),

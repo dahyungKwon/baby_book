@@ -229,7 +229,6 @@ class EditProfileController extends GetxController {
       } else {
         ModelBaby? changedBaby = await BabyRepository.putBaby(
             babyId: baby.babyId!, name: baby.name!, gender: baby.gender!, birth: baby.birth!);
-
         if (changedBaby == null) {
           ///네트웍에러
           return;

@@ -91,7 +91,7 @@ class BabyRepository {
     }
   }
 
-  static Future<ModelBaby> getBaby({
+  static Future<ModelBaby?> getBaby({
     required String babyId,
   }) async {
     try {
@@ -109,7 +109,7 @@ class BabyRepository {
           Get.toNamed(Routes.reAuthPath);
         } else {
           Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-          return ModelBaby();
+          return null;
         }
       }
 
@@ -117,7 +117,7 @@ class BabyRepository {
     } catch (e) {
       print(e);
       await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
-      return ModelBaby();
+      return null;
     }
   }
 
