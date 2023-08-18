@@ -20,24 +20,30 @@ class ReportNewBookRepository {
     required String contents,
     required String memberId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.post('/report-new-books',
-        data: {"title": title, "contents": contents, "memberId": memberId},
-        options: Options(
-          headers: {"at": accessToken},
-        ));
+      final response = await dio.post('/report-new-books',
+          data: {"title": title, "contents": contents, "memberId": memberId},
+          options: Options(
+            headers: {"at": accessToken},
+          ));
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelReportNewBook.fromJson(response.data['body']);
+      return ModelReportNewBook.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   static Future<ModelReportNewBook?> put({
@@ -46,109 +52,133 @@ class ReportNewBookRepository {
     String? contents,
     required String memberId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.put(
-      '/report-new-books/$id',
-      data: {
-        "title": title,
-        "contents": contents,
-        "memberId": memberId,
-      },
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.put(
+        '/report-new-books/$id',
+        data: {
+          "title": title,
+          "contents": contents,
+          "memberId": memberId,
+        },
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelReportNewBook.fromJson(response.data['body']);
+      return ModelReportNewBook.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   static Future<ModelReportNewBook> get({
     required int id,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/report-new-books/$id',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/report-new-books/$id',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return ModelReportNewBook();
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return ModelReportNewBook();
+        }
       }
-    }
 
-    return ModelReportNewBook.fromJson(response.data['body']);
+      return ModelReportNewBook.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return ModelReportNewBook();
+    }
   }
 
   static Future<List<ModelReportNewBook>> getList(
       {required String memberId, required PagingRequest pagingRequest}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/report-new-books',
-      queryParameters: {
-        "pageSize": pagingRequest.pageSize,
-        "pageNumber": pagingRequest.pageNumber,
-        "memberId": memberId
-      },
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/report-new-books',
+        queryParameters: {
+          "pageSize": pagingRequest.pageSize,
+          "pageNumber": pagingRequest.pageNumber,
+          "memberId": memberId
+        },
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return [];
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return [];
+        }
       }
-    }
 
-    return response.data['body']
-        .map<ModelBaby>(
-          (item) => ModelReportNewBook.fromJson(item),
-        )
-        .toList();
+      return response.data['body']
+          .map<ModelBaby>(
+            (item) => ModelReportNewBook.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return [];
+    }
   }
 
   static Future<bool> delete({
     required String id,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.delete(
-      '/report-new-books/$id',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.delete(
+        '/report-new-books/$id',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 }

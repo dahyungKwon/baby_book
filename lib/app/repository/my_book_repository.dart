@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
-import '../exception/exception_invalid_member.dart';
 import '../models/model_my_book_request.dart';
 import '../models/model_my_book_response.dart';
 import '../routes/app_pages.dart';

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
-import '../exception/exception_invalid_member.dart';
 import '../models/model_member.dart';
 import '../models/model_refresh_accesstoken.dart';
 import '../routes/app_pages.dart';
@@ -20,19 +19,26 @@ class MemberRepository {
     required String snsLoginType,
     required String snsAccessToken,
   }) async {
-    final response =
-        await dio.post('/members/join', data: {"snsLoginType": snsLoginType, "snsAccessToken": snsAccessToken});
+    try {
+      final response =
+          await dio.post('/members/join', data: {"snsLoginType": snsLoginType, "snsAccessToken": snsAccessToken});
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelMember.fromJson(response.data['body']);
+      return ModelMember.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   static Future<ModelMember?> putMember({
@@ -44,126 +50,161 @@ class MemberRepository {
     required GenderType? gender,
     String? selectedBabyId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.put(
-      '/members/$memberId',
-      data: {
-        "memberId": memberId,
-        "nickName": nickName,
-        "email": email,
-        "contents": contents,
-        "allAgreed": allAgreed,
-        "gender": gender?.code,
-        "selectedBabyId": selectedBabyId
-      },
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.put(
+        '/members/$memberId',
+        data: {
+          "memberId": memberId,
+          "nickName": nickName,
+          "email": email,
+          "contents": contents,
+          "allAgreed": allAgreed,
+          "gender": gender?.code,
+          "selectedBabyId": selectedBabyId
+        },
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelMember.fromJson(response.data['body']);
+      return ModelMember.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   static Future<bool> deleteMember({required String memberId}) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.delete(
-      '/members/$memberId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.delete(
+        '/members/$memberId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 
   static Future<ModelMember> getMember({
     required String memberId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/members/$memberId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/members/$memberId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return ModelMember.createForObsInit();
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return ModelMember.createForObsInit();
+        }
       }
-    }
 
-    return ModelMember.fromJson(response.data['body']);
+      return ModelMember.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return ModelMember.createForObsInit();
+    }
   }
 
   static Future<ModelRefreshAccessToken> refreshAccessToken() async {
-    var memberId = await PrefData.getMemberId();
-    var accessToken = await PrefData.getAccessToken();
-    var refreshToken = await PrefData.getRefreshToken();
+    try {
+      var memberId = await PrefData.getMemberId();
+      var accessToken = await PrefData.getAccessToken();
+      var refreshToken = await PrefData.getRefreshToken();
 
-    final response = await dio.post(
-      '/members/$memberId/at',
-      data: {"accessToken": accessToken, "refreshToken": refreshToken},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.post(
+        '/members/$memberId/at',
+        data: {"accessToken": accessToken, "refreshToken": refreshToken},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        await PrefData.setAccessToken(null);
-        await PrefData.setRefreshToken(null);
-        Get.toNamed(Routes.loginPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return ModelRefreshAccessToken();
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          await PrefData.setAccessToken(null);
+          await PrefData.setRefreshToken(null);
+          Get.toNamed(Routes.loginPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return ModelRefreshAccessToken();
+        }
       }
-    }
 
-    return ModelRefreshAccessToken.fromJson(response.data['body']);
+      return ModelRefreshAccessToken.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return ModelRefreshAccessToken();
+    }
   }
 
   static Future<bool?> existNickName({
     required String nickName,
   }) async {
-    final response = await dio.get(
-      '/members/nicknames/$nickName',
-    );
+    try {
+      final response = await dio.get(
+        '/members/nicknames/$nickName',
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(
+              ErrorDialog("네트워크 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요.\n상세 에러 코드: ${response.data['body']['errorCode']}"));
+          return null;
+        }
       }
-    }
 
-    //true면 존재, false면 존재하지 않음
-    return response.data['body'];
+      //true면 존재, false면 존재하지 않음
+      return response.data['body'];
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 }

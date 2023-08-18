@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
-import '../exception/exception_invalid_member.dart';
 import '../routes/app_pages.dart';
 import '../view/dialog/error_dialog.dart';
 
@@ -17,58 +16,70 @@ class CommentRepository {
   Future<List<ModelCommentResponse>> get({
     required String commentTargetId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/comments',
-      queryParameters: {'commentTargetId': commentTargetId},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/comments',
+        queryParameters: {'commentTargetId': commentTargetId},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return [];
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return [];
+        }
       }
-    }
 
-    return response.data['body']
-        .map<ModelCommentResponse>(
-          (item) => ModelCommentResponse.fromJson(item),
-        )
-        .toList();
+      return response.data['body']
+          .map<ModelCommentResponse>(
+            (item) => ModelCommentResponse.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return [];
+    }
   }
 
   Future<List<ModelCommentResponse>> getCommentDetail({
     required String commentId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.get(
-      '/comments/$commentId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.get(
+        '/comments/$commentId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return [];
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return [];
+        }
       }
-    }
 
-    return response.data['body']
-        .map<ModelCommentResponse>(
-          (item) => ModelCommentResponse.fromJson(item),
-        )
-        .toList();
+      return response.data['body']
+          .map<ModelCommentResponse>(
+            (item) => ModelCommentResponse.fromJson(item),
+          )
+          .toList();
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return [];
+    }
   }
 
   Future<ModelCommentResponse?> post({
@@ -77,26 +88,32 @@ class CommentRepository {
     required String body,
     String? parentId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.post(
-      '/comments',
-      data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.post(
+        '/comments',
+        data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return null;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return null;
+        }
       }
-    }
 
-    return ModelCommentResponse.fromJson(response.data['body']);
+      return ModelCommentResponse.fromJson(response.data['body']);
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return null;
+    }
   }
 
   Future<bool> modify({
@@ -106,49 +123,61 @@ class CommentRepository {
     required String body,
     String? parentId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.put(
-      '/comments/$commentId',
-      data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.put(
+        '/comments/$commentId',
+        data: {'commentType': commentType, 'commentTargetId': commentTargetId, 'body': body, 'parentId': parentId},
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 
   Future<bool> delete({
     required String commentId,
   }) async {
-    var accessToken = await PrefData.getAccessToken();
+    try {
+      var accessToken = await PrefData.getAccessToken();
 
-    final response = await dio.delete(
-      '/comments/$commentId',
-      options: Options(
-        headers: {"at": accessToken},
-      ),
-    );
+      final response = await dio.delete(
+        '/comments/$commentId',
+        options: Options(
+          headers: {"at": accessToken},
+        ),
+      );
 
-    if (response.data['code'] == 'FAIL') {
-      if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
-        Get.toNamed(Routes.reAuthPath);
-      } else {
-        Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
-        return false;
+      if (response.data['code'] == 'FAIL') {
+        if (response.data['body']['errorCode'] == 'INVALID_MEMBER') {
+          Get.toNamed(Routes.reAuthPath);
+        } else {
+          Get.dialog(ErrorDialog("${response.data['body']['errorMessage']}"));
+          return false;
+        }
       }
-    }
 
-    return true;
+      return true;
+    } catch (e) {
+      print(e);
+      await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
+      return false;
+    }
   }
 }
