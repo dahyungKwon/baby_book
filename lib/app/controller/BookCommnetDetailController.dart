@@ -90,6 +90,14 @@ class BookCommentDetailController extends GetxController {
   }
 
   Future<bool> addComment() async {
+    if (commentController.text == null || commentController.text.isEmpty) {
+      await Get.dialog(ErrorDialog("코멘트를 입력해주세요."));
+      return false;
+    }
+    if (commentController.text.length > 500) {
+      await Get.dialog(ErrorDialog("500자 이하로 입력해주세요."));
+      return false;
+    }
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     ModelCommentResponse? response =
         await commentRepository.post(commentTargetId: commentTargetId, body: commentController.text);
