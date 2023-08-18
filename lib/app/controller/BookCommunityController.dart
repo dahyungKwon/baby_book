@@ -50,7 +50,7 @@ class BookCommunityController extends GetxController with GetSingleTickerProvide
     widgetList = [BookCommunityListScreen(bookId)];
 
     tabController = TabController(vsync: this, length: tabsList.length);
-    widgetList[0].controller.getAllForInit();
+    // widgetList[0].controller.getAllForInit();
 
     ///사용자경험 위해 0.2초 딜레이
     Future.delayed(const Duration(milliseconds: 500), () {

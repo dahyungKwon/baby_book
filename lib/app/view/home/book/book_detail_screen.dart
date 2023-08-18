@@ -414,7 +414,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                               ),
                               getVerSpace(FetchPixels.getPixelHeight(5)),
                               getCustomFont(
-                                "${controller.bookMember.count}명" ?? "",
+                                "${controller.bookMember?.count}명" ?? "0명",
                                 16,
                                 Colors.black,
                                 1,

@@ -205,8 +205,10 @@ class BookDetailController extends GetxController {
 
     if (result != null) {
       reloadMyBook();
+      return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
   Future<bool> modifyMyBook(ModelMyBook myBook) async {
@@ -228,8 +230,10 @@ class BookDetailController extends GetxController {
 
     if (result != null) {
       reloadMyBook();
+      return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
   reloadMyBook() async {

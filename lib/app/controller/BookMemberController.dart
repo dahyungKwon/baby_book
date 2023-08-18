@@ -42,7 +42,7 @@ class BookMemberController extends GetxController with GetSingleTickerProviderSt
     widgetList = [BookMemberListScreen(bookId)];
 
     tabController = TabController(vsync: this, length: tabsList.length);
-    widgetList[0].controller.getAllForInit();
+    // widgetList[0].controller.getAllForInit();
 
     ///사용자경험 위해 0.2초 딜레이
     Future.delayed(const Duration(milliseconds: 500), () {

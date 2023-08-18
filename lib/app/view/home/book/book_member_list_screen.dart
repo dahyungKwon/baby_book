@@ -10,12 +10,10 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../../base/uuid_util.dart';
-import '../../../models/model_baby.dart';
 import '../../../models/model_my_book_member_body.dart';
 import '../../../routes/app_pages.dart';
 import '../../login/gender_type.dart';
 
-/// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class BookMemberListScreen extends GetView<BookMemberListController> {
   late final int? bookId;
   late final String? uniqueTag;

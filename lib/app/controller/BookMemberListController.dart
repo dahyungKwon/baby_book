@@ -2,10 +2,8 @@ import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:get/get.dart';
 
-import '../exception/exception_invalid_member.dart';
 import '../models/model_my_book_member_body.dart';
 import '../models/model_my_book_member_response.dart';
-import '../routes/app_pages.dart';
 
 class BookMemberListController extends GetxController {
   final MyBookRepository myBookRepository;
