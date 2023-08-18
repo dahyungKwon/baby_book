@@ -14,7 +14,6 @@ import '../../repository/post_repository.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../routes/app_pages.dart';
-import 'package:uuid/uuid.dart';
 
 /// 예상외에 동작을 한다면, TabCommunity#pageViewer쪽을 살펴보기!!
 class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
@@ -113,8 +112,12 @@ class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
           itemCount: controller.postList.length,
           itemBuilder: (context, index) {
             ModelPost modelPost = controller.postList[index];
-            return buildPostListItem(modelPost, context, index, () {
-              Get.toNamed("${Routes.communityDetailPath}", parameters: {'postId': modelPost.postId!, 'tag': 'profile'});
+            return buildPostListItem(modelPost, context, index, () async {
+              bool result = await Get.toNamed(Routes.communityDetailPath,
+                  parameters: {'postId': modelPost.postId!, 'tag': 'profile'});
+              if (result) {
+                onRefresh();
+              }
             }, () {
               //delete function
             });

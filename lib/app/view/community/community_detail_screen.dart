@@ -59,6 +59,25 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   @override
   String? get tag => uniqueTag;
 
+  backBtn() async {
+    EasyLoading.dismiss();
+
+    if (controller.modifyCommentMode) {
+      await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
+        controller.exitModifyCommentMode();
+        Get.back();
+        // Future.delayed(const Duration(milliseconds: 500), () {
+        //   commentKeyboardDown(context);
+        // });
+      }));
+    } else if (sharedMode) {
+      print("AppSchemeImpl sharedMode :$sharedMode get off");
+      Get.off(() => HomeScreen(2));
+    } else {
+      Get.back(result: true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     EdgeInsets edgeInsets = EdgeInsets.symmetric(
@@ -67,22 +86,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     FetchPixels(context);
     return WillPopScope(
         onWillPop: () async {
-          EasyLoading.dismiss();
-
-          if (controller.modifyCommentMode) {
-            await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
-              controller.exitModifyCommentMode();
-              Get.back();
-              // Future.delayed(const Duration(milliseconds: 500), () {
-              //   commentKeyboardDown(context);
-              // });
-            }));
-          } else if (sharedMode) {
-            print("AppSchemeImpl sharedMode :$sharedMode get off");
-            Get.off(() => HomeScreen(2));
-          } else {
-            Get.back();
-          }
+          backBtn();
           return false;
         },
         child: Obx(() => Scaffold(
@@ -119,20 +123,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
-              if (controller.modifyCommentMode) {
-                await Get.dialog(ReConfirmDialog("댓글 수정을 종료하시겠습니까?", "네", "아니오", () async {
-                  controller.exitModifyCommentMode();
-                  Get.back();
-                  // Future.delayed(const Duration(milliseconds: 500), () {
-                  //   commentKeyboardDown(context);
-                  // });
-                }));
-              } else if (sharedMode) {
-                print("AppSchemeImpl sharedMode :$sharedMode get off");
-                Get.off(() => HomeScreen(2));
-              } else {
-                Get.back();
-              }
+              backBtn();
             }),
             Row(children: [
               // getSimpleImageButton("notification.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
@@ -230,9 +221,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
     }));
 
     if (result) {
-      await Get.find<CommunityListController>().getAllForPullToRefresh(PostType.all);
-      await Get.find<TabCommunityController>().changePosition(PostType.all);
-      Get.back();
+      try {
+        await Get.find<CommunityListController>().getAllForPullToRefresh(PostType.all);
+        await Get.find<TabCommunityController>().changePosition(PostType.all);
+      } catch (e) {
+        print(e);
+      }
+      Get.back(result: true);
     } else {
       Get.dialog(ErrorDialog("잠시 후 다시 시도해주세요."));
     }
