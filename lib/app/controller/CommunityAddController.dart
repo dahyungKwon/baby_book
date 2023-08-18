@@ -170,13 +170,9 @@ class CommunityAddController extends GetxController {
         await Get.find<CommunityListController>().getAllForPullToRefresh(postType);
         await Get.find<TabCommunityController>().changePosition(postType);
       }
-      Get.back(result: true);
-      //   Get.snackbar('', '등록 되었습니다.',
-      //       colorText: Colors.white,
-      //       backgroundColor: Color(0xFF4B4B4B),
-      //       snackPosition: SnackPosition.BOTTOM,
-      //       margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(20)));
     }
+
+    Get.back(result: result);
   }
 
   void requestAdd() async {

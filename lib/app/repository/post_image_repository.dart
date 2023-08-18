@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart' hide MultipartFile, MediaType, FormData;
 
 ///dio랑 겹쳐서 빼버림
@@ -52,6 +53,7 @@ class PostImageRepository {
       return true;
     } catch (e) {
       print(e);
+      EasyLoading.dismiss();
       await Get.dialog(ErrorDialog("에러가 발생했습니다. 잠시 후 다시 시도해주세요."));
       return false;
     }
