@@ -24,6 +24,11 @@ class CommunityLinkAddController extends GetxController {
   }
 
   addLink() {
+    if (linkController.text.length > 1000) {
+      Get.dialog(ErrorDialog("1000자 이하만 가능합니다."));
+      return;
+    }
+
     if (_selectedLinkList.length >= 1) {
       linkController.text = "";
       Get.dialog(ErrorDialog("1개만 등록 가능합니다."));

@@ -1,6 +1,6 @@
 import 'package:baby_book/app/models/model_publisher.dart';
 import 'package:baby_book/app/repository/search_repository.dart';
-import 'package:baby_book/app/view/home/book/category_type.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +9,7 @@ import '../models/model_book_response.dart';
 import '../models/model_member.dart';
 import '../repository/member_repository.dart';
 import '../repository/paging_request.dart';
+import '../view/dialog/error_dialog.dart';
 import '../view/search/search_type.dart';
 
 class SearchScreenController extends GetxController {
@@ -119,7 +120,16 @@ class SearchScreenController extends GetxController {
     _bookList.addAll(list);
   }
 
-  search(String keyword, PagingRequest pagingRequest) async {
+  Future<bool> search(String keyword, PagingRequest pagingRequest) async {
+    if (keyword.length > 50) {
+      await Get.dialog(ErrorDialog("50자 이하로 검색해주세요."));
+      return false;
+    }
+    if (keyword == null || keyword.isEmpty) {
+      await Get.dialog(ErrorDialog("검색어를 입력해주세요."));
+      return false;
+    }
+
     loading = true;
 
     firstSearched = true;
@@ -127,10 +137,6 @@ class SearchScreenController extends GetxController {
     this.keyword = keyword;
 
     clearSearchResult();
-
-    if (keyword == null || keyword.isEmpty) {
-      return;
-    }
 
     bookList = await searchRepository.getBookListForBookName(keyword: keyword, pagingRequest: pagingRequest);
     if (searchType != SearchType.community) {
@@ -147,6 +153,7 @@ class SearchScreenController extends GetxController {
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;
     });
+    return true;
   }
 
   clearSearchResult() {

@@ -176,8 +176,16 @@ class CommunityAddController extends GetxController {
   }
 
   void requestAdd() async {
-    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+    if (titleController.text.length > 100) {
+      await Get.dialog(ErrorDialog("제목은 100자 이하로 입력 해주세요."));
+      return;
+    }
+    if (contentsController.text.length > 3000) {
+      await Get.dialog(ErrorDialog("내용은 3000자 이하로 입력 해주세요."));
+      return;
+    }
 
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
     var memberId = await PrefData.getMemberId();
     try {
       ModelPostRequest request = ModelPostRequest(

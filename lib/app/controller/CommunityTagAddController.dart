@@ -34,6 +34,10 @@ class CommunityTagAddController extends GetxController {
   }
 
   searchBook() async {
+    if (tagController.text.length > 50) {
+      await Get.dialog(ErrorDialog("50자 이하로 검색해주세요."));
+      return;
+    }
     ModelBookResponse selectedNewBook = await Get.toNamed(Routes.searchPath,
         parameters: {"keyword": tagController.text, "searchType": SearchType.community.code});
     addBookTag(selectedNewBook);

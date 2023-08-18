@@ -12,7 +12,6 @@ import '../../../base/color_data.dart';
 import '../../../base/constant.dart';
 import '../../../base/skeleton.dart';
 import '../../../base/widget_utils.dart';
-import '../../controller/CommunityTagAddController.dart';
 import '../../controller/SearchScreenController.dart';
 import '../../models/model_book_response.dart';
 import '../../models/model_member.dart';
