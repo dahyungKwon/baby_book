@@ -20,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../base/uuid_util.dart';
 import '../../controller/CommunityDetailController.dart';
@@ -366,9 +367,18 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
 
   GestureDetector selectedLinkList(ModelPost post) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         if (post.existExternalLink()) {
           print("post externalLink:${post.externalLink}");
+          final url = Uri.parse(
+            post.externalLink!,
+          );
+          if (await canLaunchUrl(url)) {
+            launchUrl(url);
+          } else {
+            // ignore: avoid_print
+            Get.dialog(ErrorDialog("네트워크 오류가 발생했습니다. 다시 시도해주세요."));
+          }
         }
       },
       child: SizedBox(
