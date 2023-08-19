@@ -130,7 +130,7 @@ class JoinScreen extends GetView<JoinController> {
           Expanded(
               child: getDefaultTextFiledWithLabel2(
             context,
-            "예) 동글이맘",
+            "예) 아기곰맘",
             Colors.black45.withOpacity(0.3),
             controller.nickNameController,
             Colors.grey,
