@@ -59,6 +59,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           // accentColor: Color(0xffBA379B).withOpacity(.6),
           // primaryColor: Color(0xffBA379B),
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          }),
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           hoverColor: Colors.transparent,
