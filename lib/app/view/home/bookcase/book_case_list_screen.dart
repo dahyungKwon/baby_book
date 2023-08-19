@@ -246,7 +246,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                         13,
                         modelMyBookResponse.myBook.holdType.color,
                         1,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                       // getHorSpace(FetchPixels.getPixelHeight(3)),
                     ],
@@ -375,7 +375,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                           modelMyBookResponse.myBook.inMonth != 0
                               ? Row(
                                   children: [
-                                    getCustomFont("시작", 12, secondMainColor, 1, fontWeight: FontWeight.w500),
+                                    getCustomFont("시작", 12, secondMainColor, 1, fontWeight: FontWeight.w600),
                                     getCustomFont(" ${modelMyBookResponse.myBook.inMonth}개월", 12, Colors.black87, 1,
                                         fontWeight: FontWeight.w500),
                                   ],
@@ -385,7 +385,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
                                   modelMyBookResponse.myBook.outMonth != 0
                               ? Row(
                                   children: [
-                                    getCustomFont("   종료", 12, secondMainColor, 1, fontWeight: FontWeight.w500),
+                                    getCustomFont("   종료", 12, secondMainColor, 1, fontWeight: FontWeight.w600),
                                     getCustomFont(" ${modelMyBookResponse.myBook.outMonth}개월", 12, Colors.black87, 1,
                                         fontWeight: FontWeight.w500)
                                   ],
