@@ -129,6 +129,7 @@ class CommunityDetailController extends GetxController {
   init() async {
     loading = true;
     commentController.text = "";
+    selectedBookTagList.clear();
 
     await getPost();
 
