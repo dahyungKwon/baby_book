@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:baby_book/app/view/home/tab/tab_book_case.dart';
 import 'package:baby_book/app/view/home/tab/tab_community.dart';
 import 'package:baby_book/app/view/home/tab/tab_home.dart';
@@ -13,6 +15,8 @@ import 'package:get/get.dart';
 import '../../../base/constant.dart';
 import '../../controller/HomeScreenController.dart';
 import 'package:flutter/foundation.dart' as foundation;
+
+import '../../routes/app_pages.dart';
 
 class HomeScreen extends GetView<HomeScreenController> {
   DateTime? currentBackPressTime;
@@ -41,6 +45,7 @@ class HomeScreen extends GetView<HomeScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    init();
     FetchPixels(context);
     return WillPopScope(
         onWillPop: onWillPop,
@@ -114,6 +119,39 @@ class HomeScreen extends GetView<HomeScreenController> {
                     ),
                   );
                 }))))));
+  }
+
+  init() async {
+    Timer(const Duration(seconds: 1), () async {
+      String sharedType = Get.parameters['sharedType'] ?? "NONE";
+
+      print("AppSchemeImpl HomeScreen switch : $sharedType");
+      switch (sharedType) {
+        case "BOOK":
+          {
+            print("AppSchemeImpl HomeScreen BOOK in : $sharedType");
+            controller.tabIndex = 0;
+            String? bookSetId = Get.parameters['bookSetId'];
+            print("AppSchemeImpl HomeScreen bookSetId : $bookSetId");
+            Get.toNamed(Routes.bookDetailPath, parameters: {'sharedType': sharedType!, 'bookSetId': bookSetId!});
+            break;
+          }
+        case "COMMUNITY":
+          {
+            print("AppSchemeImpl HomeScreen COMMUNITY in : $sharedType");
+            controller.tabIndex = 2;
+            String? postId = Get.parameters['postId'];
+            print("AppSchemeImpl HomeScreen postId : $postId");
+            Get.toNamed(Routes.communityDetailPath,
+                parameters: {'sharedType': sharedType!, 'postId': postId!, 'tag': 'share'});
+            break;
+          }
+        default:
+          {
+            break;
+          }
+      }
+    });
   }
 
   Future<bool> onWillPop() async {

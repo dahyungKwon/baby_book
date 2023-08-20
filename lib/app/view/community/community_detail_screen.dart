@@ -7,7 +7,6 @@ import 'package:baby_book/app/view/community/comment_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_detail_bottom_sheet.dart';
 import 'package:baby_book/app/view/community/post_type.dart';
 import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
-import 'package:baby_book/app/view/home/home_screen.dart';
 import 'package:baby_book/base/pref_data.dart';
 import 'package:baby_book/base/skeleton.dart';
 import 'package:baby_book/base/color_data.dart';
@@ -37,13 +36,11 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   FocusNode commentFocusNode = FocusNode();
   late final String? postId;
   late final String? uniqueTag;
-  late final bool sharedMode;
 
   CommunityDetailScreen({super.key}) {
     // Get.delete<CommunityDetailController>();
     postId = Get.parameters['postId']!;
     uniqueTag = getUuid();
-    sharedMode = Get.parameters['sharedType'] != null;
 
     Get.put(
         CommunityDetailController(
@@ -70,9 +67,6 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
         //   commentKeyboardDown(context);
         // });
       }));
-    } else if (sharedMode) {
-      print("AppSchemeImpl sharedMode :$sharedMode get off");
-      Get.off(() => HomeScreen(2));
     } else {
       Get.back(result: true);
     }

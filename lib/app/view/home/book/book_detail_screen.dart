@@ -28,7 +28,6 @@ import '../../../repository/comment_repository.dart';
 import '../../../routes/app_pages.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
-import '../home_screen.dart';
 import 'HoldType.dart';
 import 'UsedType.dart';
 import 'book_detail_bottom_sheet.dart';
@@ -39,7 +38,6 @@ class BookDetailScreen extends GetView<BookDetailController> {
   late final String? babyId;
   late final String? uniqueTag;
 
-  late bool sharedMode;
   var f = NumberFormat('###,###,###,###');
 
   BookDetailScreen({super.key}) {
@@ -61,12 +59,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
             bookSetId: bookSetId!,
             babyId: babyId),
         tag: uniqueTag);
-    sharedMode = Get.parameters['sharedType'] != null;
-    print("AppSchemeImpl BookDetailScreen : $bookSetId sharedType  : ${Get.parameters['sharedType']}");
   }
 
   @override
   String? get tag => uniqueTag;
+
+  backBtn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +73,13 @@ class BookDetailScreen extends GetView<BookDetailController> {
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
     return WillPopScope(
         onWillPop: () async {
-          if (sharedMode) {
-            print("AppSchemeImpl BookDetailScreen sharedMode :$sharedMode get off");
-            Get.off(() => HomeScreen(0));
-          } else {
-            Get.back(result: controller.myBookResponse);
-          }
+          // if (sharedMode) {
+          //   print("AppSchemeImpl BookDetailScreen sharedMode :$sharedMode get off");
+          //   Get.off(() => HomeScreen(0));
+          // } else {
+          //   Get.back(result: controller.myBookResponse);
+          // }
+          Get.back();
           return false;
         },
         child: Obx(() => controller.loading
@@ -238,12 +237,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-              if (sharedMode) {
-                print("AppSchemeImpl BookDetailScreen sharedMode :$sharedMode get off");
-                Get.off(() => HomeScreen(0));
-              } else {
-                Get.back();
-              }
+              Get.back();
             }),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
