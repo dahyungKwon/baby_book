@@ -64,7 +64,9 @@ class BookDetailScreen extends GetView<BookDetailController> {
   @override
   String? get tag => uniqueTag;
 
-  backBtn() {}
+  backBtn() async {
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,16 +74,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
     return WillPopScope(
-        onWillPop: () async {
-          // if (sharedMode) {
-          //   print("AppSchemeImpl BookDetailScreen sharedMode :$sharedMode get off");
-          //   Get.off(() => HomeScreen(0));
-          // } else {
-          //   Get.back(result: controller.myBookResponse);
-          // }
-          Get.back();
-          return false;
-        },
+        onWillPop: null,
         child: Obx(() => controller.loading
             ? const FullSizeSkeleton()
             : Scaffold(
@@ -162,14 +155,14 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                         // crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           getSvgImage(
-                                              controller.myBook
+                                              controller.isMyBook
                                                   ? controller.myBookResponse.myBook.holdType.image
                                                   : "add_bookcase.svg",
                                               width: FetchPixels.getPixelHeight(15),
                                               height: FetchPixels.getPixelHeight(20)),
                                           getHorSpace(FetchPixels.getPixelHeight(10)),
                                           getCustomFont(
-                                              controller.myBook
+                                              controller.isMyBook
                                                   ? controller.myBookResponse.myBook.holdType.desc
                                                   : "책장에 담기",
                                               16,
@@ -237,7 +230,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
           children: [
             getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                 Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () {
-              Get.back();
+              backBtn();
             }),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -254,7 +247,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
                   showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      builder: (_) => BookDetailBottomSheet(myBook: controller.myBook)).then((menu) {
+                      builder: (_) => BookDetailBottomSheet(isMyBook: controller.isMyBook)).then((menu) {
                     if (menu != null) {
                       switch (menu) {
                         case "책 공유하기":
@@ -503,8 +496,10 @@ class BookDetailScreen extends GetView<BookDetailController> {
         children: [
           buildTop(context, edgeInsets),
           Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)),
-          controller.myBook ? buildMyBook(context, edgeInsets) : Container(),
-          controller.myBook ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8)) : Container(),
+          controller.isMyBook ? buildMyBook(context, edgeInsets) : Container(),
+          controller.isMyBook
+              ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8))
+              : Container(),
           controller.hasAward ? buildAward(context, edgeInsets) : Container(),
           controller.hasAward
               ? Container(height: FetchPixels.getPixelHeight(15), color: Color(0xFFF5F6F8))

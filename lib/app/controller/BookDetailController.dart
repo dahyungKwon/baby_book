@@ -1,3 +1,4 @@
+import 'package:baby_book/app/controller/BookCaseController.dart';
 import 'package:baby_book/app/models/model_book_response.dart';
 import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/models/model_my_book.dart';
@@ -16,6 +17,7 @@ import '../models/model_my_book_response.dart';
 import '../models/model_post_tag.dart';
 import '../repository/paging_request.dart';
 import '../view/home/book/HoldType.dart';
+import 'BookCaseListController.dart';
 
 class BookDetailController extends GetxController {
   final BookRepository bookRepository;
@@ -53,11 +55,11 @@ class BookDetailController extends GetxController {
   set loading(value) => _loading.value = value;
 
   //내책에 포함된건지 여부
-  final _myBook = false.obs;
+  final _isMyBook = false.obs;
 
-  get myBook => _myBook.value;
+  get isMyBook => _isMyBook.value;
 
-  set myBook(value) => _myBook.value = value;
+  set isMyBook(value) => _isMyBook.value = value;
 
   //좋아요여부
   final _like = false.obs;
@@ -147,7 +149,7 @@ class BookDetailController extends GetxController {
     myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);
     // _book.refresh();
     // _myBookResponse.refresh();
-    myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
+    isMyBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
     like = book.liked;
     likeCount = book.modelBook.likeCount ?? 0;
 
@@ -180,7 +182,7 @@ class BookDetailController extends GetxController {
   Future<bool> removeMyBook() async {
     bool result = await myBookRepository.delete(myBookId: myBookResponse.myBook.myBookId);
     if (result) {
-      reloadMyBook();
+      reloadMyBook("remove", myBookResponse.myBook.myBookId, myBookResponse.myBook.memberId);
     }
 
     return result;
@@ -204,7 +206,7 @@ class BookDetailController extends GetxController {
     ));
 
     if (result != null) {
-      reloadMyBook();
+      reloadMyBook("add", myBookResponse.myBook.myBookId, myBookResponse.myBook.memberId);
       return true;
     } else {
       return false;
@@ -229,19 +231,36 @@ class BookDetailController extends GetxController {
         ));
 
     if (result != null) {
-      reloadMyBook();
+      reloadMyBook("modify", myBookResponse.myBook.myBookId, myBookResponse.myBook.memberId);
       return true;
     } else {
       return false;
     }
   }
 
-  reloadMyBook() async {
+  reloadMyBook(String type, String oldMyBookId, String oldMemberId) async {
     myBookResponse = await myBookRepository.get(bookSetId: bookSetId, babyId: babyId);
-    myBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
-
+    isMyBook = myBookResponse.myBook.myBookId != null && myBookResponse.myBook.myBookId != "";
     _myBookResponse.refresh();
-    _myBook.refresh();
+    _isMyBook.refresh();
+
+    switch (type) {
+      case "add":
+        {
+          Get.find<BookCaseListController>(tag: myBookResponse.myBook.memberId).addMyBook(myBookResponse);
+          break;
+        }
+      case "modify":
+        {
+          Get.find<BookCaseListController>(tag: myBookResponse.myBook.memberId).updateMyBook(myBookResponse);
+          break;
+        }
+      case "remove":
+        {
+          Get.find<BookCaseListController>(tag: oldMemberId).removeMyBook(oldMyBookId);
+          break;
+        }
+    }
   }
 
   requestComment() async {

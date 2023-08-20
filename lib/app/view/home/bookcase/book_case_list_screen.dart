@@ -6,7 +6,6 @@ import 'package:baby_book/app/repository/baby_repository.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
 import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/view/home/book/UsedType.dart';
-import 'package:baby_book/app/view/home/book/book_detail_bottom_sheet.dart';
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
@@ -19,14 +18,12 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../base/skeleton.dart';
-import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCaseListController.dart';
 import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
 import '../../dialog/error_dialog.dart';
 import '../../dialog/re_confirm_dialog.dart';
 import '../book/HoldType.dart';
-import '../book/ReviewType.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class BookCaseListScreen extends GetView<BookCaseListController> {
@@ -55,13 +52,15 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
 
   void initPageNumber() {
     ///캐시된게 있으면 맨 마지막 number를 넣어야함
-    if (controller.map.containsKey(holdType)) {
-      // 1 12345 -1 01234 /5 = 0 +1 => 1
-      // 2 678910 -1 56789 / 5 = 1 +1 => 2
-      pageNumber = (controller.map[holdType]!.length - 1) ~/ PagingRequest.defaultPageSize + 1;
-    } else {
-      pageNumber = 1;
-    }
+    // if (controller.map.containsKey(holdType)) {
+    //   // 1 12345 -1 01234 /5 = 0 +1 => 1
+    //   // 2 678910 -1 56789 / 5 = 1 +1 => 2
+    //   pageNumber = (controller.map[holdType]!.length - 1) ~/ PagingRequest.defaultPageSize + 1;
+    // } else {
+    //   pageNumber = 1;
+    // }
+
+    pageNumber = 1;
   }
 
   void plusPageNumber() {
@@ -125,12 +124,10 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             ModelMyBookResponse modelMyBookResponse = controller.myBookResponseList[index];
             return buildBookCaseItem(context, edgeInsets, modelMyBookResponse, index, () async {
               if (controller.myBookCase) {
-                ModelMyBookResponse result = await Get.toNamed(Routes.bookDetailPath, parameters: {
+                Get.toNamed(Routes.bookDetailPath, parameters: {
                   'bookSetId': modelMyBookResponse.myBook.bookSetId.toString(),
                   'babyId': modelMyBookResponse.myBook.babyId
                 });
-
-                controller.updateMyBook(index, result);
               }
             }, () {});
           },

@@ -25,7 +25,7 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   ModelBaby? selectedBaby; //대표아기
 
   ///map(로컬 캐시용)
-  Map<HoldType, List<ModelMyBookResponse>> map = {};
+  // Map<HoldType, List<ModelMyBookResponse>> map = {};
 
   List<HoldType> tabsList = HoldType.findListForTab();
 
@@ -94,15 +94,16 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
   }
 
   /// 첫 페이지 로딩 시 사용, 페이지 변경시에도 사용됨
-  getAllForInit(HoldType holdType) async {
+  getAllForInit(HoldType newHoldType) async {
     /// 캐시처리, all도 캐시 처리
-    if (map.containsKey(holdType)) {
-      _myBookResponseList.clear();
-      _myBookResponseList.addAll(map[holdType]!);
-      return;
-    }
+    // if (map.containsKey(holdType)) {
+    //   _myBookResponseList.clear();
+    //   _myBookResponseList.addAll(map[holdType]!);
+    //   return;
+    // }
+    holdType = newHoldType;
 
-    getAllForPullToRefresh(holdType);
+    getAllForPullToRefresh(newHoldType);
   }
 
   ///pull to refresh 시 사용
@@ -144,19 +145,19 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
 
   void _initList(HoldType holdType, List<ModelMyBookResponse> list) {
     // if (holdType != HoldType.all) {
-    if (map.containsKey(holdType)) {
-      map.remove(holdType);
-    }
-    map[holdType] = [];
-    map[holdType]!.addAll(list);
+    // if (map.containsKey(holdType)) {
+    //   map.remove(holdType);
     // }
+    // map[holdType] = [];
+    // map[holdType]!.addAll(list);
+    // // }
 
     _myBookResponseList.clear();
     _myBookResponseList.addAll(list);
   }
 
   void _addAll(HoldType holdType, List<ModelMyBookResponse> list) {
-    map[holdType]?.addAll(list);
+    // map[holdType]?.addAll(list);
     _myBookResponseList.addAll(list);
   }
 
@@ -164,11 +165,42 @@ class BookCaseListController extends GetxController with GetSingleTickerProvider
     return await myBookRepository.delete(myBookId: book.myBook.myBookId);
   }
 
-  updateMyBook(int index, ModelMyBookResponse book) {
-    if (book.myBook.holdType == HoldType.none) {
-      _myBookResponseList.removeAt(index);
-    } else {
-      _myBookResponseList[index].myBook = book.myBook;
+  addMyBook(ModelMyBookResponse book) {
+    myBookResponseList.insert(0, book);
+    _myBookResponseList.refresh();
+  }
+
+  updateMyBook(ModelMyBookResponse book) {
+    for (int i = 0; i < _myBookResponseList.length; i++) {
+      if (_myBookResponseList[i].myBook.myBookId == book.myBook.myBookId) {
+        if (book.myBook.holdType == HoldType.none || _changedHoldType(book.myBook.holdType)) {
+          _myBookResponseList.removeAt(i);
+        } else {
+          _myBookResponseList[i].myBook = book.myBook;
+        }
+        break;
+      }
+    }
+
+    _myBookResponseList.refresh();
+  }
+
+  bool _changedHoldType(HoldType newHoldType) {
+    if (holdType == HoldType.all) {
+      return false;
+    }
+    if (holdType == newHoldType) {
+      return false;
+    }
+    return true;
+  }
+
+  removeMyBook(String myBookId) {
+    for (int i = 0; i < _myBookResponseList.length; i++) {
+      if (_myBookResponseList[i].myBook.myBookId == myBookId) {
+        _myBookResponseList.removeAt(i);
+        break;
+      }
     }
 
     _myBookResponseList.refresh();
