@@ -97,4 +97,33 @@ class CommunityListController extends GetxController {
 
     // _postList.refresh(); 이방법도 존재하나 obx사용을 위해 사용하지 않고 스터디를 위해 해당 코드 남겨둠
   }
+
+  updateLike(PostType postType, String postId, bool liked, int likeCount) {
+    ModelPost? targetInMap = findModelPost(map[postType], postId);
+    if (targetInMap != null) {
+      targetInMap.liked = liked;
+      targetInMap.likeCount = likeCount;
+    }
+
+    ModelPost? targetInList = findModelPost(_postList, postId);
+    if (targetInList != null) {
+      targetInList.liked = liked;
+      targetInList.likeCount = likeCount;
+      _postList.refresh();
+    }
+  }
+
+  ModelPost? findModelPost(List<ModelPost>? list, String targetPostId) {
+    if (list == null) {
+      return null;
+    }
+
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].postId == targetPostId) {
+        return list[i];
+      }
+    }
+
+    return null;
+  }
 }

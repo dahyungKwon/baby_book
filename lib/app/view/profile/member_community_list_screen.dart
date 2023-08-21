@@ -113,11 +113,7 @@ class MemberCommunityListScreen extends GetView<MemberCommunityListController> {
           itemBuilder: (context, index) {
             ModelPost modelPost = controller.postList[index];
             return buildPostListItem(modelPost, context, index, () async {
-              bool result = await Get.toNamed(Routes.communityDetailPath,
-                  parameters: {'postId': modelPost.postId!, 'tag': 'profile'});
-              if (result) {
-                onRefresh();
-              }
+              Get.toNamed(Routes.communityDetailPath, parameters: {'postId': modelPost.postId!, 'tag': 'profile'});
             }, () {
               //delete function
             });

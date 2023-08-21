@@ -1,3 +1,4 @@
+import 'package:baby_book/app/controller/CommunityListController.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:baby_book/app/repository/post_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../../base/pref_data.dart';
-import '../exception/exception_invalid_member.dart';
 import '../models/model_book_response.dart';
 import '../models/model_comment_response.dart';
 import '../models/model_member.dart';
@@ -13,7 +13,6 @@ import '../models/model_post.dart';
 import '../repository/book_repository.dart';
 import '../repository/member_repository.dart';
 import '../repository/post_feedback_repository.dart';
-import '../routes/app_pages.dart';
 import '../view/dialog/error_dialog.dart';
 
 class CommunityDetailController extends GetxController {
@@ -175,6 +174,7 @@ class CommunityDetailController extends GetxController {
         liked = false;
         post.liked = false;
         post.likeCount = post.likeCount - 1;
+        Get.find<CommunityListController>().updateLike(post.postType, post.postId, liked, post.likeCount);
       }
     } else {
       bool result = await postFeedbackRepository.like(postId: postId);
@@ -182,6 +182,7 @@ class CommunityDetailController extends GetxController {
         liked = true;
         post.liked = true;
         post.likeCount = post.likeCount + 1;
+        Get.find<CommunityListController>().updateLike(post.postType, post.postId, liked, post.likeCount);
       }
     }
   }
