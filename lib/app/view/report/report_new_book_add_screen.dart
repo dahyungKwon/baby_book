@@ -31,27 +31,22 @@ class ReportNewBookAddScreen extends GetView<ReportNewBookAddController> {
     );
 
     FetchPixels(context);
-    return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: backGroundColor,
-          body: SafeArea(
-              child: Obx(
-            () => Container(
-              color: Colors.white,
-              // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
-              child: controller.loading
-                  ? const FullSizeSkeleton()
-                  : Column(
-                      children: [buildToolbar(context), buildExpand(context)],
-                    ),
-            ),
-          )),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: backGroundColor,
+      body: SafeArea(
+          child: Obx(
+        () => Container(
+          color: Colors.white,
+          // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
+          child: controller.loading
+              ? const FullSizeSkeleton()
+              : Column(
+                  children: [buildToolbar(context), buildExpand(context)],
+                ),
         ),
-        onWillPop: () async {
-          Get.back();
-          return false;
-        });
+      )),
+    );
   }
 
   Expanded buildExpand(BuildContext context) {
