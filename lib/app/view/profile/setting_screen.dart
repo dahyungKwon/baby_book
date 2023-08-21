@@ -29,27 +29,22 @@ class SettingScreen extends GetView<SettingController> {
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
 
-    return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: Obx(() => SafeArea(
-                  child: controller.loading
-                      ? const FullSizeSkeleton()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildToolbar(context, edgeInsets),
-                            getVerSpace(FetchPixels.getPixelHeight(5)),
-                            buildBody(context, edgeInsets),
-                            // buildBody(context, edgeInsets)
-                          ],
-                        ),
-                ))));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: Obx(() => SafeArea(
+              child: controller.loading
+                  ? const FullSizeSkeleton()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildToolbar(context, edgeInsets),
+                        getVerSpace(FetchPixels.getPixelHeight(5)),
+                        buildBody(context, edgeInsets),
+                        // buildBody(context, edgeInsets)
+                      ],
+                    ),
+            )));
   }
 
   Widget buildToolbar(BuildContext context, EdgeInsets edgeInsets) {

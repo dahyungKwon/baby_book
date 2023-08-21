@@ -16,21 +16,20 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
-    return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: backGroundColor,
-          body: SafeArea(
-            child: Column(
-              children: [
-                buildTop(context),
-                // getVerSpace(FetchPixels.getPixelHeight(30)),
-                Expanded(
-                    child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                            vertical: FetchPixels.getPixelWidth(15), horizontal: FetchPixels.getPixelWidth(25)),
-                        child: Column(children: [
-                          getMultilineCustomFont("""1. 개인정보 처리방침이란?
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: backGroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            buildTop(context),
+            // getVerSpace(FetchPixels.getPixelHeight(30)),
+            Expanded(
+                child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                        vertical: FetchPixels.getPixelWidth(15), horizontal: FetchPixels.getPixelWidth(25)),
+                    child: Column(children: [
+                      getMultilineCustomFont("""1. 개인정보 처리방침이란?
 아기곰책육아(이하"회사")는 이용자의 ‘동의를 기반으로 개인정보를 수집·이용 및 제공’하고 있으며, ‘이용자의 권리 (개인정보 자기결정권)를 적극적으로 보장’합니다.
 회사는 정보통신서비스제공자가 준수하여야 하는 대한민국의 관계 법령 및 개인정보보호 규정, 가이드라인을 준수하고 있습니다.
 “개인정보처리방침”이란 이용자의 소중한 개인정보를 보호함으로써 이용자가 안심하고 서비스를 이용할 수 있도록 회사가 준수해야 할 지침을 의미합니다.
@@ -135,15 +134,11 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
 - 시행일자: 2023년 08월 01일
 
 """, 16, Colors.black, fontWeight: FontWeight.w400, txtHeight: 1.3)
-                        ])))
-              ],
-            ),
-          ),
+                    ])))
+          ],
         ),
-        onWillPop: () async {
-          Get.back();
-          return false;
-        });
+      ),
+    );
   }
 
   Widget buildTop(BuildContext context) {

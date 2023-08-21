@@ -16,21 +16,20 @@ class _ServicePolicyScreenState extends State<ServicePolicyScreen> {
   @override
   Widget build(BuildContext context) {
     FetchPixels(context);
-    return WillPopScope(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: backGroundColor,
-          body: SafeArea(
-            child: Column(
-              children: [
-                buildTop(context),
-                // getVerSpace(FetchPixels.getPixelHeight(30)),
-                Expanded(
-                    child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                            vertical: FetchPixels.getPixelWidth(15), horizontal: FetchPixels.getPixelWidth(25)),
-                        child: Column(children: [
-                          getMultilineCustomFont("""제1장 총칙
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: backGroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            buildTop(context),
+            // getVerSpace(FetchPixels.getPixelHeight(30)),
+            Expanded(
+                child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                        vertical: FetchPixels.getPixelWidth(15), horizontal: FetchPixels.getPixelWidth(25)),
+                    child: Column(children: [
+                      getMultilineCustomFont("""제1장 총칙
 
 제1조 (목적)
 이 약관은 아이곰컴퍼니(이하 “회사”라 한다)가 운영하는 아이곰책육아 어플리케이션에서 제공하는 모바일 App 관련 서비스(이하 “서비스”라 한다)를 이용함에 있어 아이곰책육아와 이용자의 권리/의무 및 책임사항을 규정함을 목적으로 한다.
@@ -191,15 +190,11 @@ class _ServicePolicyScreenState extends State<ServicePolicyScreen> {
 2023년 8월 1일
 
 """, 16, Colors.black, fontWeight: FontWeight.w400, txtHeight: 1.3)
-                        ])))
-              ],
-            ),
-          ),
+                    ])))
+          ],
         ),
-        onWillPop: () async {
-          Get.back();
-          return false;
-        });
+      ),
+    );
   }
 
   Widget buildTop(BuildContext context) {
