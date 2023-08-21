@@ -21,18 +21,22 @@ import 'package:flutter/foundation.dart' as foundation;
 
 class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
   FocusNode commentFocusNode = FocusNode();
+  late final int? bookSetId;
   late final String? commentTargetId;
   late final String? uniqueTag;
   late final String? bookName;
   late final bool isCommentFocus;
 
   BookCommentDetailScreen({super.key}) {
+    bookSetId = int.tryParse(Get.parameters['bookSetId']!);
     commentTargetId = Get.parameters['commentTargetId']!;
     bookName = Get.parameters['bookName']!;
     isCommentFocus = Get.parameters['isCommentFocus'] == "true";
     uniqueTag = getUuid();
     // Get.delete<CommentDetailController>();
-    Get.put(BookCommentDetailController(commentRepository: CommentRepository(), commentTargetId: commentTargetId!),
+    Get.put(
+        BookCommentDetailController(
+            commentRepository: CommentRepository(), bookSetId: bookSetId!, commentTargetId: commentTargetId!),
         tag: uniqueTag);
   }
 
@@ -45,13 +49,8 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
     if (controller.modifyCommentMode) {
       await Get.dialog(ReConfirmDialog("코멘트 수정을 종료하시겠습니까?", "네", "아니오", () async {
         controller.exitModifyCommentMode();
-        Get.back(result: controller.changedComment);
-        Future.delayed(const Duration(milliseconds: 500), () {
-          commentKeyboardDown(context);
-        });
+        Get.back();
       }));
-    } else {
-      Get.back(result: controller.changedComment);
     }
   }
 
@@ -61,12 +60,14 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
     FetchPixels(context);
-    return WillPopScope(
-        onWillPop: () async {
-          backBtn(context);
-          return false;
-        },
-        child: Obx(() => Scaffold(
+    return Obx(() => WillPopScope(
+        onWillPop: controller.modifyCommentMode
+            ? () async {
+                backBtn(context);
+                return false;
+              }
+            : null,
+        child: Scaffold(
             resizeToAvoidBottomInset: false,
             // backgroundColor: backGroundColor,
             bottomNavigationBar: controller.loading
@@ -81,6 +82,9 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
                     color: Colors.black87,
                     backgroundColor: Colors.white,
                     onRefresh: () async {
+                      if (controller.modifyCommentMode) {
+                        return;
+                      }
                       controller.init();
                     },
                     child: Column(children: [buildTop(context), buildBody(context, controller.commentList)]))))));

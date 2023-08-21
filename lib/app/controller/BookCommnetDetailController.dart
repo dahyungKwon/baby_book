@@ -1,3 +1,4 @@
+import 'package:baby_book/app/controller/BookDetailController.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,6 +17,7 @@ class BookCommentDetailController extends GetxController {
   ScrollController scrollController = ScrollController();
 
   String commentTargetId;
+  int bookSetId;
 
   //loading
   final _loading = true.obs;
@@ -49,7 +51,8 @@ class BookCommentDetailController extends GetxController {
 
   bool changedComment = false;
 
-  BookCommentDetailController({required this.commentRepository, required this.commentTargetId}) {
+  BookCommentDetailController(
+      {required this.commentRepository, required this.bookSetId, required this.commentTargetId}) {
     assert(commentRepository != null);
 
     commentController.addListener(_titleListener);
@@ -112,6 +115,7 @@ class BookCommentDetailController extends GetxController {
       });
 
       changedComment = true;
+      Get.find<BookDetailController>(tag: bookSetId.toString()).requestComment();
 
       return true;
     } else {
@@ -152,6 +156,7 @@ class BookCommentDetailController extends GetxController {
       EasyLoading.dismiss();
 
       changedComment = true;
+      Get.find<BookDetailController>(tag: bookSetId.toString()).requestComment();
       return true;
     } else {
       EasyLoading.dismiss();
@@ -163,6 +168,7 @@ class BookCommentDetailController extends GetxController {
     bool result = await commentRepository.delete(commentId: commentId);
     if (result) {
       changedComment = true;
+      Get.find<BookDetailController>(tag: bookSetId.toString()).requestComment();
     }
 
     return result;

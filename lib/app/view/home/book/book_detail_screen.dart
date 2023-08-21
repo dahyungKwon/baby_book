@@ -20,7 +20,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../base/color_data.dart';
 import '../../../../base/pref_data.dart';
 import '../../../../base/skeleton.dart';
-import '../../../../base/uuid_util.dart';
 import '../../../models/model_comment_response.dart';
 import '../../../models/model_kakao_link_template.dart';
 import '../../../repository/book_repository.dart';
@@ -48,7 +47,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
 
     bookSetId = int.parse(bookId);
     babyId = Get.parameters['babyId'];
-    uniqueTag = getUuid();
+    uniqueTag = bookSetId.toString();
 
     Get.put(
         BookDetailController(
@@ -411,14 +410,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
                           ))),
                   GestureDetector(
                       onTap: () async {
-                        bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+                        Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+                          'bookSetId': controller.bookSetId!.toString(),
                           'commentTargetId': controller.bookSetCommentId!,
                           'bookName': controller.book.modelBook.name,
                           'isCommentFocus': false.toString()
                         });
-                        if (changed) {
-                          controller.requestComment();
-                        }
                       },
                       child: Container(
                           width: FetchPixels.getPixelHeight(100),
@@ -870,15 +867,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
       GestureDetector(
           onTap: () async {
             print("comment tab");
-            bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+            Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+              'bookSetId': controller.bookSetId!.toString(),
               'commentTargetId': controller.bookSetCommentId!,
               'bookName': controller.book.modelBook.name,
               'isCommentFocus': false.toString()
             });
-
-            if (changed) {
-              controller.requestComment();
-            }
           },
           child: Container(
               margin: EdgeInsets.only(top: FetchPixels.getPixelHeight(5), bottom: FetchPixels.getPixelHeight(5)),
@@ -924,14 +918,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
         buildComment(context, controller.commentList),
         getVerSpace(FetchPixels.getPixelHeight(20)),
         getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () async {
-          bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+          Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+            'bookSetId': controller.bookSetId!.toString(),
             'commentTargetId': controller.bookSetCommentId!,
             'bookName': controller.book.modelBook.name,
             'isCommentFocus': true.toString()
           });
-          if (changed) {
-            controller.requestComment();
-          }
         }, 14,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(40),
@@ -1029,14 +1021,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
         ),
         getVerSpace(FetchPixels.getPixelHeight(10)),
         getButton(context, secondMainColor, "한줄 코멘트 쓰기", Colors.white, () async {
-          bool changed = await Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+          Get.toNamed(Routes.bookCommentDetailPath, parameters: {
+            'bookSetId': controller.bookSetId!.toString(),
             'commentTargetId': controller.bookSetCommentId!,
             'bookName': controller.book.modelBook.name,
             'isCommentFocus': true.toString()
           });
-          if (changed) {
-            controller.requestComment();
-          }
         }, 14,
             weight: FontWeight.w600,
             buttonHeight: FetchPixels.getPixelHeight(40),
