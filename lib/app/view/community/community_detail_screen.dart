@@ -21,7 +21,6 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../base/uuid_util.dart';
 import '../../controller/CommunityDetailController.dart';
 import '../../controller/CommunityListController.dart';
 import '../../controller/TabCommunityController.dart';
