@@ -36,10 +36,7 @@ class BookCommunityScreen extends GetView<BookCommunityController> {
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
 
     return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
+        onWillPop: null,
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: backGroundColor,
