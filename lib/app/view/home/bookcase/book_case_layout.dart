@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
-import '../../../../base/skeleton.dart';
 import '../../../../base/widget_utils.dart';
 import '../../../controller/BookCaseController.dart';
-import '../book/HoldType.dart';
-import 'book_case_list_screen.dart';
 
 Widget buildBookCaseLayout(BuildContext context, BookCaseController controller) {
   return Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

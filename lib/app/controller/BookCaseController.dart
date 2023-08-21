@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import '../view/home/book/HoldType.dart';
+import 'BookCaseListController.dart';
 
 class BookCaseController extends GetxController with GetSingleTickerProviderStateMixin {
   late String? memberId;
@@ -50,6 +51,9 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
     String? myId = await PrefData.getMemberId();
     memberId = memberId ?? myId;
     myBookCase = myId == memberId;
+
+    ///이 방법 말고는 없는가..?
+    Get.delete<BookCaseListController>(tag: memberId);
     widgetList = tabsList.map((e) => BookCaseListScreen(memberId: memberId, holdType: e)).toList();
 
     Future.delayed(const Duration(milliseconds: 500), () {
