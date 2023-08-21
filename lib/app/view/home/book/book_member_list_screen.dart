@@ -104,8 +104,13 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
           itemCount: controller.memberList.length,
           itemBuilder: (context, index) {
             ModelMyBookMemberBody member = controller.memberList[index];
-            return buildMemberItem(member, context, index, () {
-              Get.toNamed(Routes.profilePath, parameters: {'memberId': member.memberId});
+            bool me = member.memberId == controller.myMemberId;
+            return buildMemberItem(member, context, index, me, () {
+              if (me) {
+                Get.offAllNamed(Routes.tabProfilePath);
+              } else {
+                Get.toNamed(Routes.profilePath, parameters: {'memberId': member.memberId});
+              }
             });
           },
         ));
@@ -115,6 +120,7 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
     ModelMyBookMemberBody member,
     BuildContext context,
     int index,
+    bool me,
     Function clickFunction,
   ) {
     return GestureDetector(
@@ -122,7 +128,7 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
         clickFunction();
       },
       child: Container(
-        height: FetchPixels.getPixelHeight(80),
+        height: FetchPixels.getPixelHeight(70),
         margin: EdgeInsets.only(bottom: FetchPixels.getPixelHeight(1)),
         padding:
             EdgeInsets.symmetric(vertical: FetchPixels.getPixelHeight(12), horizontal: FetchPixels.getPixelWidth(15)),
@@ -142,7 +148,7 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
                       child: Row(children: [
                     getHorSpace(FetchPixels.getPixelWidth(10)),
                     getAssetImage(member.gender == GenderType.man ? "man_bear3.png" : "woman_bear3.png",
-                        FetchPixels.getPixelWidth(50), FetchPixels.getPixelWidth(50)),
+                        FetchPixels.getPixelWidth(40), FetchPixels.getPixelWidth(40)),
                     getHorSpace(FetchPixels.getPixelWidth(15)),
                     Expanded(
                       flex: 1,
@@ -156,8 +162,16 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
                           ),
                           Row(children: [
                             Expanded(
-                                child: getCustomFont(member.nickName ?? "", 16, Colors.black, 1,
-                                    fontWeight: FontWeight.w500)),
+                                child: me
+                                    ? Row(
+                                        children: [
+                                          getCustomFont(member.nickName ?? "", 14, Colors.black87, 1,
+                                              fontWeight: FontWeight.w500),
+                                          getCustomFont("*" ?? "", 14, Colors.red, 1, fontWeight: FontWeight.w400)
+                                        ],
+                                      )
+                                    : getCustomFont(member.nickName ?? "", 14, Colors.black87, 1,
+                                        fontWeight: FontWeight.w500)),
                             Expanded(
                               flex: 1,
                               child: getHorSpace(0),
@@ -166,7 +180,7 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
                           getVerSpace(FetchPixels.getPixelHeight(5)),
                           getCustomFont(
                             member.getBirthdayToString(),
-                            13,
+                            12,
                             Colors.black38,
                             1,
                             fontWeight: FontWeight.w400,

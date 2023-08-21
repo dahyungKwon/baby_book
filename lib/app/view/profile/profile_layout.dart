@@ -7,6 +7,7 @@ import '../../../base/kakao_login_util.dart';
 import '../../../base/resizer/fetch_pixels.dart';
 import '../../../base/skeleton.dart';
 import '../../../base/widget_utils.dart';
+import '../../controller/HomeScreenController.dart';
 import '../../routes/app_pages.dart';
 
 Widget buildProfileLayout(BuildContext context, bool loading, ModelMember member, bool myProfile, String babyToString) {
@@ -115,7 +116,8 @@ Widget _buildContents(BuildContext context, ModelMember member) {
 Widget _bookCaseButton(BuildContext context, ModelMember member, bool myProfile) {
   return getButtonWithIcon(context, Colors.white, "책장", Colors.black, () {
     if (myProfile) {
-      Get.offAllNamed(Routes.tabBookCasePath);
+      Get.find<HomeScreenController>().tabIndex = 1;
+      // Get.offAllNamed(Routes.tabBookCasePath);
     } else {
       Get.toNamed(Routes.bookCasePath, parameters: {'memberId': member.memberId!});
     }

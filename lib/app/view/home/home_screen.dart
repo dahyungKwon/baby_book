@@ -77,6 +77,8 @@ class HomeScreen extends GetView<HomeScreenController> {
                             screenName: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenName",
                             screenClass: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenClass");
 
+                        //책장일때
+                        // if (selectedTabIndex == 1) {}
                         controller.tabIndex = selectedTabIndex;
                       },
                       child: Center(

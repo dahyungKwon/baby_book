@@ -1,16 +1,12 @@
 import 'package:baby_book/app/models/model_post.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
-import 'package:baby_book/app/view/profile/member_post_type.dart';
 import 'package:baby_book/base/skeleton.dart';
-import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/resizer/fetch_pixels.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import 'package:uuid/uuid.dart';
 
 import '../../../../base/uuid_util.dart';
 import '../../../controller/BookCommunityListController.dart';

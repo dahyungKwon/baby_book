@@ -2,6 +2,7 @@ import 'package:baby_book/app/repository/my_book_repository.dart';
 import 'package:baby_book/app/repository/paging_request.dart';
 import 'package:get/get.dart';
 
+import '../../base/pref_data.dart';
 import '../models/model_my_book_member_body.dart';
 import '../models/model_my_book_member_response.dart';
 
@@ -23,6 +24,8 @@ class BookMemberListController extends GetxController {
 
   set loading(value) => _loading.value = value;
 
+  late String? myMemberId;
+
   BookMemberListController({required this.myBookRepository, required this.bookId}) {
     assert(myBookRepository != null);
   }
@@ -30,6 +33,7 @@ class BookMemberListController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    myMemberId = await PrefData.getMemberId();
     getAllForInit();
   }
 

@@ -4,6 +4,9 @@ import 'package:baby_book/base/pref_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import '../repository/baby_repository.dart';
+import '../repository/member_repository.dart';
+import '../repository/my_book_repository.dart';
 import '../view/home/book/HoldType.dart';
 import 'BookCaseListController.dart';
 
@@ -54,7 +57,7 @@ class BookCaseController extends GetxController with GetSingleTickerProviderStat
 
     ///이 방법 말고는 없는가..?
     Get.delete<BookCaseListController>(tag: memberId);
-    widgetList = tabsList.map((e) => BookCaseListScreen(memberId: memberId, holdType: e)).toList();
+    widgetList = tabsList.map((e) => BookCaseListScreen(memberId: memberId!, holdType: e)).toList();
 
     Future.delayed(const Duration(milliseconds: 500), () {
       loading = false;

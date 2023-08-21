@@ -34,7 +34,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
   int pageNumber = 1;
   var f = NumberFormat('###,###,###,###');
 
-  BookCaseListScreen({required String? memberId, required this.holdType, super.key}) {
+  BookCaseListScreen({required this.memberId, required this.holdType, super.key}) {
     uniqueTag = memberId;
     Get.put(
         BookCaseListController(
@@ -44,6 +44,7 @@ class BookCaseListScreen extends GetView<BookCaseListController> {
             memberId: memberId,
             holdType: holdType),
         tag: uniqueTag);
+
     refreshController = RefreshController(initialRefresh: false);
   }
 
