@@ -31,26 +31,21 @@ class PublisherListScreen extends GetView<PublisherListController> {
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
 
-    return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: SafeArea(
-                child: Obx(() => Column(
-                      children: [
-                        buildToolbar(context),
-                        getVerSpace(FetchPixels.getPixelHeight(10)),
-                        controller.loading
-                            ? const Expanded(child: ListSkeleton())
-                            : controller.publisherList.length < 1
-                                ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
-                                : Expanded(child: draw())
-                      ],
-                    )))));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: SafeArea(
+            child: Obx(() => Column(
+                  children: [
+                    buildToolbar(context),
+                    getVerSpace(FetchPixels.getPixelHeight(10)),
+                    controller.loading
+                        ? const Expanded(child: ListSkeleton())
+                        : controller.publisherList.length < 1
+                            ? Expanded(child: getPaddingWidget(edgeInsets, nullListView(context)))
+                            : Expanded(child: draw())
+                  ],
+                ))));
   }
 
   Widget buildToolbar(BuildContext context) {
