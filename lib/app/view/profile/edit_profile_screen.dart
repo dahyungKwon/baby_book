@@ -30,27 +30,22 @@ class EditProfileScreen extends GetView<EditProfileController> {
     FetchPixels(context);
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
-    return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: backGroundColor,
-            body: Obx(
-              () => SafeArea(
-                child: controller.loading
-                    ? const FullSizeSkeleton()
-                    : Column(
-                        children: [
-                          buildToolbar(context),
-                          getVerSpace(FetchPixels.getPixelHeight(10)),
-                          buildMainArea(context, edgeInsets, defHorSpace)
-                        ],
-                      ),
-              ),
-            )));
+    return Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: backGroundColor,
+        body: Obx(
+          () => SafeArea(
+            child: controller.loading
+                ? const FullSizeSkeleton()
+                : Column(
+                    children: [
+                      buildToolbar(context),
+                      getVerSpace(FetchPixels.getPixelHeight(10)),
+                      buildMainArea(context, edgeInsets, defHorSpace)
+                    ],
+                  ),
+          ),
+        ));
   }
 
   Widget buildToolbar(BuildContext context) {
