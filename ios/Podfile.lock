@@ -228,9 +228,9 @@ SPEC CHECKSUMS:
   kakao_flutter_sdk_common: fc550ec16c85451e874d5304d2e1c540a221f5cb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
-  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
-  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   smart_auth: 4bedbc118723912d0e45a07e8ab34039c19e04f2
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
@@ -238,4 +238,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: a4e8b4206910edd9a1b6e23f8ed60d7bdb3dd91f
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
