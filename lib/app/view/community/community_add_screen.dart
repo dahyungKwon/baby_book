@@ -53,38 +53,32 @@ class CommunityAddScreen extends GetView<CommunityAddController> {
     );
 
     FetchPixels(context);
-    return WillPopScope(
-        child: Listener(
-            onPointerUp: (_) {
-              if (Platform.isIOS) {
-                FocusScopeNode currentFocus = FocusScope.of(context);
-                if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                }
-              }
-            },
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              backgroundColor: backGroundColor,
-              bottomNavigationBar: buildBottom(context),
-              body: SafeArea(
-                  child: Obx(
-                () => Container(
-                  color: Colors.white,
-                  // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
-                  child: controller.loading
-                      ? const FullSizeSkeleton()
-                      : Column(
-                          children: [buildToolbar(context), buildExpand(context)],
-                        ),
-                ),
-              )),
-            )),
-        onWillPop: () async {
-          EasyLoading.dismiss();
-          Get.back();
-          return false;
-        });
+    return Listener(
+        onPointerUp: (_) {
+          if (Platform.isIOS) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          }
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: backGroundColor,
+          bottomNavigationBar: buildBottom(context),
+          body: SafeArea(
+              child: Obx(
+            () => Container(
+              color: Colors.white,
+              // padding: EdgeInsets.symmetric(horizontal: FetchPixels.getDefaultHorSpace(context)),
+              child: controller.loading
+                  ? const FullSizeSkeleton()
+                  : Column(
+                      children: [buildToolbar(context), buildExpand(context)],
+                    ),
+            ),
+          )),
+        ));
   }
 
   Expanded buildExpand(BuildContext context) {

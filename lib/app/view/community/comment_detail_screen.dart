@@ -53,8 +53,6 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
         //   commentKeyboardDown(context);
         // });
       }));
-    } else {
-      Get.back(result: controller.changed);
     }
   }
 
@@ -64,12 +62,14 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
     FetchPixels(context);
-    return WillPopScope(
-        onWillPop: () async {
-          backBtn(context);
-          return false;
-        },
-        child: Obx(() => Scaffold(
+    return Obx(() => WillPopScope(
+        onWillPop: controller.modifyCommentMode
+            ? () async {
+                backBtn(context);
+                return false;
+              }
+            : null,
+        child: Scaffold(
             resizeToAvoidBottomInset: false,
             // backgroundColor: backGroundColor,
             bottomNavigationBar: controller.loading
@@ -86,6 +86,9 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
                         color: Colors.black87,
                         backgroundColor: Colors.white,
                         onRefresh: () async {
+                          if (controller.modifyCommentMode) {
+                            return;
+                          }
                           controller.init();
                         },
                         child: Column(children: [buildTop(context), buildBody(context, controller.commentList)]))))));
@@ -220,25 +223,35 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
                 commentMenuBtnColor,
                 FetchPixels.getPixelHeight(15),
                 FetchPixels.getPixelHeight(15),
-                () {
-                  showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
-                      .then((menu) {
-                    if (menu != null) {
-                      switch (menu) {
-                        case "수정하기":
-                          {
-                            clickedModifyComment(context, comment);
-                            // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
-                            break;
-                          }
-                        case "삭제하기":
-                          {
-                            clickedRemoveComment(comment);
-                            break;
-                          }
+                () async {
+                  if (controller.modifyCommentMode) {
+                    await Get.dialog(ReConfirmDialog("코멘트 수정을 종료하시겠습니까?", "네", "아니오", () async {
+                      controller.exitModifyCommentMode();
+                      Get.back();
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        commentKeyboardDown(context);
+                      });
+                    }));
+                  } else {
+                    showModalBottomSheet(
+                        context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet()).then((menu) {
+                      if (menu != null) {
+                        switch (menu) {
+                          case "수정하기":
+                            {
+                              clickedModifyComment(context, comment);
+                              // Get.toNamed("${Routes.communityAddPath}?postId=${controller.postId}");
+                              break;
+                            }
+                          case "삭제하기":
+                            {
+                              clickedRemoveComment(comment);
+                              break;
+                            }
+                        }
                       }
-                    }
-                  });
+                    });
+                  }
                 },
               )
       ]),

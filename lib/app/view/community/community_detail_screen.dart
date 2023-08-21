@@ -40,7 +40,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
   CommunityDetailScreen({super.key}) {
     // Get.delete<CommunityDetailController>();
     postId = Get.parameters['postId']!;
-    uniqueTag = getUuid();
+    uniqueTag = postId;
 
     Get.put(
         CommunityDetailController(
@@ -78,34 +78,29 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
       horizontal: FetchPixels.getDefaultHorSpace(context),
     );
     FetchPixels(context);
-    return WillPopScope(
-        onWillPop: () async {
-          backBtn();
-          return false;
-        },
-        child: Obx(() => Scaffold(
-            resizeToAvoidBottomInset: false,
-            // backgroundColor: backGroundColor,
-            bottomNavigationBar: controller.loading
-                ? Container(
-                    height: 10,
-                  )
-                : Padding(
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: buildBottom(context)),
-            body: SafeArea(
-                child: controller.loading
-                    ? const FullSizeSkeleton()
-                    : RefreshIndicator(
-                        color: Colors.black87,
-                        backgroundColor: Colors.white,
-                        onRefresh: () async {
-                          controller.init();
-                        },
-                        child: Column(children: [
-                          buildTop(context, controller.post),
-                          buildBody(context, controller.post, controller.commentList)
-                        ]))))));
+    return Obx(() => Scaffold(
+        resizeToAvoidBottomInset: false,
+        // backgroundColor: backGroundColor,
+        bottomNavigationBar: controller.loading
+            ? Container(
+                height: 10,
+              )
+            : Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: buildBottom(context)),
+        body: SafeArea(
+            child: controller.loading
+                ? const FullSizeSkeleton()
+                : RefreshIndicator(
+                    color: Colors.black87,
+                    backgroundColor: Colors.white,
+                    onRefresh: () async {
+                      controller.init();
+                    },
+                    child: Column(children: [
+                      buildTop(context, controller.post),
+                      buildBody(context, controller.post, controller.commentList)
+                    ])))));
   }
 
   Widget buildTop(BuildContext context, ModelPost post) {
@@ -557,16 +552,13 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
           getHorSpace(FetchPixels.getPixelHeight(10)),
           getSimpleTextButton("답글 쓰기", 12, Colors.black54, commentMenuBtnColor, FontWeight.w400,
               FetchPixels.getPixelWidth(75), FetchPixels.getPixelHeight(25), () async {
-            bool changed = await Get.toNamed(Routes.commentDetailPath, parameters: {
+            Get.toNamed(Routes.commentDetailPath, parameters: {
               "postId": controller.postId,
               "commentId": comment.comment.commentParentId != null
                   ? comment.comment.commentParentId!
                   : comment.comment.commentId!,
               "title": controller.post.title
             });
-            if (changed) {
-              controller.getComment();
-            }
           })
         ]),
         comment.deleted || !comment.myComment

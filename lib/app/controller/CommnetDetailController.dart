@@ -1,4 +1,6 @@
+import 'package:baby_book/app/controller/CommunityDetailController.dart';
 import 'package:baby_book/app/repository/comment_repository.dart';
+import 'package:baby_book/app/view/community/community_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -120,6 +122,7 @@ class CommentDetailController extends GetxController {
       });
 
       changed = true;
+      Get.find<CommunityDetailController>(tag: postId).getComment();
 
       return true;
     } else {
@@ -158,6 +161,7 @@ class CommentDetailController extends GetxController {
       exitModifyCommentMode();
 
       changed = true;
+      Get.find<CommunityDetailController>(tag: postId).getComment();
 
       EasyLoading.dismiss();
       return true;
@@ -172,6 +176,7 @@ class CommentDetailController extends GetxController {
     bool result = await commentRepository.delete(commentId: commentId);
     if (result) {
       changed = true;
+      Get.find<CommunityDetailController>(tag: postId).getComment();
     }
 
     return result;

@@ -231,6 +231,7 @@ class CommunityDetailController extends GetxController {
     if (response != null) {
       commentList.add(response);
       _commentList.refresh();
+      post.commentCount += 1;
       commentController.text = "";
       EasyLoading.dismiss();
       Future.delayed(const Duration(milliseconds: 500), () {
