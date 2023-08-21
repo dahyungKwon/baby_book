@@ -22,14 +22,9 @@ class BookCaseScreen extends GetView<BookCaseController> {
   Widget build(BuildContext context) {
     Get.delete<BookCaseController>(tag: uniqueTag);
     Get.put(BookCaseController(memberId: memberId), tag: uniqueTag);
-    return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: SafeArea(child: buildBookCaseLayout(context, controller))));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: SafeArea(child: buildBookCaseLayout(context, controller)));
   }
 }
