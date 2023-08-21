@@ -34,24 +34,19 @@ class MemberCommunityScreen extends GetView<MemberCommunityController> {
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
 
-    return WillPopScope(
-        onWillPop: () async {
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: Obx(() => SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildToolbar(context, edgeInsets),
-                      getVerSpace(FetchPixels.getPixelHeight(15)),
-                      pageViewer()
-                    ],
-                  ),
-                ))));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: Obx(() => SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildToolbar(context, edgeInsets),
+                  getVerSpace(FetchPixels.getPixelHeight(15)),
+                  pageViewer()
+                ],
+              ),
+            )));
   }
 
   Widget buildToolbar(BuildContext context, EdgeInsets edgeInsets) {
