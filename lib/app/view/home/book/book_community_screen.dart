@@ -35,21 +35,19 @@ class BookCommunityScreen extends GetView<BookCommunityController> {
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
 
-    return WillPopScope(
-        onWillPop: null,
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: backGroundColor,
-            body: Obx(() => SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildToolbar(context, edgeInsets),
-                      // getVerSpace(FetchPixels.getPixelHeight(5)),
-                      pageViewer()
-                    ],
-                  ),
-                ))));
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: backGroundColor,
+        body: Obx(() => SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildToolbar(context, edgeInsets),
+                  // getVerSpace(FetchPixels.getPixelHeight(5)),
+                  pageViewer()
+                ],
+              ),
+            )));
   }
 
   Widget buildToolbar(BuildContext context, EdgeInsets edgeInsets) {

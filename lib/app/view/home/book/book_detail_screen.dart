@@ -72,118 +72,116 @@ class BookDetailScreen extends GetView<BookDetailController> {
     FetchPixels(context);
     double defHorSpace = FetchPixels.getDefaultHorSpace(context);
     EdgeInsets edgeInsets = EdgeInsets.symmetric(horizontal: defHorSpace);
-    return WillPopScope(
-        onWillPop: null,
-        child: Obx(() => controller.loading
-            ? const FullSizeSkeleton()
-            : Scaffold(
-                resizeToAvoidBottomInset: false,
-                backgroundColor: backGroundColor,
-                bottomNavigationBar: Container(
-                    height: FetchPixels.getPixelHeight(65),
-                    padding: EdgeInsets.only(
-                        top: FetchPixels.getPixelHeight(8),
-                        bottom: FetchPixels.getPixelHeight(8),
-                        left: FetchPixels.getPixelWidth(10),
-                        right: FetchPixels.getPixelWidth(10)),
-                    margin: EdgeInsets.only(
-                        bottom: FetchPixels.getPixelHeight(
-                            foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
-                    decoration: const BoxDecoration(
-                        color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                              onTap: () async {
-                                if (controller.like) {
-                                  bool result = await controller.clickCancelLike();
-                                  if (result) {
-                                    controller.like = false;
-                                    controller.likeCount -= 1;
-                                  }
-                                } else {
-                                  bool result = await controller.clickLike();
-                                  if (result) {
-                                    controller.like = true;
-                                    controller.likeCount += 1;
-                                  }
-                                }
-                              },
-                              child: Container(
-                                  color: Colors.transparent,
-                                  width: FetchPixels.getPixelWidth(80),
-                                  padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
-                                  child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        controller.likeCount > 0
-                                            ? getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
-                                                height: FetchPixels.getPixelHeight(20),
-                                                width: FetchPixels.getPixelHeight(20))
-                                            : getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
-                                                height: FetchPixels.getPixelHeight(25),
-                                                width: FetchPixels.getPixelHeight(25)),
-                                        getVerSpace(FetchPixels.getPixelWidth(5)),
-                                        controller.likeCount > 0
-                                            ? getCustomFont(controller.getLikeCount(), 14,
-                                                controller.like ? const Color(0xFFF65E5E) : Colors.black54, 1,
-                                                fontWeight: FontWeight.w400)
-                                            : Container(),
-                                      ]))),
-                          Expanded(
-                            child: GestureDetector(
-                                onTap: () {
-                                  buildBookExperience(context);
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                      color: controller.myBookResponse.myBook.holdType.color,
-                                      borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(6)),
-                                      boxShadow: const [
-                                        BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 0.0)),
-                                      ],
-                                    ),
-                                    height: FetchPixels.getPixelHeight(80),
-                                    // color: controller.myBookResponse.myBook.holdType.color,
-                                    child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        // crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          getSvgImage(
-                                              controller.isMyBook
-                                                  ? controller.myBookResponse.myBook.holdType.image
-                                                  : "add_bookcase.svg",
-                                              width: FetchPixels.getPixelHeight(15),
-                                              height: FetchPixels.getPixelHeight(20)),
-                                          getHorSpace(FetchPixels.getPixelHeight(10)),
-                                          getCustomFont(
-                                              controller.isMyBook
-                                                  ? controller.myBookResponse.myBook.holdType.desc
-                                                  : "책장에 담기",
-                                              16,
-                                              Colors.white,
-                                              1,
-                                              fontWeight: FontWeight.w500),
-                                        ]))),
-                          )
-                        ],
-                      ),
-                    )),
-                body: SafeArea(
-                  child: Column(
+    return Obx(() => controller.loading
+        ? const FullSizeSkeleton()
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: backGroundColor,
+            bottomNavigationBar: Container(
+                height: FetchPixels.getPixelHeight(65),
+                padding: EdgeInsets.only(
+                    top: FetchPixels.getPixelHeight(8),
+                    bottom: FetchPixels.getPixelHeight(8),
+                    left: FetchPixels.getPixelWidth(10),
+                    right: FetchPixels.getPixelWidth(10)),
+                margin: EdgeInsets.only(
+                    bottom: FetchPixels.getPixelHeight(
+                        foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
+                decoration: const BoxDecoration(
+                    color: Colors.white, border: Border(top: BorderSide(color: Color(0xffd3d3d3), width: 0.8))),
+                child: Container(
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // getVerSpace(FetchPixels.getPixelHeight(20)),
-                      buildToolbar(context),
-                      getVerSpace(FetchPixels.getPixelHeight(10)),
-                      buildMainArea(context, edgeInsets, defHorSpace)
+                      GestureDetector(
+                          onTap: () async {
+                            if (controller.like) {
+                              bool result = await controller.clickCancelLike();
+                              if (result) {
+                                controller.like = false;
+                                controller.likeCount -= 1;
+                              }
+                            } else {
+                              bool result = await controller.clickLike();
+                              if (result) {
+                                controller.like = true;
+                                controller.likeCount += 1;
+                              }
+                            }
+                          },
+                          child: Container(
+                              color: Colors.transparent,
+                              width: FetchPixels.getPixelWidth(80),
+                              padding: EdgeInsets.only(right: FetchPixels.getPixelWidth(10)),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    controller.likeCount > 0
+                                        ? getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                            height: FetchPixels.getPixelHeight(20),
+                                            width: FetchPixels.getPixelHeight(20))
+                                        : getSvgImage(controller.like ? "heart_selected.svg" : "heart.svg",
+                                            height: FetchPixels.getPixelHeight(25),
+                                            width: FetchPixels.getPixelHeight(25)),
+                                    getVerSpace(FetchPixels.getPixelWidth(5)),
+                                    controller.likeCount > 0
+                                        ? getCustomFont(controller.getLikeCount(), 14,
+                                            controller.like ? const Color(0xFFF65E5E) : Colors.black54, 1,
+                                            fontWeight: FontWeight.w400)
+                                        : Container(),
+                                  ]))),
+                      Expanded(
+                        child: GestureDetector(
+                            onTap: () {
+                              buildBookExperience(context);
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: controller.myBookResponse.myBook.holdType.color,
+                                  borderRadius: BorderRadius.circular(FetchPixels.getPixelHeight(6)),
+                                  boxShadow: const [
+                                    BoxShadow(color: Colors.black12, blurRadius: 1, offset: Offset(0.0, 0.0)),
+                                  ],
+                                ),
+                                height: FetchPixels.getPixelHeight(80),
+                                // color: controller.myBookResponse.myBook.holdType.color,
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    // crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      getSvgImage(
+                                          controller.isMyBook
+                                              ? controller.myBookResponse.myBook.holdType.image
+                                              : "add_bookcase.svg",
+                                          width: FetchPixels.getPixelHeight(15),
+                                          height: FetchPixels.getPixelHeight(20)),
+                                      getHorSpace(FetchPixels.getPixelHeight(10)),
+                                      getCustomFont(
+                                          controller.isMyBook
+                                              ? controller.myBookResponse.myBook.holdType.desc
+                                              : "책장에 담기",
+                                          16,
+                                          Colors.white,
+                                          1,
+                                          fontWeight: FontWeight.w500),
+                                    ]))),
+                      )
                     ],
                   ),
-                ),
-              )));
+                )),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  // getVerSpace(FetchPixels.getPixelHeight(20)),
+                  buildToolbar(context),
+                  getVerSpace(FetchPixels.getPixelHeight(10)),
+                  buildMainArea(context, edgeInsets, defHorSpace)
+                ],
+              ),
+            ),
+          ));
   }
 
   buildBookExperience(BuildContext context) {
