@@ -17,6 +17,7 @@ import '../../../models/model_book_response.dart';
 import '../../../models/model_member.dart';
 import '../../../repository/paging_request.dart';
 import '../../../routes/app_pages.dart';
+import '../../dialog/re_confirm_dialog.dart';
 import 'book_list_sort_type_bottom_sheet.dart';
 
 class TabHome extends GetView<TabHomeController> {
@@ -25,8 +26,9 @@ class TabHome extends GetView<TabHomeController> {
   ValueNotifier selectedPage = ValueNotifier(0);
   late RefreshController refreshController;
   int pageNumber = 1;
+  bool guestMode = false;
 
-  TabHome({super.key}) {
+  TabHome({super.key, required this.guestMode}) {
     // Get.delete<TabHomeController>();
     Get.put(TabHomeController(0, bookListRepository: BookRepository()));
     refreshController = RefreshController(initialRefresh: false);
@@ -99,6 +101,10 @@ class TabHome extends GetView<TabHomeController> {
                       // getHorSpace(FetchPixels.getPixelWidth(10)),
                       getSimpleImageButton("search.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
                           Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+                        if (guestMode) {
+                          openLoginPopup();
+                          return;
+                        }
                         await FirebaseAnalytics.instance.logScreenView(
                             screenName: "home_searchBtn_screenName", screenClass: "home_searchBtn_screenClass");
                         Get.toNamed(Routes.searchPath);
@@ -293,7 +299,7 @@ class TabHome extends GetView<TabHomeController> {
     print("plusPageNumber.... end...pageNumber...$pageNumber...${controller.selectedCategoryType.code}");
   }
 
-  ListView buildBookList(List<ModelBookResponse> bookList, ModelMember member) {
+  ListView buildBookList(List<ModelBookResponse> bookList, ModelMember? member) {
     return ListView.builder(
         scrollDirection: Axis.vertical,
         // shrinkWrap: true,
@@ -302,13 +308,17 @@ class TabHome extends GetView<TabHomeController> {
         itemBuilder: (context, index) {
           ModelBookResponse modelBookResponse = bookList[index];
           return buildBookListItem(modelBookResponse, context, index, () async {
+            if (guestMode) {
+              openLoginPopup();
+              return;
+            }
             await FirebaseAnalytics.instance.logScreenView(
                 screenName: "home_click_book_${modelBookResponse.modelBook.id}_screenName",
                 screenClass: "home_click_book_${modelBookResponse.modelBook.id}_screenClass");
 
             Get.toNamed(Routes.bookDetailPath, parameters: {
               'bookSetId': modelBookResponse.modelBook.id.toString(),
-              'babyId': member.selectedBabyId ?? ""
+              'babyId': member?.selectedBabyId ?? ""
             });
           });
         });
@@ -331,6 +341,10 @@ class TabHome extends GetView<TabHomeController> {
         ),
         getVerSpace(FetchPixels.getPixelHeight(30)),
         getButton(context, backGroundColor, "책 제보 하러가기", Colors.black87, () async {
+          if (guestMode) {
+            openLoginPopup();
+            return;
+          }
           await FirebaseAnalytics.instance.logScreenView(
               screenName: "home_recommendBook_screenName", screenClass: "home_recommendBook_screenClass");
           Get.toNamed(Routes.reportNewBookAddPath);
@@ -345,5 +359,11 @@ class TabHome extends GetView<TabHomeController> {
             borderWidth: 1.5)
       ],
     );
+  }
+
+  openLoginPopup() async {
+    await Get.dialog(ReConfirmDialog("로그인이 필요한 기능입니다.\n로그인 하러 가시겠습니까?", "네", "아니오", () async {
+      Get.offAllNamed(Routes.loginPath);
+    }));
   }
 }

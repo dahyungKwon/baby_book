@@ -27,7 +27,7 @@ class BookRepository {
       var accessToken = await PrefData.getAccessToken();
       // pageSize=15&pageNumber=1&categoryList=ALL&startMonth=0&endMonth=17&sortType=LIKE
       final response = await dio.get(
-        '/bookset',
+        '/bookset/guest',
         queryParameters: {
           'pageSize': pagingRequest.pageSize,
           'pageNumber': pagingRequest.pageNumber,

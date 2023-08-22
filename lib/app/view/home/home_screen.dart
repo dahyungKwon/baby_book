@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:baby_book/app/view/dialog/re_confirm_dialog.dart';
 import 'package:baby_book/app/view/home/tab/tab_book_case.dart';
 import 'package:baby_book/app/view/home/tab/tab_community.dart';
 import 'package:baby_book/app/view/home/tab/tab_home.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import '../../routes/app_pages.dart';
 
 class HomeScreen extends GetView<HomeScreenController> {
+  bool guestMode = false;
   DateTime? currentBackPressTime;
   List<String> bottomBarNoSelectedImgList = ["home.svg", "book.svg", "chatbubbles.svg", "person.svg"];
   List<String> bottomBarSelectedImgList = [
@@ -32,14 +34,22 @@ class HomeScreen extends GetView<HomeScreenController> {
   ///구글 애널리틱스 용
   List<String> bottomBarStringEnList = ["home", "bookcase", "community", "profile"];
 
-  List<Widget> tabList = [
-    TabHome(),
-    TabBookCase(),
-    const TabCommunity(),
-    TabProfile(),
-  ];
+  late List<Widget> tabList;
 
   HomeScreen(int tabIndex, {super.key}) {
+    guestMode = Get.parameters["guestMode"] != null ? bool.tryParse(Get.parameters["guestMode"]!) ?? false : false;
+    if (guestMode) {
+      tabList = [TabHome(guestMode: true)];
+    } else {
+      tabList = [
+        TabHome(
+          guestMode: false,
+        ),
+        TabBookCase(),
+        const TabCommunity(),
+        TabProfile(),
+      ];
+    }
     Get.put(HomeScreenController(tabIndex));
   }
 
@@ -73,12 +83,14 @@ class HomeScreen extends GetView<HomeScreenController> {
                     flex: 1,
                     child: InkWell(
                       onTap: () async {
+                        if (guestMode) {
+                          openLoginPopup();
+                          return;
+                        }
                         await FirebaseAnalytics.instance.logScreenView(
                             screenName: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenName",
                             screenClass: "home_bottombtn_${bottomBarStringEnList[selectedTabIndex]}_screenClass");
 
-                        //책장일때
-                        // if (selectedTabIndex == 1) {}
                         controller.tabIndex = selectedTabIndex;
                       },
                       child: Center(
@@ -173,5 +185,11 @@ class HomeScreen extends GetView<HomeScreenController> {
 
     Constant.closeApp();
     return Future.value(true);
+  }
+
+  openLoginPopup() async {
+    await Get.dialog(ReConfirmDialog("로그인이 필요한 기능입니다.\n로그인 하러 가시겠습니까?", "네", "아니오", () async {
+      Get.offAllNamed(Routes.loginPath);
+    }));
   }
 }

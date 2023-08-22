@@ -13,8 +13,12 @@ Future<bool> isLogin() async {
 }
 
 Future<bool> logout() async {
-  await PrefData.setAccessToken(null);
   await PrefData.setAgreed(false);
+  await PrefData.setLogIn(false);
+  await PrefData.setMemberId(null);
+  await PrefData.setAccessToken(null);
+  await PrefData.setRefreshToken(null);
+  await PrefData.setLastLoginDate(null);
 
   return true;
 }

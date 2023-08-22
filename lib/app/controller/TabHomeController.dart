@@ -66,14 +66,17 @@ class TabHomeController extends GetxController {
   TextEditingController ageGroupTextEditingController = TextEditingController();
   TextEditingController bookListSortTextEditingController = TextEditingController();
 
-  late ModelMember member;
+  ///둘러보기 시 없을 수 있음
+  ModelMember? member;
 
   @override
   void onInit() async {
     super.onInit();
 
     String? memberId = await PrefData.getMemberId();
-    member = await MemberRepository.getMember(memberId: memberId!);
+    if (memberId != null) {
+      member = await MemberRepository.getMember(memberId: memberId!);
+    }
 
     getAllForInit(CategoryType.all);
   }

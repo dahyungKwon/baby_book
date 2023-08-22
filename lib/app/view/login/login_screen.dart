@@ -46,19 +46,28 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
         color: Colors.white,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
-              finishView();
-            }),
-            getCustomFont(
-              "로그인",
-              22,
-              Colors.black,
-              1,
-              fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
+                    Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+                  finishView();
+                }),
+                getCustomFont(
+                  "로그인",
+                  FetchPixels.getPixelHeight(24),
+                  Colors.black,
+                  1,
+                  fontWeight: FontWeight.w600,
+                )
+              ],
             ),
+            getSimpleTextButton("둘러보기", FetchPixels.getPixelHeight(16), Colors.black54, Colors.white, FontWeight.w500,
+                FetchPixels.getPixelHeight(100), FetchPixels.getPixelHeight(50), () {
+              Get.offAllNamed(Routes.homescreenPath, parameters: {"guestMode": "true"});
+            }),
           ],
         ));
   }
