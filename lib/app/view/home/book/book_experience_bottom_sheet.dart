@@ -54,6 +54,8 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
                   if (controller.mybook.holdType == HoldType.plan) ...[
                     buildHoldType(),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
+                    buildTempInMonth(context),
+                    getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildTempReviewType(context),
                     getVerSpace(FetchPixels.getPixelHeight(20)),
                     buildMemo(context),
@@ -216,7 +218,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
       children: [
         Container(
             padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelHeight(16)),
-            child: getCustomFont("기대평점" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600)),
+            child: getCustomFont("기대 평점" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600)),
         getVerSpace(10),
         Container(
             padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelHeight(10)),
@@ -335,7 +337,7 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getCustomFont("구매방식" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              getCustomFont("구매 방식" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
               // getVerSpace(10),
               // getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
               // getVerSpace(30),
@@ -351,6 +353,44 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
           boxColor: backGroundColor,
           FontWeight.w400, function: () {
         controller.showUsedTypeBottomSheet(context);
+      },
+          isEnable: false,
+          withprefix: false,
+          minLines: true,
+          height: FetchPixels.getPixelHeight(45),
+          withSufix: true,
+          suffiximage: "down_arrow.svg",
+          enableEditing: false)
+    ]);
+  }
+
+  Widget buildTempInMonth(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(
+          padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelHeight(16)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getCustomFont("예정" ?? "", 14, Colors.black38, 1, fontWeight: FontWeight.w600),
+              // getVerSpace(10),
+              // getCustomFont("입력하신 모든 정보는 추후에 수정이 가능합니다." ?? "", 13, Colors.black38, 1, fontWeight: FontWeight.w400),
+              // getVerSpace(30),
+            ],
+          )),
+      getDefaultTextFiledWithLabel2(
+          context,
+          controller.mybook.tempInMonth == null || controller.mybook.tempInMonth == 0
+              ? "구매예정 개월수를 선택해주세요."
+              : "${controller.mybook.tempInMonth}개월 (만${calAge(controller.mybook.tempInMonth)}세)",
+          controller.mybook.tempInMonth == null || controller.mybook.tempInMonth == 0
+              ? Colors.black45.withOpacity(0.3)
+              : Colors.black,
+          controller.inMonthTextEditing,
+          Colors.black87,
+          FetchPixels.getPixelHeight(20),
+          boxColor: backGroundColor,
+          FontWeight.w400, function: () {
+        controller.showTempInMonthBottomSheet(context);
       },
           isEnable: false,
           withprefix: false,

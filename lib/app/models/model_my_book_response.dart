@@ -25,7 +25,8 @@ class ModelMyBookResponse {
 
   bool needDetailReview() {
     if (myBook.holdType == HoldType.plan) {
-      return (myBook.tempReviewRating == null || myBook.tempReviewRating == 0);
+      return (myBook.tempReviewRating == null || myBook.tempReviewRating == 0) &&
+          (myBook.tempInMonth == null || myBook.tempInMonth == 0);
     } else {
       return (myBook.inMonth == 0) &&
           (myBook.reviewRating == null || myBook.reviewRating == 0) &&

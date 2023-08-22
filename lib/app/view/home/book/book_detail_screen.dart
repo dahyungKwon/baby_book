@@ -574,6 +574,12 @@ class BookDetailScreen extends GetView<BookDetailController> {
                                       valueColor: controller.myBookResponse.myBook.holdType.color),
                                   getVerSpace(FetchPixels.getPixelHeight(15)),
                                   if (controller.myBookResponse.myBook.holdType == HoldType.plan) ...[
+                                    buildBookInfoRow(
+                                        "예정",
+                                        controller.myBookResponse.myBook.tempInMonth == 0
+                                            ? ""
+                                            : "${controller.myBookResponse.myBook.tempInMonth}개월"),
+                                    getVerSpace(FetchPixels.getPixelHeight(15)),
                                     buildBookInfoRow("기대평점", "", tempRating: true),
                                     getVerSpace(FetchPixels.getPixelHeight(15)),
                                     buildBookInfoRow("한줄메모", controller.myBookResponse.myBook.comment),

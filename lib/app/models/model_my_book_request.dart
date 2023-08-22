@@ -9,6 +9,8 @@ class ModelMyBookRequest {
   HoldType holdType;
   int? inMonth = 0;
   int? outMonth = 0;
+  int? tempInMonth = 0;
+  int? tempOutMonth = 0;
   UsedType usedType;
   ReviewType reviewType;
   double? reviewRating;
@@ -22,6 +24,8 @@ class ModelMyBookRequest {
       required this.holdType,
       this.inMonth,
       this.outMonth,
+      this.tempInMonth,
+      this.tempOutMonth,
       required this.usedType,
       required this.reviewType,
       this.reviewRating,
@@ -35,6 +39,8 @@ class ModelMyBookRequest {
         'holdType': holdType.code,
         'inMonth': inMonth,
         'outMonth': outMonth,
+        'tempInMonth': tempInMonth,
+        'tempOutMonth': tempOutMonth,
         'usedType': usedType.code,
         'reviewType': reviewType.code,
         'reviewRating': reviewRating,

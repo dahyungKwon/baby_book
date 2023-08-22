@@ -10,6 +10,8 @@ class ModelMyBook {
   HoldType holdType;
   int? inMonth = 0;
   int? outMonth = 0;
+  int? tempInMonth = 0;
+  int? tempOutMonth = 0;
   UsedType usedType;
   ReviewType reviewType;
   ReviewType tempReviewType;
@@ -27,6 +29,8 @@ class ModelMyBook {
       required this.holdType,
       this.inMonth,
       this.outMonth,
+      this.tempInMonth,
+      this.tempOutMonth,
       required this.usedType,
       required this.reviewType,
       required this.tempReviewType,
@@ -45,6 +49,8 @@ class ModelMyBook {
         holdType: HoldType.none,
         inMonth: 0,
         outMonth: 0,
+        tempInMonth: 0,
+        tempOutMonth: 0,
         usedType: UsedType.none,
         reviewType: ReviewType.none,
         tempReviewType: ReviewType.none,
@@ -75,6 +81,8 @@ class ModelMyBook {
         holdType = HoldType.findByCode(json['holdType']),
         inMonth = json['inMonth'],
         outMonth = json['outMonth'],
+        tempInMonth = json['tempInMonth'],
+        tempOutMonth = json['tempOutMonth'],
         usedType = UsedType.findByCode(json['usedType']),
         reviewType = ReviewType.findByCode(json['reviewType']),
         tempReviewType = ReviewType.findByCode(json['tempReviewType']),
@@ -92,6 +100,8 @@ class ModelMyBook {
         holdType = oldBook.holdType,
         inMonth = oldBook.inMonth,
         outMonth = oldBook.outMonth,
+        tempInMonth = oldBook.tempInMonth,
+        tempOutMonth = oldBook.tempOutMonth,
         usedType = oldBook.usedType,
         reviewType = oldBook.reviewType,
         tempReviewType = oldBook.tempReviewType,

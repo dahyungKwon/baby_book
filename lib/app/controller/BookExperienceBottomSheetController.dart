@@ -97,6 +97,11 @@ class BookExperienceBottomSheetController extends GetxController {
     _mybook.refresh();
   }
 
+  changeTempInMonth(int tempInMonth) {
+    mybook.tempInMonth = tempInMonth;
+    _mybook.refresh();
+  }
+
   changeInMonth(int inMonth) {
     mybook.inMonth = inMonth;
     _mybook.refresh();
@@ -148,13 +153,29 @@ class BookExperienceBottomSheetController extends GetxController {
     });
   }
 
+  showTempInMonthBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        builder: (_) => MonthBottomSheet(
+              month: mybook.tempInMonth,
+              isTempInMonth: true,
+              isInMonth: true,
+            )).then((selectedTempInMonth) {
+      if (selectedTempInMonth != null) {
+        changeTempInMonth(selectedTempInMonth);
+      }
+    });
+  }
+
   showInMonthBottomSheet(BuildContext context) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (_) => MonthBottomSheet(
               month: mybook.inMonth,
-              inMonth: true,
+              isTempInMonth: false,
+              isInMonth: true,
             )).then((selectedInMonth) {
       if (selectedInMonth != null) {
         changeInMonth(selectedInMonth);
@@ -169,7 +190,8 @@ class BookExperienceBottomSheetController extends GetxController {
         builder: (_) => MonthBottomSheet(
               month: mybook.outMonth,
               startMonth: startMonth,
-              inMonth: false,
+              isTempInMonth: false,
+              isInMonth: false,
             )).then((selectedOutMonth) {
       if (selectedOutMonth != null) {
         changeOutMonth(selectedOutMonth);

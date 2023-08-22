@@ -1,9 +1,7 @@
-import 'package:baby_book/app/view/home/book/UsedType.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
@@ -11,10 +9,13 @@ import '../../dialog/error_dialog.dart';
 
 class MonthBottomSheet extends StatefulWidget {
   int month;
-  bool inMonth;
+  bool isTempInMonth;
+  bool isInMonth;
   int? startMonth = 0;
 
-  MonthBottomSheet({required this.month, required this.inMonth, this.startMonth, Key? key}) : super(key: key);
+  MonthBottomSheet(
+      {required this.month, required this.isTempInMonth, required this.isInMonth, this.startMonth, Key? key})
+      : super(key: key);
 
   @override
   State<MonthBottomSheet> createState() => _MonthBottomSheet();
@@ -22,14 +23,16 @@ class MonthBottomSheet extends StatefulWidget {
 
 class _MonthBottomSheet extends State<MonthBottomSheet> {
   late int selectedMonth;
-  late bool selectedInMonth;
+  late bool isTempInMonth;
+  late bool isInMonth;
   late int startMonth;
 
   @override
   void initState() {
     super.initState();
     selectedMonth = widget.month;
-    selectedInMonth = widget.inMonth;
+    isTempInMonth = widget.isTempInMonth;
+    isInMonth = widget.isInMonth;
     startMonth = widget.startMonth ?? 0;
   }
 
@@ -46,7 +49,11 @@ class _MonthBottomSheet extends State<MonthBottomSheet> {
               Row(children: [
                 getHorSpace(FetchPixels.getPixelHeight(10)),
                 getCustomFont(
-                  selectedInMonth ? "시작 개월수를 선택해주세요." : "종료 개월수를 선택해주세요.",
+                  isTempInMonth
+                      ? "구매예정 개월수를 선택해주세요."
+                      : isInMonth
+                          ? "시작 개월수를 선택해주세요."
+                          : "종료 개월수를 선택해주세요.",
                   18,
                   Colors.black,
                   1,
@@ -155,22 +162,4 @@ class _MonthBottomSheetPicker extends StatelessWidget {
     ///24~36 => 만 2세
     return month ~/ 12;
   }
-
-// Widget render(BuildContext context, UsedType usedType, bool isSelected) {
-//   return RadioListTile<UsedType>(
-//       visualDensity: const VisualDensity(
-//         horizontal: VisualDensity.minimumDensity,
-//         vertical: VisualDensity.minimumDensity,
-//       ),
-//       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-//       contentPadding: EdgeInsets.zero,
-//       title: Text(usedType.desc),
-//       value: usedType,
-//       activeColor: Colors.black,
-//       groupValue: selectedUsedType,
-//       onChanged: (UsedType? usedType) {
-//         usedTypeBottomSheetSetter(usedType!);
-//         Navigator.pop(context, usedType);
-//       });
-// }
 }
