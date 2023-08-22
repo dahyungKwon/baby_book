@@ -147,8 +147,14 @@ class BookMemberListScreen extends GetView<BookMemberListController> {
                   Expanded(
                       child: Row(children: [
                     getHorSpace(FetchPixels.getPixelWidth(10)),
-                    getAssetImage(member.gender == GenderType.man ? "man_bear3.png" : "woman_bear3.png",
-                        FetchPixels.getPixelWidth(40), FetchPixels.getPixelWidth(40)),
+                    getAssetImage(
+                        member.gender == GenderType.man
+                            ? "bear_man.png"
+                            : member.gender == GenderType.woman
+                                ? "bear_woman.png"
+                                : "bear_none.png",
+                        FetchPixels.getPixelWidth(40),
+                        FetchPixels.getPixelWidth(40)),
                     getHorSpace(FetchPixels.getPixelWidth(15)),
                     Expanded(
                       flex: 1,

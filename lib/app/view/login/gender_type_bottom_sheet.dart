@@ -32,7 +32,7 @@ class _GenderTypeBottomSheetState extends State<GenderTypeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 20.h,
+        height: 22.h,
         child: Container(
           color: Colors.white,
           padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),

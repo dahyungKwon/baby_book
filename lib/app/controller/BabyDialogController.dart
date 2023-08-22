@@ -35,7 +35,7 @@ class BabyDialogController extends GetxController {
   set loading(value) => _loading.value = value;
 
   ///성별
-  final _gender = GenderType.none.obs;
+  final _gender = GenderType.nullType.obs;
 
   get gender => _gender.value;
 
@@ -74,7 +74,7 @@ class BabyDialogController extends GetxController {
   }
 
   checkAdd() {
-    if (nameController.text.isNotEmpty && gender != null && gender != GenderType.none) {
+    if (nameController.text.isNotEmpty && gender != null && gender != GenderType.nullType) {
       canAdd = true;
     } else {
       canAdd = false;
@@ -96,7 +96,7 @@ class BabyDialogController extends GetxController {
       return;
     }
 
-    if (gender == null || gender == GenderType.none) {
+    if (gender == null || gender == GenderType.nullType) {
       Get.dialog(ErrorDialog("아기곰 성별을 선택해주세요."));
       return;
     }

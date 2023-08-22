@@ -118,7 +118,8 @@ class JoinScreen extends GetView<JoinController> {
               getCustomFont("사용하실 닉네임을 입력해주세요." ?? "", FetchPixels.getPixelHeight(20), Colors.black, 1,
                   fontWeight: FontWeight.w600),
               getVerSpace(10),
-              getCustomFont("닉네임은 커뮤니티나 책장등에서 사용됩니다." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 1,
+              getCustomFont(
+                  "닉네임은 커뮤니티나 책장등에서 사용되고, 추후 변경 가능합니다." ?? "", FetchPixels.getPixelHeight(13), Colors.black38, 1,
                   fontWeight: FontWeight.w400),
               getVerSpace(30),
             ],
@@ -187,8 +188,8 @@ class JoinScreen extends GetView<JoinController> {
           )),
       getDefaultTextFiledWithLabel2(
           context,
-          controller.gender == GenderType.none ? "성별을 선택해주세요." : controller.gender.adult,
-          controller.gender == GenderType.none ? Colors.black45.withOpacity(0.3) : Colors.black,
+          controller.gender == GenderType.nullType ? "성별을 선택해주세요." : controller.gender.adult,
+          controller.gender == GenderType.nullType ? Colors.black45.withOpacity(0.3) : Colors.black,
           controller.genderController,
           Colors.black87,
           FetchPixels.getPixelHeight(20),
@@ -201,7 +202,7 @@ class JoinScreen extends GetView<JoinController> {
           minLines: true,
           height: FetchPixels.getPixelHeight(45),
           withSufix: true,
-          suffiximage: controller.gender == GenderType.none ? "down_arrow.svg" : "confirm_mark.svg",
+          suffiximage: controller.gender == GenderType.nullType ? "down_arrow.svg" : "confirm_mark.svg",
           enableEditing: false)
     ]);
   }

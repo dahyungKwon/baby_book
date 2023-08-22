@@ -167,8 +167,8 @@ class EditProfileScreen extends GetView<EditProfileController> {
           )),
       getDefaultTextFiledWithLabel2(
           context,
-          controller.gender == GenderType.none ? "성별을 선택해주세요." : controller.gender.adult,
-          controller.gender == GenderType.none ? Colors.black45.withOpacity(0.3) : Colors.black,
+          controller.gender == GenderType.nullType ? "성별을 선택해주세요." : controller.gender.adult,
+          controller.gender == GenderType.nullType ? Colors.black45.withOpacity(0.3) : Colors.black,
           controller.genderController,
           Colors.black87,
           FetchPixels.getPixelHeight(20),
@@ -181,7 +181,7 @@ class EditProfileScreen extends GetView<EditProfileController> {
           minLines: true,
           height: FetchPixels.getPixelHeight(60),
           withSufix: true,
-          suffiximage: controller.gender == GenderType.none ? "down_arrow.svg" : "confirm_mark.svg",
+          suffiximage: controller.gender == GenderType.nullType ? "down_arrow.svg" : "confirm_mark.svg",
           enableEditing: false)
     ]);
   }

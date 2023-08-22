@@ -61,7 +61,7 @@ class JoinController extends GetxController {
   set validNickName(value) => _validNickName.value = value;
 
   ///성별
-  final _gender = GenderType.none.obs;
+  final _gender = GenderType.nullType.obs;
 
   get gender => _gender.value;
 
@@ -325,7 +325,7 @@ class JoinController extends GetxController {
     }
 
     if (!finishSecondStep) {
-      if (gender == null || gender == GenderType.none) {
+      if (gender == null || gender == GenderType.nullType) {
         Get.dialog(ErrorDialog("성별을 선택해주세요."));
         return;
       }
@@ -422,7 +422,7 @@ class JoinController extends GetxController {
       return;
     }
 
-    if (gender == null || gender == GenderType.none) {
+    if (gender == null || gender == GenderType.nullType) {
       await Get.dialog(ErrorDialog("성별을 선택해주세요."));
       return;
     }
@@ -479,7 +479,7 @@ class JoinController extends GetxController {
 
     await PrefData.setAgreed(true);
 
-    Get.toNamed(Routes.homescreenPath);
+    Get.offAllNamed(Routes.homescreenPath);
   }
 
   openModifyBabyDialog(int index) {

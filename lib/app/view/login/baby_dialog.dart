@@ -23,7 +23,7 @@ class BabyDialog extends GetView<BabyDialogController> {
     if (selectedBaby == null) {
       modifyMode = false;
       controller.nameController.text = "";
-      controller.gender = GenderType.none;
+      controller.gender = GenderType.nullType;
       controller.selectedModelBaby = selectedBaby;
     } else {
       modifyMode = true;
@@ -80,8 +80,8 @@ class BabyDialog extends GetView<BabyDialogController> {
                     // getVerSpace(FetchPixels.getPixelHeight(5)),
                     getDefaultTextFiledWithLabel2(
                         context,
-                        controller.gender == GenderType.none ? "성별을 선택해주세요." : controller.gender.baby,
-                        controller.gender == GenderType.none ? Colors.black45.withOpacity(0.3) : Colors.black,
+                        controller.gender == GenderType.nullType ? "성별을 선택해주세요." : controller.gender.baby,
+                        controller.gender == GenderType.nullType ? Colors.black45.withOpacity(0.3) : Colors.black,
                         controller.genderController,
                         Colors.black87,
                         FetchPixels.getPixelHeight(15),
@@ -103,7 +103,7 @@ class BabyDialog extends GetView<BabyDialogController> {
                         minLines: true,
                         height: FetchPixels.getPixelHeight(60),
                         withSufix: true,
-                        suffiximage: controller.gender == GenderType.none ? "down_arrow.svg" : "confirm_mark.svg",
+                        suffiximage: controller.gender == GenderType.nullType ? "down_arrow.svg" : "confirm_mark.svg",
                         enableEditing: false),
                     getDefaultTextFiledWithLabel2(
                         context,
