@@ -14,13 +14,13 @@ import '../view/dialog/error_dialog.dart';
 class PostImageRepository {
   /// 파일 전송 시 사용됨 [중요!!]
   var fileDio = Dio(BaseOptions(
-      baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
+      baseUrl: 'https://babybear-readbook.com/apis',
       connectTimeout: 5000,
       receiveTimeout: 10000,
       contentType: 'multipart/form-data'));
 
   var dio = Dio(BaseOptions(
-    baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
+    baseUrl: 'https://babybear-readbook.com/apis',
     connectTimeout: 5000,
     receiveTimeout: 10000,
   ));

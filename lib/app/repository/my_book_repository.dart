@@ -14,7 +14,7 @@ import '../view/dialog/error_dialog.dart';
 
 class MyBookRepository {
   var dio = Dio(BaseOptions(
-    baseUrl: 'http://ec2-52-78-163-194.ap-northeast-2.compute.amazonaws.com:3001/apis',
+    baseUrl: 'https://babybear-readbook.com/apis',
     connectTimeout: 5000,
     receiveTimeout: 3000,
   ));
