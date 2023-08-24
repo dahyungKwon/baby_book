@@ -13,6 +13,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
 import '../../routes/app_pages.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -83,36 +84,25 @@ class LoginScreen extends StatelessWidget {
                       child: getAssetImage("app_icon6.jpeg", FetchPixels.getPixelWidth(double.infinity),
                           FetchPixels.getPixelHeight(200)))),
               getVerSpace(FetchPixels.getPixelHeight(100)),
-              GestureDetector(
-                  onTap: () async {
-                    //어떤 상황에서든 로그인버튼 누르면 인증초기화 진행
-                    OAuthToken? token = await kakaoLogin();
-                    if (token == null) {
-                      print("시스템 에러");
-                    } else {
-                      print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
-                      ModelMember? member =
-                          await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+              buildKakaoLogin(),
+              getVerSpace(FetchPixels.getPixelHeight(15)),
+              SignInWithAppleButton(
+                text: "Apple 로그인",
+                height: FetchPixels.getPixelHeight(45),
+                onPressed: () async {
+                  final credential = await SignInWithApple.getAppleIDCredential(
+                    scopes: [
+                      AppleIDAuthorizationScopes.email,
+                      AppleIDAuthorizationScopes.fullName,
+                    ],
+                  );
 
-                      if (member == null) {
-                        ///네트웍 에러
-                        return;
-                      }
-                      await PrefData.setLastLoginDate(DateTime.now());
-                      await PrefData.setAccessToken(member.accessToken!);
-                      await PrefData.setRefreshToken(member.refreshToken!);
-                      await PrefData.setMemberId(member.memberId!);
+                  print(credential);
 
-                      if (member.allAgreed == null || member.allAgreed == false) {
-                        Get.toNamed(Routes.joinPath);
-                      } else {
-                        await PrefData.setAgreed(true); //로그아웃하고 새로 들어왔을경우
-                        Get.offAllNamed(Routes.homescreenPath);
-                      }
-                    }
-                  },
-                  child: getAssetImage("kakao_login_large_wide.png", FetchPixels.getPixelWidth(double.infinity),
-                      FetchPixels.getPixelHeight(70))),
+                  // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                  // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                },
+              ),
               getVerSpace(FetchPixels.getPixelHeight(15)),
               Row(
                 children: [
@@ -144,5 +134,38 @@ class LoginScreen extends StatelessWidget {
                 ],
               )
             ])));
+  }
+
+  Widget buildKakaoLogin() {
+    return GestureDetector(
+        onTap: () async {
+          //어떤 상황에서든 로그인버튼 누르면 인증초기화 진행
+          OAuthToken? token = await kakaoLogin();
+          if (token == null) {
+            print("시스템 에러");
+          } else {
+            print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
+            ModelMember? member =
+                await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
+
+            if (member == null) {
+              ///네트웍 에러
+              return;
+            }
+            await PrefData.setLastLoginDate(DateTime.now());
+            await PrefData.setAccessToken(member.accessToken!);
+            await PrefData.setRefreshToken(member.refreshToken!);
+            await PrefData.setMemberId(member.memberId!);
+
+            if (member.allAgreed == null || member.allAgreed == false) {
+              Get.toNamed(Routes.joinPath);
+            } else {
+              await PrefData.setAgreed(true); //로그아웃하고 새로 들어왔을경우
+              Get.offAllNamed(Routes.homescreenPath);
+            }
+          }
+        },
+        child: getAssetImage(
+            "kakao_login_large_wide.png", FetchPixels.getPixelWidth(double.infinity), FetchPixels.getPixelHeight(70)));
   }
 }
