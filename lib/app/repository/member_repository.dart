@@ -12,7 +12,7 @@ class MemberRepository {
   static var dio = Dio(BaseOptions(
     baseUrl: 'https://babybear-readbook.com/apis',
     connectTimeout: 5000,
-    receiveTimeout: 3000,
+    receiveTimeout: 6000,
   ));
 
   static Future<ModelMember?> createMember({

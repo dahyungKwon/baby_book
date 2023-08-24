@@ -1,5 +1,6 @@
 import 'package:baby_book/app/models/model_member.dart';
 import 'package:baby_book/app/repository/member_repository.dart';
+import 'package:baby_book/app/view/login/sns_login_type.dart';
 
 import 'package:baby_book/base/color_data.dart';
 import 'package:baby_book/base/pref_data.dart';
@@ -14,6 +15,7 @@ import '../../../base/constant.dart';
 import '../../../base/kakao_login_util.dart';
 import '../../routes/app_pages.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -33,7 +35,8 @@ class LoginScreen extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           backgroundColor: backGroundColor,
           body: SafeArea(
-            child: Column(children: [buildTop(context), buildWidgetList(context)]),
+            child:
+                Column(children: [buildTop(context), buildWidgetList(context)]),
           ),
         ),
         onWillPop: () async {
@@ -52,8 +55,13 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                getSimpleImageButton("back_outline.svg", FetchPixels.getPixelHeight(50), FetchPixels.getPixelHeight(50),
-                    Colors.white, FetchPixels.getPixelHeight(26), FetchPixels.getPixelHeight(26), () async {
+                getSimpleImageButton(
+                    "back_outline.svg",
+                    FetchPixels.getPixelHeight(50),
+                    FetchPixels.getPixelHeight(50),
+                    Colors.white,
+                    FetchPixels.getPixelHeight(26),
+                    FetchPixels.getPixelHeight(26), () async {
                   finishView();
                 }),
                 getCustomFont(
@@ -65,9 +73,16 @@ class LoginScreen extends StatelessWidget {
                 )
               ],
             ),
-            getSimpleTextButton("둘러보기", FetchPixels.getPixelHeight(16), Colors.black54, Colors.white, FontWeight.w500,
-                FetchPixels.getPixelHeight(100), FetchPixels.getPixelHeight(50), () {
-              Get.offAllNamed(Routes.homescreenPath, parameters: {"guestMode": "true"});
+            getSimpleTextButton(
+                "둘러보기",
+                FetchPixels.getPixelHeight(16),
+                Colors.black54,
+                Colors.white,
+                FontWeight.w500,
+                FetchPixels.getPixelHeight(100),
+                FetchPixels.getPixelHeight(50), () {
+              Get.offAllNamed(Routes.homescreenPath,
+                  parameters: {"guestMode": "true"});
             }),
           ],
         ));
@@ -76,47 +91,57 @@ class LoginScreen extends StatelessWidget {
   Expanded buildWidgetList(BuildContext context) {
     return Expanded(
         child: Container(
-            padding: EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(25)),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            padding:
+                EdgeInsets.symmetric(horizontal: FetchPixels.getPixelWidth(25)),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Container(
                   color: Colors.white,
                   child: Center(
-                      child: getAssetImage("app_icon6.jpeg", FetchPixels.getPixelWidth(double.infinity),
+                      child: getAssetImage(
+                          "app_icon6.jpeg",
+                          FetchPixels.getPixelWidth(double.infinity),
                           FetchPixels.getPixelHeight(200)))),
               getVerSpace(FetchPixels.getPixelHeight(100)),
               buildKakaoLogin(),
-              getVerSpace(FetchPixels.getPixelHeight(15)),
-              SignInWithAppleButton(
-                text: "Apple 로그인",
-                height: FetchPixels.getPixelHeight(45),
-                onPressed: () async {
-                  final credential = await SignInWithApple.getAppleIDCredential(
-                    scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                  );
-
-                  print(credential);
-
-                  // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                  // after they have been validated with Apple (see `Integration` section for more information on how to do this)
-                },
-              ),
-              getVerSpace(FetchPixels.getPixelHeight(15)),
+              if (foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS) ...[
+                getVerSpace(FetchPixels.getPixelHeight(10)),
+                SignInWithAppleButton(
+                  text: "     Apple 로그인",
+                  height: FetchPixels.getPixelHeight(47),
+                  iconAlignment: IconAlignment.left,
+                  onPressed: () async {
+                    final credential =
+                        await SignInWithApple.getAppleIDCredential(
+                      scopes: [
+                        // AppleIDAuthorizationScopes.email,
+                        // AppleIDAuthorizationScopes.fullName,
+                      ],
+                    );
+                    print(credential);
+                    login(SnsLoginType.apple, credential.authorizationCode);
+                    // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                    // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                  },
+                ),
+              ],
+              getVerSpace(FetchPixels.getPixelHeight(20)),
               Row(
                 children: [
                   getSvgImage("alert_circle_outline.svg",
-                      width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                      width: FetchPixels.getPixelHeight(15),
+                      height: FetchPixels.getPixelHeight(15)),
                   getHorSpace(FetchPixels.getPixelHeight(5)),
-                  getCustomFont("회원가입은 카카오 인증을 통해 진행됩니다.", 14, Colors.black, 1, fontWeight: FontWeight.w400)
+                  getCustomFont("회원가입은 SNS인증을 통해 진행됩니다.", 14, Colors.black, 1,
+                      fontWeight: FontWeight.w400)
                 ],
               ),
               getVerSpace(FetchPixels.getPixelHeight(10)),
               Row(
                 children: [
                   getSvgImage("alert_circle_outline.svg",
-                      width: FetchPixels.getPixelHeight(15), height: FetchPixels.getPixelHeight(15)),
+                      width: FetchPixels.getPixelHeight(15),
+                      height: FetchPixels.getPixelHeight(15)),
                   getHorSpace(FetchPixels.getPixelHeight(5)),
                   GestureDetector(
                     onTap: () async {
@@ -144,28 +169,33 @@ class LoginScreen extends StatelessWidget {
           if (token == null) {
             print("시스템 에러");
           } else {
-            print('카카오톡 최종 로그인 성공 ${token?.accessToken}');
-            ModelMember? member =
-                await MemberRepository.createMember(snsLoginType: "KAKAO", snsAccessToken: token.accessToken);
-
-            if (member == null) {
-              ///네트웍 에러
-              return;
-            }
-            await PrefData.setLastLoginDate(DateTime.now());
-            await PrefData.setAccessToken(member.accessToken!);
-            await PrefData.setRefreshToken(member.refreshToken!);
-            await PrefData.setMemberId(member.memberId!);
-
-            if (member.allAgreed == null || member.allAgreed == false) {
-              Get.toNamed(Routes.joinPath);
-            } else {
-              await PrefData.setAgreed(true); //로그아웃하고 새로 들어왔을경우
-              Get.offAllNamed(Routes.homescreenPath);
-            }
+            login(SnsLoginType.kakao, token.accessToken);
           }
         },
         child: getAssetImage(
-            "kakao_login_large_wide.png", FetchPixels.getPixelWidth(double.infinity), FetchPixels.getPixelHeight(70)));
+            "kakao_login_large_wide.png",
+            FetchPixels.getPixelWidth(double.infinity),
+            FetchPixels.getPixelHeight(65)));
+  }
+
+  login(SnsLoginType snsLoginType, String snsAccessToken) async {
+    ModelMember? member = await MemberRepository.createMember(
+        snsLoginType: snsLoginType.code, snsAccessToken: snsAccessToken);
+
+    if (member == null) {
+      ///네트웍 에러
+      return;
+    }
+    await PrefData.setLastLoginDate(DateTime.now());
+    await PrefData.setAccessToken(member.accessToken!);
+    await PrefData.setRefreshToken(member.refreshToken!);
+    await PrefData.setMemberId(member.memberId!);
+
+    if (member.allAgreed == null || member.allAgreed == false) {
+      Get.toNamed(Routes.joinPath);
+    } else {
+      await PrefData.setAgreed(true); //로그아웃하고 새로 들어왔을경우
+      Get.offAllNamed(Routes.homescreenPath);
+    }
   }
 }
