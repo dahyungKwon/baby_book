@@ -28,6 +28,15 @@ void main() async {
     javaScriptAppKey: '501ecd1d1f9a2007d192c62155596a62',
   );
 
+  //가로모드만 항상 위만 보도록 지원
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitDown,
+    ],
+  );
+
   runApp(const MyApp());
 }
 
