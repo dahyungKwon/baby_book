@@ -1124,7 +1124,7 @@ class BookDetailScreen extends GetView<BookDetailController> {
       list.isEmpty
           ? nullPost(context)
           : SizedBox(
-              height: FetchPixels.getPixelHeight(220),
+              height: FetchPixels.getPixelHeight(230),
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(
                     horizontal: FetchPixels.getPixelWidth(10), vertical: FetchPixels.getPixelWidth(10)),

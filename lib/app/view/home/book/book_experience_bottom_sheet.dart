@@ -1,6 +1,5 @@
 import 'package:baby_book/app/models/model_my_book.dart';
 import 'package:baby_book/app/view/home/book/HoldType.dart';
-import 'package:baby_book/app/view/home/book/ReviewType.dart';
 import 'package:baby_book/app/view/home/book/UsedType.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +7,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
-import 'package:intl/intl.dart';
-import 'package:sizer/sizer.dart';
 
 import '../../../../base/color_data.dart';
 import '../../../../base/resizer/fetch_pixels.dart';
 import '../../../controller/BookExperienceBottomSheetController.dart';
 import '../../../repository/my_book_repository.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetController> {
   FocusNode tempReviewFocusNode = FocusNode();
@@ -39,6 +37,9 @@ class BookExperienceBottomSheet extends GetView<BookExperienceBottomSheetControl
 
     return Obx(() => Container(
         color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+            FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         padding: EdgeInsets.only(
             left: FetchPixels.getPixelHeight(10),
             right: FetchPixels.getPixelHeight(10),

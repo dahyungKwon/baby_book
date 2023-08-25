@@ -53,6 +53,8 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
         //   commentKeyboardDown(context);
         // });
       }));
+    } else {
+      Get.back();
     }
   }
 

@@ -2,22 +2,25 @@ import 'package:baby_book/app/view/home/tab/book_list_sort_type.dart';
 import 'package:baby_book/base/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
 import '../../dialog/error_dialog.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class BookListSortTypeBottomSheet extends StatefulWidget {
   final BookListSortType bookListSortType;
 
-  const BookListSortTypeBottomSheet({required this.bookListSortType, Key? key}) : super(key: key);
+  const BookListSortTypeBottomSheet({required this.bookListSortType, Key? key})
+      : super(key: key);
 
   @override
-  State<BookListSortTypeBottomSheet> createState() => _BookListSortTypeBottomSheetState();
+  State<BookListSortTypeBottomSheet> createState() =>
+      _BookListSortTypeBottomSheetState();
 }
 
-class _BookListSortTypeBottomSheetState extends State<BookListSortTypeBottomSheet> {
+class _BookListSortTypeBottomSheetState
+    extends State<BookListSortTypeBottomSheet> {
   BookListSortType? selectedBookListSortType;
 
   @override
@@ -29,10 +32,14 @@ class _BookListSortTypeBottomSheetState extends State<BookListSortTypeBottomShee
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 14.h,
+        height: 15.h,
         child: Container(
           color: Colors.white,
-          padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),
+          margin: EdgeInsets.only(
+              bottom: FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
+          padding: EdgeInsets.only(
+              left: FetchPixels.getPixelHeight(15),
+              right: FetchPixels.getPixelWidth(15)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +52,8 @@ class _BookListSortTypeBottomSheetState extends State<BookListSortTypeBottomShee
                     _BookListSortTypeBottomSheetPicker(
                         bookListSortTypeList: BookListSortType.values,
                         selectedBookListSortType: selectedBookListSortType!,
-                        bookListSortTypeBottomSheetSetter: (BookListSortType bookListSortType) {
+                        bookListSortTypeBottomSheetSetter:
+                            (BookListSortType bookListSortType) {
                           setState(() {
                             selectedBookListSortType = bookListSortType;
                           });
@@ -59,7 +67,8 @@ class _BookListSortTypeBottomSheetState extends State<BookListSortTypeBottomShee
   }
 }
 
-typedef BookListSortTypeBottomSheetSetter = void Function(BookListSortType bookListSortType);
+typedef BookListSortTypeBottomSheetSetter = void Function(
+    BookListSortType bookListSortType);
 
 class _BookListSortTypeBottomSheetPicker extends StatelessWidget {
   final List<BookListSortType> bookListSortTypeList;
@@ -76,11 +85,14 @@ class _BookListSortTypeBottomSheetPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: bookListSortTypeList.map((e) => render(context, e, selectedBookListSortType == e)).toList(),
+      children: bookListSortTypeList
+          .map((e) => render(context, e, selectedBookListSortType == e))
+          .toList(),
     );
   }
 
-  Widget render(BuildContext context, BookListSortType bookListSortType, bool isSelected) {
+  Widget render(BuildContext context, BookListSortType bookListSortType,
+      bool isSelected) {
     return Row(children: [
       Expanded(
           child: RadioListTile<BookListSortType>(
@@ -107,7 +119,8 @@ class _BookListSortTypeBottomSheetPicker extends StatelessWidget {
                             Colors.white,
                             FetchPixels.getPixelHeight(23),
                             FetchPixels.getPixelHeight(23), () async {
-                          Get.dialog(ErrorDialog("인기도의 경우는 대형 포탈사의 검색량, 리뷰데이터 등을 기준으로 평가하여 산정됩니다."));
+                          Get.dialog(ErrorDialog(
+                              "인기도의 경우는 대형 포탈사의 검색량, 리뷰데이터 등을 기준으로 평가하여 산정됩니다."));
                         }),
                       ))
                 ]

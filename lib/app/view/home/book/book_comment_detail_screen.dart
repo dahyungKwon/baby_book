@@ -51,6 +51,8 @@ class BookCommentDetailScreen extends GetView<BookCommentDetailController> {
         controller.exitModifyCommentMode();
         Get.back();
       }));
+    } else {
+      Get.back();
     }
   }
 

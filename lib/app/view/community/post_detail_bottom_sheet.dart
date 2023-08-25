@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../base/resizer/fetch_pixels.dart';
 import '../../models/model_post.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class PostDetailBottomSheet extends StatefulWidget {
   late ModelPost post;
@@ -36,6 +37,9 @@ class _PostDetailBottomSheetState extends State<PostDetailBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
         color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+            FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         padding: EdgeInsets.all(FetchPixels.getPixelHeight(5)),
         child: Wrap(
             children: selectedMenuList
@@ -48,7 +52,6 @@ class _PostDetailBottomSheetState extends State<PostDetailBottomSheet> {
                         height: FetchPixels.getPixelHeight(50),
                         color: Colors.white,
                         padding: const EdgeInsets.only(left: 15),
-                        margin: const EdgeInsets.only(bottom: 5),
                         // decoration: const BoxDecoration(
                         //     color: Colors.white, border: Border(bottom: BorderSide(color: Color(0xfff1f1f1), width: 0.8))),
                         child: Align(

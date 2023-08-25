@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../base/resizer/fetch_pixels.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class BookDetailBottomSheet extends StatefulWidget {
   bool isMyBook;
@@ -33,6 +34,9 @@ class _BookDetailBottomSheetState extends State<BookDetailBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
         color: Colors.white,
+        margin: EdgeInsets.only(
+            bottom:
+            FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
         padding: EdgeInsets.all(FetchPixels.getPixelHeight(5)),
         child: Wrap(
             children: menuList

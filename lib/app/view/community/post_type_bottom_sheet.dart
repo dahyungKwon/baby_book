@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../base/resizer/fetch_pixels.dart';
+import 'package:flutter/foundation.dart' as foundation;
 
 class PostTypeBottomSheet extends StatefulWidget {
   final PostType postType;
@@ -29,6 +30,9 @@ class _PostTypeBottomSheetState extends State<PostTypeBottomSheet> {
         height: 30.h,
         child: Container(
           color: Colors.white,
+          margin: EdgeInsets.only(
+              bottom:
+              FetchPixels.getPixelHeight(foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS ? 20 : 0)),
           padding: EdgeInsets.only(left: FetchPixels.getPixelHeight(15), right: FetchPixels.getPixelWidth(15)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
