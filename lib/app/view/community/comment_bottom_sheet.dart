@@ -4,20 +4,31 @@ import '../../../base/resizer/fetch_pixels.dart';
 import '../../models/model_post.dart';
 
 class CommentBottomSheet extends StatefulWidget {
-  CommentBottomSheet({Key? key}) : super(key: key);
+  late bool myComment;
+
+  CommentBottomSheet({Key? key, required this.myComment}) : super(key: key);
 
   @override
-  State<CommentBottomSheet> createState() => _CommentBottomSheetState();
+  State<CommentBottomSheet> createState() => _CommentBottomSheetState(myComment);
 }
 
 class _CommentBottomSheetState extends State<CommentBottomSheet> {
-  List<String> menuList = ["수정하기", "삭제하기"];
+  late bool myComment;
+  List<String> selectedMenuList = [];
+  List<String> noMyCommentList = ["신고하기"];
+  List<String> myMenuList = ["수정하기", "삭제하기"];
 
-  _CommentBottomSheetState();
+  _CommentBottomSheetState(this.myComment);
 
   @override
   void initState() {
     super.initState();
+
+    if (myComment) {
+      selectedMenuList.addAll(myMenuList);
+    } else {
+      selectedMenuList.addAll(noMyCommentList);
+    }
   }
 
   @override
@@ -26,7 +37,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
         color: Colors.white,
         padding: EdgeInsets.all(FetchPixels.getPixelHeight(5)),
         child: Wrap(
-            children: menuList
+            children: selectedMenuList
                 .map((e) => GestureDetector(
                     onTap: () {
                       Navigator.pop(context, e);

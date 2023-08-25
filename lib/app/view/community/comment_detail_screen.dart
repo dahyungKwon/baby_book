@@ -214,7 +214,7 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
           //   print("답글쓰기 버튼 클릭");
           // })
         ]),
-        comment.deleted || !comment.myComment
+        comment.deleted
             ? Container(width: FetchPixels.getPixelHeight(50), height: FetchPixels.getPixelHeight(30))
             : getSimpleImageButton(
                 "ellipsis_horizontal_outline_comment.svg",
@@ -234,9 +234,23 @@ class CommentDetailScreen extends GetView<CommentDetailController> {
                     }));
                   } else {
                     showModalBottomSheet(
-                        context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet()).then((menu) {
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) => CommentBottomSheet(
+                              myComment: comment.myComment,
+                            )).then((menu) async {
                       if (menu != null) {
                         switch (menu) {
+                          case "신고하기":
+                            {
+                              // clickedModifyComment(context, comment);
+                              await Get.toNamed(Routes.reportBadCommentAddPath, parameters: {
+                                "commentId": comment.comment.commentId,
+                                "commentTitle": comment.comment.body,
+                                "writerName": comment.commentWriterNickName!,
+                              });
+                              break;
+                            }
                           case "수정하기":
                             {
                               clickedModifyComment(context, comment);

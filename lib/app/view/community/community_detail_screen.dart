@@ -148,6 +148,15 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                           _share();
                           break;
                         }
+                      case "신고하기":
+                        {
+                          await Get.toNamed(Routes.reportBadPostAddPath, parameters: {
+                            "postId": controller.postId,
+                            "postTitle": controller.post.title,
+                            "writerName": controller.post.nickName
+                          });
+                          break;
+                        }
                       case "수정하기":
                         {
                           bool result =
@@ -560,7 +569,7 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
             });
           })
         ]),
-        comment.deleted || !comment.myComment
+        comment.deleted
             ? Container()
             : getSimpleImageButton(
                 "ellipsis_horizontal_outline_comment.svg",
@@ -570,10 +579,22 @@ class CommunityDetailScreen extends GetView<CommunityDetailController> {
                 FetchPixels.getPixelHeight(15),
                 FetchPixels.getPixelHeight(15),
                 () {
-                  showModalBottomSheet(context: context, isScrollControlled: true, builder: (_) => CommentBottomSheet())
-                      .then((menu) {
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => CommentBottomSheet(myComment: comment.myComment)).then((menu) async {
                     if (menu != null) {
                       switch (menu) {
+                        case "신고하기":
+                          {
+                            // clickedModifyComment(context, comment);
+                            await Get.toNamed(Routes.reportBadCommentAddPath, parameters: {
+                              "commentId": comment.comment.commentId,
+                              "commentTitle": comment.comment.body,
+                              "writerName": comment.commentWriterNickName!,
+                            });
+                            break;
+                          }
                         case "수정하기":
                           {
                             clickedModifyComment(context, comment);

@@ -17,7 +17,7 @@ class _PostDetailBottomSheetState extends State<PostDetailBottomSheet> {
   late ModelPost post;
   bool myPost = false;
   List<String> selectedMenuList = [];
-  List<String> commonMenuList = ["공유하기"];
+  List<String> commonMenuList = ["공유하기", "신고하기"];
   List<String> myMenuList = ["수정하기", "삭제하기"];
 
   _PostDetailBottomSheetState(this.post, this.myPost);

@@ -174,7 +174,7 @@ class CommunityDetailController extends GetxController {
         liked = false;
         post.liked = false;
         post.likeCount = post.likeCount - 1;
-        Get.find<CommunityListController>().updateLike(post.postType, post.postId, liked, post.likeCount);
+        Get.find<CommunityListController>().updateLike(post.postType, post.commentId, liked, post.likeCount);
       }
     } else {
       bool result = await postFeedbackRepository.like(postId: postId);
@@ -182,7 +182,7 @@ class CommunityDetailController extends GetxController {
         liked = true;
         post.liked = true;
         post.likeCount = post.likeCount + 1;
-        Get.find<CommunityListController>().updateLike(post.postType, post.postId, liked, post.likeCount);
+        Get.find<CommunityListController>().updateLike(post.postType, post.commentId, liked, post.likeCount);
       }
     }
   }

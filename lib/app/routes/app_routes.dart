@@ -35,6 +35,8 @@ abstract class Routes {
   static const communityDetailPath = "/CommunityDetailScreen";
   static const communityModifyPath = "/CommunityModifyScreen";
   static const commentDetailPath = "/CommentDetailScreen";
+  static const reportBadPostAddPath = "/ReportBadPostAddScreen";
+  static const reportBadCommentAddPath = "/ReportBadCommentAddScreen";
 
   ///프로필
   static const tabProfilePath = "/TabProfile";
